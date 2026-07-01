@@ -1,0 +1,56 @@
+.activity-section {
+  margin-top: 32px;
+  margin-bottom: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.activity-button-group {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 30px;
+  justify-content: center;
+}
+
+.activity-title {
+  font-size: 20px;
+  font-weight: 800;
+  text-align: left;
+  margin-bottom: 16px;
+  width: 100%;
+  max-width: 310px;
+}
+
+.activity-buttons {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+}
+
+.activity-btn-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 480px) {
+  .activity-section {
+    margin-bottom: 100px;
+  }
+}
+
+/* 아이폰 SE 등 작은 화면 대응 */
+@media (max-width: 375px) {
+  .activity-section {
+    margin-top: 24px;
+    margin-bottom: 100px;
+  }
+
+  .activity-title {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+}

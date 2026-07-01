@@ -1,0 +1,31 @@
+# Dependencies
+node_modules
+
+# Build outputs
+dist
+build
+.react-router
+coverage
+
+# VCS
+.git
+.gitignore
+
+# Editor and OS files
+.DS_Store
+.idea
+.vscode
+
+# Package manager caches
+.pnpm-store
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Local environment files
+.env
+.env.*

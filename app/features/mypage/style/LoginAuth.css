@@ -1,0 +1,28 @@
+.login-auth-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px;
+  overflow-y: auto;
+}
+
+.login-auth-title {
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.login-auth-desc {
+  color: #7e7e7e;
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.login-auth-image img {
+  width: 130px;
+  height: 130px;
+}

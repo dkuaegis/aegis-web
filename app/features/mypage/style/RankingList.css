@@ -1,0 +1,51 @@
+.ranking-list-container {
+  width: 600px;
+  max-width: 100%;
+}
+
+.ranking-item {
+  display: flex;
+  align-items: center;
+  margin-left: 45px;
+  margin-bottom: 24px;
+}
+
+.rank-medal {
+  width: 40px;
+  font-size: 30px;
+  font-weight: 700;
+  text-align: center;
+  margin-right: 25px;
+}
+
+.rank-number {
+  width: 40px;
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  margin-right: 25px;
+  color: #7e7e7e;
+}
+
+.ranking-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  margin-right: 20px;
+}
+
+.ranking-user-info {
+  flex-grow: 1;
+}
+
+.ranking-name {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+}
+
+.ranking-score {
+  font-size: 14px;
+  color: #7e7e7e;
+  margin: 0;
+}

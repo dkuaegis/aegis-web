@@ -1,0 +1,140 @@
+@layer components {
+  .application-card {
+    @apply border border-gray-200 transition-all duration-200 hover:shadow-md;
+  }
+
+  .application-card-content {
+    @apply p-6;
+  }
+
+  .application-header {
+    @apply mb-6 flex items-start justify-between;
+  }
+
+  .application-avatar-section {
+    @apply flex items-center space-x-4;
+  }
+
+  .application-avatar {
+    @apply h-12 w-12;
+  }
+
+  .application-avatar-fallback {
+    @apply bg-blue-100 font-semibold text-blue-600 text-lg;
+  }
+
+  .application-name {
+    @apply font-semibold text-gray-900 text-lg;
+  }
+
+  .application-contact-info {
+    @apply mt-1 flex items-center text-gray-500 text-sm;
+  }
+
+  .application-contact-icon {
+    @apply mr-2 font-medium;
+  }
+
+  .application-actions {
+    @apply flex items-center justify-between;
+  }
+
+  .application-actions-left {
+    @apply flex items-center space-x-3;
+  }
+
+  .application-actions-right {
+    @apply flex space-x-2;
+  }
+
+  .application-status-section {
+    @apply flex items-center space-x-3;
+  }
+
+  .dialog-content {
+    @apply mt-6;
+  }
+
+  .dialog-info-box {
+    @apply mb-4 rounded-lg bg-gray-50 p-4;
+  }
+
+  .dialog-info-row {
+    @apply mb-2 flex items-center justify-between text-gray-600 text-sm;
+  }
+
+  .dialog-loading-container {
+    @apply flex min-h-[250px] items-center justify-center;
+  }
+
+  .dialog-loading-content {
+    @apply text-center;
+  }
+
+  .dialog-loading-spinner {
+    @apply mx-auto mb-2 h-6 w-6 animate-spin rounded-full border-blue-600 border-b-2;
+  }
+
+  .dialog-loading-text {
+    @apply text-gray-500 text-sm;
+  }
+
+  .dialog-error-text {
+    @apply text-red-600 text-sm;
+  }
+
+  .dialog-retry-button {
+    @apply mt-2;
+  }
+
+  .dialog-textarea {
+    @apply min-h-[250px] resize-none border-gray-200 bg-white;
+  }
+
+  .icon-size-sm {
+    @apply mr-2 h-4 w-4;
+  }
+
+  .icon-size-xs {
+    @apply mr-1 h-4 w-4;
+  }
+}
+
+/* Utilities that need to override component defaults */
+@layer utilities {
+  .dialog-max-width {
+    @apply max-w-2xl sm:max-w-2xl;
+  }
+
+  .dialog-header-title {
+    @apply flex items-center;
+  }
+
+  .dialog-icon {
+    @apply mr-2 h-5 w-5 text-blue-600;
+  }
+
+  .status-badge-pending {
+    @apply border-yellow-200 bg-yellow-100 text-yellow-800;
+  }
+
+  .status-badge-approved {
+    @apply border-green-200 bg-green-100 text-green-800;
+  }
+
+  .status-badge-rejected {
+    @apply border-red-200 bg-red-100 text-red-800;
+  }
+
+  .btn-view-application {
+    @apply border-blue-200 bg-white text-blue-600 hover:bg-blue-50;
+  }
+
+  .btn-approve {
+    @apply bg-green-600 text-white shadow-sm hover:bg-green-700;
+  }
+
+  .btn-reject {
+    @apply border-red-200 bg-white text-red-600 hover:bg-red-50;
+  }
+}

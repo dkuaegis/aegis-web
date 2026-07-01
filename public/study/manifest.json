@@ -1,0 +1,53 @@
+{
+    "name": "Aegis Study",
+    "short_name": "Aegis",
+    "description": "Aegis Study입니다. 모바일에서도 편하게 이용하세요.",
+    "start_url": "/",
+    "scope": "/",
+    "display": "standalone",
+    "orientation": "portrait",
+    "theme_color": "#ffffff",
+    "background_color": "#ffffff",
+    "icons": [
+        {
+            "src": "/pwa-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/pwa-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/pwa-192x192-maskable.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "/pwa-512x512-maskable.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ],
+    "categories": ["education", "productivity"],
+    "shortcuts": [
+        {
+            "name": "스터디 목록",
+            "short_name": "목록",
+            "description": "스터디 목록 조회",
+            "url": "/",
+            "icons": [
+                {
+                    "src": "/pwa-192x192.png",
+                    "sizes": "192x192",
+                    "type": "image/png"
+                }
+            ]
+        }
+    ]
+}

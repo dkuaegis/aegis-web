@@ -1,0 +1,181 @@
+.Button {
+  background-color: #ffffff;
+  cursor: pointer;
+  border: none;
+  border-radius: 15px;
+  padding: 10px 20px;
+  font-size: 18px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.point-box {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 25px;
+}
+
+.point-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.point-arrow {
+  background: none;
+  border: none;
+}
+
+.main-button-group {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-bottom: 50px;
+}
+
+.Button_POINT {
+  color: #000000;
+  width: 325px;
+  height: 82px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.Button_MAIN {
+  color: #000000;
+  width: 152px;
+  height: 65px;
+}
+
+.Button_BACKHOME {
+  background-color: #000000;
+  color: #ffffff;
+  width: 320px;
+  height: 50px;
+  margin-top: 40px;
+}
+
+.Button_SIGNUP {
+  background-color: #dbdbdb;
+  color: #000000;
+  width: 320px;
+  height: 50px;
+}
+
+.Button_LOGIN {
+  background-color: #000000;
+  color: #ffffff;
+  width: 320px;
+  height: 50px;
+}
+
+.Button_ACTIVITY {
+  color: #7e7e7e;
+  width: 152px;
+  height: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.Button_REFRESH {
+  background: none;
+  border: none;
+  font-size: 16px;
+  font-weight: 500;
+  color: #7e7e7e;
+  text-decoration: underline;
+  margin-top: 16px;
+  cursor: pointer;
+}
+
+.Button_CLOSE {
+  position: relative;
+  background: none;
+  border: none;
+  font-size: 16px;
+  font-weight: 500;
+  color: #ffffff;
+  text-decoration: underline;
+  margin-top: 60px;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.Button_EDITSAVE {
+  background-color: #000000;
+  width: 152px;
+  height: 50px;
+  color: #ffffff;
+}
+
+.Button_EDITRETURN {
+  background-color: #dbdbdb;
+  width: 152px;
+  height: 50px;
+  color: #000000;
+}
+
+.Button_EXCHANGE {
+  background-color: #000000;
+  width: 320px;
+  height: 50px;
+  color: #ffffff;
+  margin: 24px 0 24px 0;
+}
+
+.Button_GACHASAVE {
+  background-color: #000000;
+  width: 216px;
+  height: 45px;
+  border-radius: 10px;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 16px;
+  position: static;
+  inset: auto;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  transform: none;
+  z-index: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 32px;
+}
+
+.Button_GACHAHIS {
+  background-color: #dbdbdb;
+  width: 216px;
+  height: 45px;
+  border-radius: 10px;
+  color: #000000;
+  font-weight: 700;
+  font-size: 16px;
+  position: static;
+  inset: auto;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  transform: none;
+  z-index: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 10px;
+}
+
+.button-group-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 40px;
+}

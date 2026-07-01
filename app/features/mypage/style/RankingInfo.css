@@ -1,0 +1,22 @@
+.ranking-info-container {
+  padding: 24px 20px;
+  margin-left: 20px;
+}
+
+.participants-text {
+  font-size: 16px;
+  color: #7e7e7e;
+  margin: 0 0 8px 0;
+}
+
+.ranking-title {
+  font-size: 24px;
+  font-weight: 800;
+  margin: 0 0 8px 0;
+}
+
+.ranking-time-text {
+  font-size: 12px;
+  color: #7e7e7e;
+  margin: 0 0 8px 0;
+}

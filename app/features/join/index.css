@@ -1,0 +1,187 @@
+@import "tailwindcss";
+
+@plugin "tailwindcss-animate";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --color-background: oklch(var(--background));
+  --color-foreground: oklch(var(--foreground));
+  --color-discord-blue: #5865f2;
+
+  --color-card: oklch(var(--card));
+  --color-card-foreground: oklch(var(--card-foreground));
+
+  --color-popover: oklch(var(--popover));
+  --color-popover-foreground: oklch(var(--popover-foreground));
+
+  --color-primary: oklch(var(--primary));
+  --color-primary-foreground: oklch(var(--primary-foreground));
+
+  --color-secondary: oklch(var(--secondary));
+  --color-secondary-foreground: oklch(var(--secondary-foreground));
+
+  --color-muted: oklch(var(--muted));
+  --color-muted-foreground: oklch(var(--muted-foreground));
+
+  --color-accent: oklch(var(--accent));
+  --color-accent-foreground: oklch(var(--accent-foreground));
+
+  --color-destructive: oklch(var(--destructive));
+  --color-destructive-foreground: oklch(var(--destructive-foreground));
+
+  --color-border: oklch(var(--border));
+  --color-input: oklch(var(--input));
+  --color-ring: oklch(var(--ring));
+
+  --color-chart-1: oklch(var(--chart-1));
+  --color-chart-2: oklch(var(--chart-2));
+  --color-chart-3: oklch(var(--chart-3));
+  --color-chart-4: oklch(var(--chart-4));
+  --color-chart-5: oklch(var(--chart-5));
+
+  --animate-emoji-rotate: emoji-rotate 3s ease-in-out infinite;
+  --animate-shimmer: shimmer 3s infinite linear;
+
+  @keyframes emoji-rotate {
+    0% {
+      transform: rotate(20deg);
+    }
+    50% {
+      transform: rotate(-20deg);
+    }
+    100% {
+      transform: rotate(20deg);
+    }
+  }
+  @keyframes shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: 0% 0;
+    }
+  }
+}
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+    --background: 1 0 0;
+    --foreground: 0.129 0.042 264.695;
+    --card: 1 0 0;
+    --card-foreground: 0.129 0.042 264.695;
+    --popover: 1 0 0;
+    --popover-foreground: 0.129 0.042 264.695;
+    --primary: 0.208 0.042 265.755;
+    --primary-border: 222.2 47.4% 11.2% / 0.5;
+    --primary-foreground: 0.984 0.003 247.858;
+    --secondary: 0.968 0.007 247.896;
+    --secondary-foreground: 0.208 0.042 265.755;
+    --muted: 0.968 0.007 247.896;
+    --muted-foreground: 0.554 0.046 257.417;
+    --accent: 0.968 0.007 247.896;
+    --accent-foreground: 0.208 0.042 265.755;
+    --destructive: 0.577 0.245 27.325;
+    --border: 0.929 0.013 255.508;
+    --input: 0.929 0.013 255.508;
+    --ring: 0.704 0.04 256.788;
+    --chart-1: 0.646 0.222 41.116;
+    --chart-2: 0.6 0.118 184.704;
+    --chart-3: 0.398 0.07 227.392;
+    --chart-4: 0.828 0.189 84.429;
+    --chart-5: 0.769 0.188 70.08;
+  }
+
+  .dark {
+    --background: 0.129 0.042 264.695;
+    --foreground: 0.984 0.003 247.858;
+    --card: 0.208 0.042 265.755;
+    --card-foreground: 0.984 0.003 247.858;
+    --popover: 0.208 0.042 265.755;
+    --popover-foreground: 0.984 0.003 247.858;
+    --primary: 0.929 0.013 255.508;
+    --primary-foreground: 0.208 0.042 265.755;
+    --secondary: 0.279 0.041 260.031;
+    --secondary-foreground: 0.984 0.003 247.858;
+    --muted: 0.279 0.041 260.031;
+    --muted-foreground: 0.704 0.04 256.788;
+    --accent: 0.279 0.041 260.031;
+    --accent-foreground: 0.984 0.003 247.858;
+    --destructive: 0.704 0.191 22.216;
+    --border: 1 0 0 / 0.1;
+    --input: 1 0 0 / 0.15;
+    --ring: 0.551 0.027 264.364;
+    --chart-1: 0.488 0.243 264.376;
+    --chart-2: 0.696 0.17 162.48;
+    --chart-3: 0.769 0.188 70.08;
+    --chart-4: 0.627 0.265 303.9;
+    --chart-5: 0.645 0.246 16.439;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "SUIT", sans-serif;
+  }
+}
+
+@layer utilities {
+  .table-row {
+    height: 40px;
+    display: table-row;
+  }
+
+  .line-breaks {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
+  .text-input-base {
+    @apply text-lg;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  .fade-in {
+    animation: fadeIn 0.3s ease-in forwards;
+  }
+  .fade-out {
+    animation: fadeOut 0.3s ease-out forwards;
+  }
+
+  @keyframes aurora {
+    from {
+      background-position: 0% 50%;
+    }
+    to {
+      background-position: 100% 50%;
+    }
+  }
+
+  .animate-aurora {
+    animation: aurora 5s linear infinite alternate;
+  }
+}

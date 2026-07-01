@@ -1,0 +1,211 @@
+.profile-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100dvh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 1000;
+}
+
+.profile-modal {
+  width: min(570px, 95vw);
+  height: 400px;
+  min-height: 48%;
+  max-width: 95%;
+  background: #ffffff;
+  border-radius: 25px 25px 0 0;
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.12);
+  padding: 16px 16px 24px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+  margin-bottom: 0;
+  animation: modalUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes modalUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.profile-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 24px 0 16px 50px;
+  line-height: 1.5;
+  text-align: left;
+  width: 100%;
+}
+
+.profile-current-img {
+  width: 80px;
+  height: 80px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.image-grid {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 8px;
+  width: min(400px, calc(100vw - 32px));
+  max-width: calc(100vw - 32px);
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE, Edge */
+}
+
+.image-page {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: min(16px, 2vw);
+  min-width: min(400px, calc(100vw - 32px));
+  max-width: min(400px, calc(100vw - 32px));
+  scroll-snap-align: start;
+  margin-top: 16px;
+  place-items: center;
+}
+
+.profile-option-img {
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border 0.2s ease;
+  margin: auto;
+  background: transparent;
+  padding: 0;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  appearance: none;
+}
+
+.profile-option-img.selected {
+  border: 5px;
+  border-color: #d9d9d9;
+  border-radius: 100%;
+}
+
+.profile-option-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0 16px 24px 16px;
+}
+
+.image-grid-scroll {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(2, 1fr);
+  grid-auto-columns: 1fr;
+  gap: 16px;
+  overflow-x: auto;
+  width: 393px;
+  max-width: 393px;
+  min-width: 393px;
+  min-height: 120px;
+  margin: 0 auto 16px auto;
+  padding-bottom: 8px;
+  scrollbar-width: none;
+}
+
+.image-grid::-webkit-scrollbar {
+  display: none;
+}
+
+.image-grid {
+  scroll-behavior: smooth;
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 8px 0 56px;
+}
+
+.pager-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #d9d9d9;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: width 0.2s ease;
+}
+
+.pager-dot.active {
+  background: #000000;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 480px) {
+  .profile-modal {
+    width: 100vw;
+    border-radius: 20px 20px 0 0;
+    padding: 12px 12px 20px 12px;
+  }
+
+  .profile-title {
+    font-size: 18px;
+    margin: 16px 0 12px 20px;
+  }
+
+  .profile-current-img {
+    width: 70px;
+    height: 70px;
+    margin: 12px 0;
+  }
+
+  .image-grid {
+    width: calc(100vw - 24px);
+    max-width: calc(100vw - 24px);
+    gap: 12px;
+  }
+
+  .image-page {
+    min-width: calc(100vw - 24px);
+    max-width: calc(100vw - 24px);
+    gap: min(12px, 3vw);
+  }
+
+  .profile-option-img {
+    width: min(45px, 10vw);
+    height: min(45px, 10vw);
+  }
+
+  .button-group {
+    gap: 16px;
+    padding: 0 12px 20px 12px;
+  }
+}

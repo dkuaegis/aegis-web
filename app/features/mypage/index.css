@@ -1,0 +1,105 @@
+@font-face {
+  font-family: "SUIT Variable";
+  src: url("/mypage/SUIT-Variable.ttf");
+  font-weight: 100 900;
+}
+
+.mypage {
+  margin: 0px;
+  width: 100%;
+  background-color: #ffffff;
+  height: auto;
+  min-height: 100vh;
+}
+
+.mypage-body {
+  background-color: #f2f3f8;
+}
+
+.mypage#root {
+  background-color: #f2f3f8;
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+  height: auto;
+  min-height: 100vh;
+  padding: 0 16px;
+  box-sizing: border-box;
+  color: #000000;
+}
+
+.mypage * {
+  font-family: "SUIT Variable", sans-serif;
+}
+
+/* Toast 스타일 커스터마이징 */
+.Toastify__toast--error {
+  background-color: #ff4444;
+  color: #ffffff;
+  font-family: "SUIT Variable", sans-serif;
+  font-weight: 500;
+  max-width: 300px;
+  justify-content: center;
+  text-align: center;
+}
+
+.Toastify__toast--success {
+  background-color: #00aa44;
+  color: #ffffff;
+  font-family: "SUIT Variable", sans-serif;
+  font-weight: 500;
+  max-width: 300px;
+  justify-content: center;
+  text-align: center;
+}
+
+.Toastify__close-button {
+  color: #ffffff;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 480px) {
+  .mypage-body {
+    background-color: #f2f3f8;
+  }
+
+  .mypage {
+    height: auto;
+    min-height: 100dvh;
+    background-color: #f2f3f8;
+    overflow-y: auto;
+  }
+
+  .mypage#root {
+    max-width: 100vw;
+    width: 100vw;
+    padding: 0 16px;
+    min-height: 100dvh;
+    height: auto;
+  }
+}
+
+/* 아이폰 SE 등 작은 화면 대응 */
+@media (max-width: 375px) {
+  .mypage-body {
+    background-color: #f2f3f8;
+    overflow-x: hidden;
+  }
+
+  .mypage {
+    width: 100vw;
+    height: auto;
+    min-height: 100dvh;
+    background-color: #f2f3f8;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .mypage#root {
+    max-width: 100vw;
+    width: 100vw;
+    padding: 0 12px;
+    min-height: 100dvh;
+    height: auto;
+  }
+}

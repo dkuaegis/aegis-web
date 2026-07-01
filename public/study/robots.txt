@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://study.dkuaegis.org/sitemap.xml

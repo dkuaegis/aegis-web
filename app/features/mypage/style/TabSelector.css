@@ -1,0 +1,30 @@
+.tab-selector {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 25px 40px 25px;
+}
+
+.tab-btn {
+  min-width: 78px;
+  padding: 6px 18px;
+  border: none;
+  border-radius: 10px;
+  background: #acacac;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tab-btn.selected {
+  background: #000000;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.tab-btn:not(.selected):hover,
+.tab-btn.hovered {
+  background: #626262;
+}
