@@ -25,7 +25,7 @@ const FirstComeForm = ({ recruiting }: FirstComeFormProps) => {
           <AlertDialogTrigger asChild>
             <Button
               disabled={isApplying || !recruiting}
-              className="group relative w-full max-w-xl overflow-hidden bg-blue-600 text-white transition-colors hover:bg-blue-700 disabled:opacity-60"
+              className="group relative w-full max-w-xl overflow-hidden disabled:opacity-60"
             >
               <span
                 aria-hidden="true"
@@ -49,7 +49,7 @@ const FirstComeForm = ({ recruiting }: FirstComeFormProps) => {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel className="group relative min-w-[120px] overflow-hidden bg-gray-200 text-gray-700 transition-colors hover:bg-gray-300">
+              <AlertDialogCancel className="group relative min-w-[120px] overflow-hidden">
                 <span
                   aria-hidden="true"
                   className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center"
@@ -64,7 +64,7 @@ const FirstComeForm = ({ recruiting }: FirstComeFormProps) => {
               <AlertDialogAction
                 onClick={handleApply}
                 disabled={isApplying}
-                className="group relative min-w-[120px] overflow-hidden bg-blue-600 text-white transition-colors hover:bg-blue-700"
+                className="group relative min-w-[120px] overflow-hidden"
               >
                 <span
                   aria-hidden="true"

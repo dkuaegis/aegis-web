@@ -46,7 +46,6 @@ const LoginPage = () => {
   useEffect(() => {
     const tl = gsap.timeline();
 
-    // Set initial states
     gsap.set(
       [titleRef.current, subtitleRef.current, buttonRef.current],
       INITIAL_STATE.HIDDEN_ELEMENT
@@ -54,7 +53,6 @@ const LoginPage = () => {
     gsap.set(iconsRef.current, INITIAL_STATE.HIDDEN_ICON);
     gsap.set(cardRef.current, INITIAL_STATE.CARD_INITIAL);
 
-    // Animate elements
     tl.to(cardRef.current, {
       scale: 1,
       duration: ANIMATION_CONFIG.CARD_DURATION,
