@@ -2,7 +2,6 @@ import { Label } from "@study/components/ui/label";
 import { useExternalBrowser } from "@study/hooks/useExternalBrowser";
 import { useEffect, useState } from "react";
 
-// 인앱 브라우저별 Safari에서 열기 안내
 const IN_APP_INSTRUCTIONS: Record<
   string,
   { steps: string[]; safariHint?: string }

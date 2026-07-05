@@ -34,7 +34,7 @@ const App = () => {
   // 로딩 중에는 로딩 화면 표시
   if (isLoading) {
     return (
-      <div className="study flex min-h-screen items-center justify-center bg-gray-50">
+      <div className="study flex min-h-screen items-center justify-center bg-white">
         <div className="text-gray-500">로딩 중...</div>
       </div>
     );
@@ -46,10 +46,10 @@ const App = () => {
   }
 
   return (
-    <div className="study min-h-screen bg-gray-50">
+    <div className="study min-h-screen bg-white">
       <Suspense
         fallback={
-          <div className="study flex min-h-screen items-center justify-center bg-gray-50">
+          <div className="study flex min-h-screen items-center justify-center bg-white">
             <div className="text-gray-500">로딩 중...</div>
           </div>
         }

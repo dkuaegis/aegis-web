@@ -93,6 +93,16 @@ const StudyDetailPage = ({
     );
   }
 
+  if (!study) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-black">
+        <div className="text-[rgba(255,255,255,0.7)]">
+          스터디를 찾을 수 없습니다.
+        </div>
+      </div>
+    );
+  }
+
   const isOwner = isInstructor(studyId);
   const isMember = isParticipant(studyId);
 

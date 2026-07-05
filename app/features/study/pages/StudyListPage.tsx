@@ -20,7 +20,7 @@ function SkeletonLine({ className }: { className?: string }) {
 
 function StudyCardSkeleton() {
   return (
-    <div className="flex h-[280px] w-full min-w-[250px] flex-col gap-6 rounded-xl border bg-card py-6 shadow-sm">
+    <div className="flex h-[280px] w-full min-w-[250px] flex-col gap-6 rounded-2xl border border-gray-200 bg-white py-6 shadow-[0_4px_20px_rgba(11,16,34,0.08)]">
       <div className="flex h-full flex-col p-6">
         <div className="flex flex-1 flex-col space-y-3">
           <SkeletonLine className="h-5 w-16" />
@@ -75,7 +75,7 @@ const StudyCard = memo(({ study, onViewStudyDetail }: StudyCardProps) => {
 
   return (
     <Card
-      className="relative h-[280px] w-full min-w-[250px] cursor-pointer overflow-hidden border-gray-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+      className="relative h-[280px] w-full min-w-[250px] cursor-pointer overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-[0_4px_20px_rgba(11,16,34,0.08)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_12px_32px_rgba(11,16,34,0.12)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3b82f6]"
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       tabIndex={0}
@@ -89,8 +89,8 @@ const StudyCard = memo(({ study, onViewStudyDetail }: StudyCardProps) => {
               variant="secondary"
               className={
                 isOpen
-                  ? "bg-blue-100 text-blue-800"
-                  : "bg-gray-100 text-gray-800"
+                  ? "bg-blue-50 text-blue-700"
+                  : "bg-gray-100 text-gray-600"
               }
             >
               {isOpen ? "모집중" : "모집완료"}
@@ -101,7 +101,7 @@ const StudyCard = memo(({ study, onViewStudyDetail }: StudyCardProps) => {
             {study.title}
           </h3>
 
-          <div className="flex-1 space-y-3 text-gray-600 text-sm">
+          <div className="flex-1 space-y-3 text-gray-500 text-sm">
             <div className="flex items-center">
               <BarChart3 className="mr-2 h-4 w-4 shrink-0" />
               <span>{StudyLevelLabels[study.level]}</span>
@@ -121,13 +121,13 @@ const StudyCard = memo(({ study, onViewStudyDetail }: StudyCardProps) => {
           </div>
 
           <div className="flex shrink-0 items-center justify-between gap-2">
-            <div className="flex min-w-0 items-center text-gray-600 text-sm">
+            <div className="flex min-w-0 items-center text-gray-500 text-sm">
               <User className="mr-2 h-4 w-4 shrink-0" />
               <span className="truncate">{study.instructor}</span>
             </div>
             <Badge
               variant="outline"
-              className="shrink-0 border-gray-300 text-gray-600"
+              className="shrink-0 border-gray-200 text-gray-500"
             >
               #{StudyCategoryLabels[study.category]}
             </Badge>
@@ -157,7 +157,7 @@ const StudyList = ({
       <div className="mb-6 flex w-full justify-end px-6 pt-6">
         <Button
           onClick={onCreateStudy}
-          className="group relative overflow-hidden bg-blue-600 text-white transition-colors hover:bg-blue-700"
+          className="group relative overflow-hidden bg-gradient-to-br from-[#3b82f6] to-[#2563eb] px-6 py-2.5 text-white font-semibold shadow-[0_4px_20px_rgba(59,130,246,0.4),0_8px_32px_rgba(59,130,246,0.2)] transition-all duration-300 hover:-translate-y-0.5 hover:from-[#2563eb] hover:to-[#1d4ed8] hover:shadow-[0_6px_28px_rgba(59,130,246,0.5),0_12px_40px_rgba(59,130,246,0.3)] rounded-full"
         >
           <span
             aria-hidden="true"

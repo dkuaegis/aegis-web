@@ -40,7 +40,6 @@ const FireLottie = () => {
 };
 
 const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
-  // 사용자 역할 확인
   const {
     isInstructor,
     isLoading: isRoleLoading,
@@ -58,10 +57,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
     error,
   } = useApplications(studyId);
 
-  // 로딩 상태 처리
   const isLoading = loading || isRoleLoading;
-
-  // 권한 확인 - 강사만 지원현황을 볼 수 있음
   const isOwner = isInstructor(studyId);
 
   if (isLoading) {
@@ -71,7 +67,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
         <div className="mx-auto max-w-7xl p-6">
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
-              <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-blue-600 border-b-2"></div>
+              <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-[#3b82f6] border-b-2"></div>
               <p className="text-gray-500">
                 {isRoleLoading
                   ? "권한 정보를 불러오는 중..."
@@ -86,10 +82,8 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
 
   if (roleError) {
     console.error("사용자 권한 조회 오류:", roleError);
-    // 권한 오류 시에도 기본 권한으로 계속 진행
   }
 
-  // 권한이 없는 경우
   if (!isOwner) {
     return (
       <ForbiddenPage
@@ -99,7 +93,6 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
     );
   }
 
-  // 선착순 스터디의 경우 지원 현황이 없음
   if (studyInfo?.recruitmentMethod === StudyRecruitmentMethod.FCFS) {
     return (
       <div className="flex min-h-screen flex-col bg-gray-50">
@@ -133,7 +126,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
               <button
                 type="button"
                 onClick={() => window.location.reload()}
-                className="mt-4 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                className="mt-4 rounded-full bg-gradient-to-br from-[#3b82f6] to-[#2563eb] px-6 py-2.5 text-white font-semibold shadow-[0_4px_20px_rgba(59,130,246,0.4),0_8px_32px_rgba(59,130,246,0.2)] transition-all duration-300 hover:-translate-y-0.5 hover:from-[#2563eb] hover:to-[#1d4ed8] hover:shadow-[0_6px_28px_rgba(59,130,246,0.5),0_12px_40px_rgba(59,130,246,0.3)]"
               >
                 다시 시도
               </button>
@@ -170,7 +163,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
       label: "전체",
       count: stats.total,
       icon: User,
-      color: "text-blue-600",
+      color: "text-[#3b82f6]",
       bgColor: "bg-blue-50",
       hoverColor: "hover:bg-blue-100",
       activeColor: "bg-blue-100 text-blue-700 border-blue-200",
@@ -238,9 +231,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
                           isActive ? "bg-white" : option.bgColor
                         }`}
                       >
-                        <IconComponent
-                          className={`h-5 w-5 ${isActive ? option.color : option.color}`}
-                        />
+                        <IconComponent className={`h-5 w-5 ${option.color}`} />
                       </div>
                       <span
                         className={`font-medium ${isActive ? "text-current" : "text-gray-700"}`}
@@ -264,7 +255,6 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
             </div>
           </aside>
 
-          {/* Right Content - Applications List */}
           <main className="flex-1">
             <Card className="border-0 shadow-sm">
               <CardHeader className="border-gray-100 border-b bg-white">

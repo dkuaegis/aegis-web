@@ -27,7 +27,6 @@ export default function StudyMembersPage({
   studyId,
   onBack,
 }: StudyMembersProps) {
-  // 사용자 역할 확인
   const {
     isInstructor,
     isLoading: isRoleLoading,
@@ -39,18 +38,13 @@ export default function StudyMembersPage({
   const [error, setError] = useState<string | null>(null);
   const toast = useToast();
 
-  // 권한 확인 - 강사만 스터디원 관리를 할 수 있음
   const isOwner = isInstructor(studyId);
-
-  // 로딩 상태 처리
   const isLoading = loading || isRoleLoading;
 
   useEffect(() => {
     const controller = new AbortController();
     const { signal } = controller;
-    // 권한 로딩 중이면 대기
     if (isRoleLoading) return;
-    // 비소유자는 즉시 로딩 종료 후 반환 (API 호출 금지)
     if (!isOwner) {
       setLoading(false);
       return;
@@ -69,7 +63,6 @@ export default function StudyMembersPage({
       })
       .catch((err: unknown) => {
         if ((err as { name?: string }).name === "AbortError") return;
-
         const msg =
           err instanceof Error
             ? err.message
@@ -102,10 +95,8 @@ export default function StudyMembersPage({
 
   if (roleError) {
     console.error("사용자 권한 조회 오류:", roleError);
-    // 권한 오류 시에도 기본 권한으로 계속 진행
   }
 
-  // 권한이 없는 경우
   if (!isOwner) {
     return (
       <ForbiddenPage
@@ -120,7 +111,7 @@ export default function StudyMembersPage({
       <div className="min-h-screen bg-gray-50">
         <Header onBack={onBack} />
         <div className="flex min-h-screen items-center justify-center">
-          <div className="text-red-600">{error}</div>
+          <div className="text-red-500">{error}</div>
         </div>
       </div>
     );
