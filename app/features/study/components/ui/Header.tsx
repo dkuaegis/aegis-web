@@ -24,7 +24,7 @@ const Header: React.FC<HeaderProps> = ({ onBack }) => {
                 variant="ghost"
                 size="sm"
                 onClick={onBack}
-                className="mr-4 text-gray-600 hover:text-gray-900"
+                className="mr-4 text-gray-500 hover:text-gray-900"
               >
                 <ArrowLeft className="mr-1 h-4 w-4" />
                 뒤로가기
@@ -45,7 +45,7 @@ const Header: React.FC<HeaderProps> = ({ onBack }) => {
               <a
                 key={link.label}
                 href={link.href}
-                className="relative px-3 py-2 font-medium text-gray-700 text-sm uppercase tracking-wide transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-blue-600 after:transition-all after:duration-300 hover:text-blue-600 hover:after:w-full"
+                className="relative px-3 py-2 font-medium text-gray-500 text-sm uppercase tracking-wide transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-[#3b82f6] after:transition-all after:duration-300 hover:text-gray-900 hover:after:w-full"
               >
                 {link.label}
               </a>
