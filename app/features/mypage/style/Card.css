@@ -2,14 +2,16 @@
   width: 100%;
   max-width: 325px;
   min-height: 64px;
-  background: #ffffff;
-  border-radius: 15px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: var(--mypage-card);
+  border: 1px solid var(--mypage-border);
+  border-radius: var(--mypage-radius-md);
+  box-shadow: var(--mypage-shadow);
   display: flex;
   align-items: center;
   margin: 0 auto 18px auto;
   padding: 16px 20px;
   box-sizing: border-box;
+  color: var(--mypage-foreground);
 }
 
 .card-icon {
@@ -32,7 +34,7 @@
 .point-card .card-date {
   font-size: 10px;
   font-weight: 500;
-  color: #7e7e7e;
+  color: var(--mypage-muted);
 }
 
 .card-amount {
@@ -43,11 +45,11 @@
 }
 
 .card-amount.plus {
-  color: #1452ff;
+  color: var(--mypage-primary);
 }
 
 .card-amount.minus {
-  color: #000000;
+  color: var(--mypage-foreground);
 }
 
 /* 쿠폰 카드 */
@@ -67,7 +69,7 @@
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
-  border-radius: 15px;
+  border-radius: var(--mypage-radius-md);
 }
 
 .coupon-card .card-content {
@@ -83,23 +85,23 @@
 .coupon-card .card-desc {
   font-size: 13px;
   font-weight: 700;
-  color: #7e7e7e;
+  color: var(--mypage-muted);
 }
 
 .card-coupon-status {
   min-width: 54px;
   padding: 6px 0;
-  border-radius: 10px;
-  background: #acacac;
-  color: #ffffff;
+  border-radius: var(--mypage-radius-sm);
+  background: rgba(59, 130, 246, 0.12);
+  color: var(--mypage-primary);
   font-size: 12px;
   font-weight: 700;
   text-align: center;
 }
 
 .card-coupon-status.used {
-  background: #626262;
-  color: #ffffff;
+  background: var(--mypage-secondary);
+  color: var(--mypage-muted);
 }
 
 /* 뽑기내역 카드 */
@@ -116,7 +118,7 @@
 .history-card .card-date {
   font-size: 10px;
   font-weight: 500;
-  color: #7e7e7e;
+  color: var(--mypage-muted);
 }
 
 /* 도움말 아이콘 */
@@ -127,23 +129,27 @@
 }
 
 .help-icon {
-  color: #7e7e7e;
+  color: var(--mypage-muted);
   cursor: pointer;
   transition: color 0.2s ease;
+}
+
+.help-icon:hover {
+  color: var(--mypage-primary);
 }
 
 .tooltip {
   position: absolute;
   top: -40px;
   right: 0;
-  background: #626262;
+  background: var(--mypage-foreground);
   color: white;
   padding: 8px 12px;
-  border-radius: 6px;
+  border-radius: var(--mypage-radius-sm);
   font-size: 12px;
   white-space: nowrap;
   z-index: 1000;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--mypage-shadow-hover);
 }
 
 .tooltip::after {
@@ -154,5 +160,5 @@
   margin-left: -5px;
   border-width: 5px;
   border-style: solid;
-  border-color: #626262 transparent transparent transparent;
+  border-color: var(--mypage-foreground) transparent transparent transparent;
 }

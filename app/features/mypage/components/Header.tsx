@@ -9,6 +9,10 @@ const Header: React.FC<HeaderProps> = ({ title, leftChild, backPath }) => {
     navigate(backPath || "/mypage");
   };
 
+  if (!title && !leftChild) {
+    return null;
+  }
+
   return (
     <header className="Header">
       <button type="button" className="header_left" onClick={handleBack}>
