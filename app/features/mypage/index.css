@@ -17,8 +17,7 @@
 }
 
 .mypage-body,
-.mypage-shell,
-.mypage {
+.mypage-shell {
   --mypage-background: #f8fafc;
   --mypage-foreground: #0b1022;
   --mypage-card: #ffffff;
@@ -80,7 +79,7 @@
   padding: 0 28px;
 }
 
-.mypage-shell .mypage-site-logo {
+.mypage-site-logo {
   display: inline-flex;
   align-items: center;
   color: var(--mypage-foreground);
@@ -251,18 +250,13 @@
   height: auto;
   min-height: 100vh;
   padding: 0 16px;
-  box-sizing: border-box;
   color: var(--mypage-foreground);
 }
 
 .mypage-shell *,
 .mypage-shell *::before,
-.mypage-shell *::after,
-.mypage *,
-.mypage *::before,
-.mypage *::after {
+.mypage-shell *::after {
   box-sizing: border-box;
-  font-family: "SUIT Variable", sans-serif;
 }
 
 /* Toast 스타일 커스터마이징 */
@@ -301,7 +295,7 @@
     padding: 0 16px;
   }
 
-  .mypage-shell .mypage-site-logo {
+  .mypage-site-logo {
     font-size: 25px;
   }
 
