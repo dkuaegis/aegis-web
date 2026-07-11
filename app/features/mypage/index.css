@@ -4,32 +4,259 @@
   font-weight: 100 900;
 }
 
+@font-face {
+  font-family: "Stack Sans Notch";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src:
+    url("https://cdn.jsdelivr.net/fontsource/fonts/stack-sans-notch@latest/latin-700-normal.woff2")
+    format("woff2"),
+    url("https://cdn.jsdelivr.net/fontsource/fonts/stack-sans-notch@latest/latin-700-normal.woff")
+    format("woff");
+}
+
+.mypage-body,
+.mypage-shell {
+  --mypage-background: #f8fafc;
+  --mypage-foreground: #0b1022;
+  --mypage-card: #ffffff;
+  --mypage-primary: #3b82f6;
+  --mypage-primary-hover: #2563eb;
+  --mypage-primary-foreground: #ffffff;
+  --mypage-secondary: #eef2f7;
+  --mypage-secondary-hover: #e2e8f0;
+  --mypage-muted: rgba(11, 16, 34, 0.62);
+  --mypage-border: rgba(11, 16, 34, 0.08);
+  --mypage-border-strong: rgba(11, 16, 34, 0.14);
+  --mypage-shadow: 0 4px 20px rgba(11, 16, 34, 0.08);
+  --mypage-shadow-hover: 0 12px 32px rgba(11, 16, 34, 0.12);
+  --mypage-radius-sm: 10px;
+  --mypage-radius-md: 15px;
+  --mypage-radius-lg: 20px;
+}
+
 .mypage {
   margin: 0px;
   width: 100%;
-  background-color: #ffffff;
+  background-color: var(--mypage-background);
   height: auto;
   min-height: 100vh;
+  color: var(--mypage-foreground);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .mypage-body {
-  background-color: #f2f3f8;
+  background-color: var(--mypage-background);
+}
+
+.mypage-shell {
+  min-height: 100vh;
+  background: var(--mypage-background);
+  color: var(--mypage-foreground);
+  font-family: "SUIT Variable", sans-serif;
+}
+
+.mypage-site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid var(--mypage-border);
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(12px);
+}
+
+.mypage-site-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1180px;
+  min-height: 68px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+.mypage-site-logo {
+  display: inline-flex;
+  align-items: center;
+  color: var(--mypage-foreground);
+  font-family: "Stack Sans Notch", "Space Grotesk", sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.mypage-site-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mypage-site-nav-link {
+  position: relative;
+  padding: 10px 12px;
+  color: var(--mypage-muted);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.mypage-site-nav-link::after {
+  position: absolute;
+  right: 12px;
+  bottom: 4px;
+  left: 12px;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--mypage-primary);
+  content: "";
+  opacity: 0;
+  transform: scaleX(0.3);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.mypage-site-nav-link:hover,
+.mypage-site-nav-link.is-active {
+  color: var(--mypage-foreground);
+}
+
+.mypage-site-nav-link:hover::after,
+.mypage-site-nav-link.is-active::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.mypage-site-menu-button {
+  display: none;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.mypage-site-menu-button span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  margin: 5px auto;
+  border-radius: 999px;
+  background: var(--mypage-foreground);
+}
+
+.mypage-site-mobile-menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 70;
+  visibility: hidden;
+  padding: 22px 24px 28px;
+  border-bottom: 1px solid var(--mypage-border);
+  background: var(--mypage-card);
+  box-shadow: var(--mypage-shadow-hover);
+  opacity: 0;
+  transform: translateY(-16px);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    visibility 0.2s ease;
+}
+
+.mypage-site-mobile-menu.is-open {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.mypage-site-mobile-menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.mypage-site-menu-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--mypage-border);
+  border-radius: 999px;
+  background: var(--mypage-secondary);
+  color: var(--mypage-foreground);
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.mypage-site-mobile-nav {
+  display: grid;
+  gap: 6px;
+}
+
+.mypage-site-mobile-link {
+  padding: 15px 12px;
+  border-radius: var(--mypage-radius-sm);
+  color: var(--mypage-foreground);
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-align: center;
+  text-decoration: none;
+}
+
+.mypage-site-mobile-link:hover,
+.mypage-site-mobile-link.is-active {
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--mypage-primary);
+}
+
+.mypage-site-menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  visibility: hidden;
+  border: 0;
+  background: rgba(11, 16, 34, 0.48);
+  opacity: 0;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease;
+}
+
+.mypage-site-menu-overlay.is-open {
+  visibility: visible;
+  opacity: 1;
 }
 
 .mypage#root {
-  background-color: #f2f3f8;
+  background-color: var(--mypage-background);
   max-width: 600px;
   width: 100%;
   margin: 0 auto;
   height: auto;
   min-height: 100vh;
   padding: 0 16px;
-  box-sizing: border-box;
-  color: #000000;
+  color: var(--mypage-foreground);
 }
 
-.mypage * {
-  font-family: "SUIT Variable", sans-serif;
+.mypage-shell *,
+.mypage-shell *::before,
+.mypage-shell *::after {
+  box-sizing: border-box;
 }
 
 /* Toast 스타일 커스터마이징 */
@@ -60,13 +287,30 @@
 /* 모바일 반응형 */
 @media (max-width: 480px) {
   .mypage-body {
-    background-color: #f2f3f8;
+    background-color: var(--mypage-background);
+  }
+
+  .mypage-site-header-inner {
+    min-height: 60px;
+    padding: 0 16px;
+  }
+
+  .mypage-site-logo {
+    font-size: 25px;
+  }
+
+  .mypage-site-nav {
+    display: none;
+  }
+
+  .mypage-site-menu-button {
+    display: block;
   }
 
   .mypage {
     height: auto;
     min-height: 100dvh;
-    background-color: #f2f3f8;
+    background-color: var(--mypage-background);
     overflow-y: auto;
   }
 
@@ -82,7 +326,7 @@
 /* 아이폰 SE 등 작은 화면 대응 */
 @media (max-width: 375px) {
   .mypage-body {
-    background-color: #f2f3f8;
+    background-color: var(--mypage-background);
     overflow-x: hidden;
   }
 
@@ -90,7 +334,7 @@
     width: 100vw;
     height: auto;
     min-height: 100dvh;
-    background-color: #f2f3f8;
+    background-color: var(--mypage-background);
     overflow-x: hidden;
     overflow-y: auto;
   }
