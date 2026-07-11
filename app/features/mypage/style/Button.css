@@ -1,12 +1,35 @@
 .Button {
-  background-color: #ffffff;
+  background-color: var(--mypage-card);
+  color: var(--mypage-foreground);
   cursor: pointer;
-  border: none;
-  border-radius: 15px;
+  border: 1px solid var(--mypage-border);
+  border-radius: var(--mypage-radius-md);
   padding: 10px 20px;
   font-size: 18px;
   font-weight: 700;
   white-space: nowrap;
+  box-shadow: var(--mypage-shadow);
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    color 0.2s ease;
+}
+
+.Button:hover {
+  border-color: var(--mypage-border-strong);
+  box-shadow: var(--mypage-shadow-hover);
+  transform: translateY(-2px);
+}
+
+.Button:active {
+  transform: translateY(0);
+}
+
+.Button:focus-visible {
+  outline: 3px solid rgba(59, 130, 246, 0.24);
+  outline-offset: 2px;
 }
 
 .point-box {
@@ -23,8 +46,16 @@
 }
 
 .point-arrow {
-  background: none;
-  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--mypage-secondary);
+  color: var(--mypage-primary);
+  font-size: 16px;
+  line-height: 1;
 }
 
 .main-button-group {
@@ -35,7 +66,6 @@
 }
 
 .Button_POINT {
-  color: #000000;
   width: 325px;
   height: 82px;
   display: flex;
@@ -44,35 +74,36 @@
 }
 
 .Button_MAIN {
-  color: #000000;
   width: 152px;
   height: 65px;
 }
 
 .Button_BACKHOME {
-  background-color: #000000;
-  color: #ffffff;
+  background-color: var(--mypage-primary);
+  color: var(--mypage-primary-foreground);
+  border-color: transparent;
   width: 320px;
   height: 50px;
   margin-top: 40px;
 }
 
 .Button_SIGNUP {
-  background-color: #dbdbdb;
-  color: #000000;
+  background-color: var(--mypage-secondary);
+  color: var(--mypage-foreground);
   width: 320px;
   height: 50px;
 }
 
 .Button_LOGIN {
-  background-color: #000000;
-  color: #ffffff;
+  background-color: var(--mypage-primary);
+  color: var(--mypage-primary-foreground);
+  border-color: transparent;
   width: 320px;
   height: 50px;
 }
 
 .Button_ACTIVITY {
-  color: #7e7e7e;
+  color: var(--mypage-muted);
   width: 152px;
   height: 140px;
   display: flex;
@@ -86,10 +117,11 @@
   border: none;
   font-size: 16px;
   font-weight: 500;
-  color: #7e7e7e;
+  color: var(--mypage-primary);
   text-decoration: underline;
   margin-top: 16px;
   cursor: pointer;
+  box-shadow: none;
 }
 
 .Button_CLOSE {
@@ -103,36 +135,40 @@
   margin-top: 60px;
   cursor: pointer;
   z-index: 1001;
+  box-shadow: none;
 }
 
 .Button_EDITSAVE {
-  background-color: #000000;
+  background-color: var(--mypage-primary);
   width: 152px;
   height: 50px;
-  color: #ffffff;
+  color: var(--mypage-primary-foreground);
+  border-color: transparent;
 }
 
 .Button_EDITRETURN {
-  background-color: #dbdbdb;
+  background-color: var(--mypage-secondary);
   width: 152px;
   height: 50px;
-  color: #000000;
+  color: var(--mypage-foreground);
 }
 
 .Button_EXCHANGE {
-  background-color: #000000;
+  background-color: var(--mypage-primary);
   width: 320px;
   height: 50px;
-  color: #ffffff;
+  color: var(--mypage-primary-foreground);
+  border-color: transparent;
   margin: 24px 0 24px 0;
 }
 
 .Button_GACHASAVE {
-  background-color: #000000;
+  background-color: var(--mypage-primary);
   width: 216px;
   height: 45px;
-  border-radius: 10px;
-  color: #ffffff;
+  border-radius: var(--mypage-radius-sm);
+  color: var(--mypage-primary-foreground);
+  border-color: transparent;
   font-weight: 700;
   font-size: 16px;
   position: static;
@@ -150,11 +186,11 @@
 }
 
 .Button_GACHAHIS {
-  background-color: #dbdbdb;
+  background-color: var(--mypage-secondary);
   width: 216px;
   height: 45px;
-  border-radius: 10px;
-  color: #000000;
+  border-radius: var(--mypage-radius-sm);
+  color: var(--mypage-foreground);
   font-weight: 700;
   font-size: 16px;
   position: static;
@@ -169,6 +205,28 @@
   align-items: center;
   justify-content: center;
   margin: 0 auto 10px;
+}
+
+.Button_BACKHOME:hover,
+.Button_LOGIN:hover,
+.Button_EDITSAVE:hover,
+.Button_EXCHANGE:hover,
+.Button_GACHASAVE:hover {
+  background-color: var(--mypage-primary-hover);
+  border-color: transparent;
+}
+
+.Button_SIGNUP:hover,
+.Button_EDITRETURN:hover,
+.Button_GACHAHIS:hover {
+  background-color: var(--mypage-secondary-hover);
+}
+
+.Button_REFRESH:hover,
+.Button_CLOSE:hover {
+  border-color: transparent;
+  box-shadow: none;
+  transform: none;
 }
 
 .button-group-section {

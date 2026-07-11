@@ -1,8 +1,13 @@
 .Profile {
   width: 325px;
-  height: 142px;
+  min-height: 142px;
   display: flex;
   align-items: center;
+  background: var(--mypage-card);
+  border: 1px solid var(--mypage-border);
+  border-radius: var(--mypage-radius-lg);
+  box-shadow: var(--mypage-shadow);
+  padding: 22px 24px;
   margin-top: 50px;
   margin-bottom: 35px;
   margin-left: auto;
@@ -26,15 +31,16 @@
 }
 
 .profile_edit > img {
-  border: 1px solid #f2f3f8;
+  border: 1px solid var(--mypage-border);
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(11, 16, 34, 0.12);
 }
 
 .profile_img {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: 15px;
-  margin-right: 35px;
+  margin-right: 28px;
 }
 
 .profile_info {
@@ -47,10 +53,11 @@
   font-size: 20px;
   font-weight: 800;
   margin-bottom: 10px;
+  color: var(--mypage-foreground);
 }
 
 .profile_greeting {
   font-size: 16px;
   font-weight: 500;
-  color: #7e7e7e;
+  color: var(--mypage-muted);
 }

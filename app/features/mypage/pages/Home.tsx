@@ -5,11 +5,8 @@ import { issueQRCode } from "../api/QRCode";
 import pointImg from "../assets/point.svg";
 import ActivitySection from "../components/ActivitySection";
 import Button from "../components/Button";
-import Header from "../components/Header";
 import Profile from "../components/Profile";
 import QRModal from "../components/QRModal";
-
-//import aegisLogo from '../assets/aegisLogo.svg';/
 
 const Home: React.FC = () => {
   const [mypage, setMypage] = useState<{
@@ -53,7 +50,6 @@ const Home: React.FC = () => {
 
   return (
     <div>
-      <Header leftChild={""} title={""} />
       <Profile mypage={mypage} />
       <div className="point-box">
         <Button
