@@ -1,4 +1,5 @@
 import { Progress } from "@join/components/ui/progress";
+import Chat from "@join/pages/Chat/Chat";
 import Payment from "@join/pages/Payment/Payment";
 import PersonalInfo from "@join/pages/PersonalInfo/PersonalInfo";
 import Survey from "@join/pages/Survey/Survey";
@@ -63,6 +64,7 @@ const App = () => {
             <Route path="agreement" element={<Agreement />} />
             <Route path="personal-info" element={<PersonalInfo />} />
             <Route path="survey" element={<Survey />} />
+            <Route path="chat" element={<Chat />} />
             <Route path="payment" element={<Payment />} />
           </Route>
         </Routes>

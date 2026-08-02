@@ -3,6 +3,7 @@ export const JOIN_STEPS: readonly string[] = [
   "agreement",
   "personal-info",
   "survey",
+  "chat",
   "payment",
 ] as const;
 
@@ -14,5 +15,6 @@ export const JOIN_STEP_KOREAN_MAP: { [key in JoinStep]: string } = {
   agreement: "회칙 동의",
   "personal-info": "기본 인적사항",
   survey: "가입 설문",
+  chat: "팀채팅방 가입",
   payment: "회비 납부",
 };
