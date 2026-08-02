@@ -1,11 +1,11 @@
-import DiscordLinkButton from "@join/components/ui/custom/discord-link-button";
+import KakaoLinkButton from "@join/components/ui/custom/kakao-link-button";
 import NavigationButtons from "@join/components/ui/custom/navigationButton";
 import useFunnel from "@join/hooks/useFunnel";
 import { Analytics } from "@join/service/analytics";
 import { useState } from "react";
 
-const NOTICE_URL = import.meta.env.VITE_DISCORD_NOTICE_URL;
-const COMMUNITY_URL = import.meta.env.VITE_DISCORD_COMMUNITY_URL;
+const NOTICE_ROOM_URL = import.meta.env.VITE_KAKAO_NOTICEROOM_URL;
+const COMMUNITY_ROOM_URL = import.meta.env.VITE_KAKAO_COMMUNITYROOM_URL;
 
 interface JoinedState {
   notice: boolean;
@@ -28,20 +28,23 @@ const Chat = () => {
   return (
     <div className="space-y-8">
       <p className="line-breaks text-muted-foreground">
-        공지 확인과 소통은 팀 채팅방에서 이루어져요. 아래 두 채팅방에 모두
-        참여해주세요.
+        공지 확인과 소통은 팀 채팅방에서 이루어져요.
+        <br />
+        아래 두 채팅방에 모두 참여를 신청해주세요.
+        <br />
+        운영진이 확인한 뒤 수락해드려요.
       </p>
 
       <div className="flex flex-col gap-3">
-        <DiscordLinkButton
+        <KakaoLinkButton
           text="공지방 가입하기"
-          url={NOTICE_URL}
+          url={NOTICE_ROOM_URL}
           completed={joined.notice}
           onClick={() => handleJoin("notice")}
         />
-        <DiscordLinkButton
+        <KakaoLinkButton
           text="소통방 가입하기"
-          url={COMMUNITY_URL}
+          url={COMMUNITY_ROOM_URL}
           completed={joined.community}
           onClick={() => handleJoin("community")}
         />
@@ -49,8 +52,8 @@ const Chat = () => {
 
       <p className="text-center text-muted-foreground text-sm">
         {allJoined
-          ? "두 채팅방 참여를 확인했어요"
-          : "두 채팅방에 모두 참여해야 다음으로 넘어갈 수 있어요"}
+          ? "두 채팅방 참여 신청을 확인했어요"
+          : "두 채팅방에 모두 신청해야 다음으로 넘어갈 수 있어요"}
       </p>
 
       <NavigationButtons
