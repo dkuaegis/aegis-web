@@ -1,5 +1,6 @@
 import KakaoIcon from "@join/assets/kakao-logo.svg";
 import { Button } from "@join/components/ui/button";
+import KakaoLinkButton from "@join/components/ui/custom/kakao-link-button";
 import {
   Dialog,
   DialogContent,
@@ -54,9 +55,9 @@ const Content = () => {
     }
   };
 
+  // 새 탭 열기는 KakaoLinkButton 의 링크가 담당하므로 여기서는 트래킹만 남깁니다.
   const handleJoin = () => {
     Analytics.safeTrack("Complete_Kakao_Join_Click", { category: "Complete" });
-    window.open(chatroomUrl, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -87,13 +88,7 @@ const Content = () => {
       </div>
 
       {/* 2. 참여하기 버튼 */}
-      <Button
-        size="lg"
-        className="w-full bg-[#FEE500] font-bold text-black transition-all hover:bg-[#F7D300] active:scale-95"
-        onClick={handleJoin}
-      >
-        입장하기
-      </Button>
+      <KakaoLinkButton text="입장하기" url={chatroomUrl} onClick={handleJoin} />
     </div>
   );
 };
@@ -122,11 +117,7 @@ const KakaoChatroom = () => {
     return (
       <Dialog open={open} onOpenChange={handleOpenChange}>
         <DialogTrigger asChild>
-          <Button
-            size="lg"
-            className="w-full bg-[#FEE500] text-black transition-all hover:bg-[#F7D300] active:scale-95"
-            asChild
-          >
+          <Button variant="kakao" size="lg" className="w-full" asChild>
             <TriggerButton />
           </Button>
         </DialogTrigger>
@@ -144,11 +135,7 @@ const KakaoChatroom = () => {
   return (
     <Drawer open={open} onOpenChange={handleOpenChange}>
       <DrawerTrigger asChild>
-        <Button
-          size="lg"
-          className="w-full bg-[#FEE500] text-black transition-all hover:bg-[#F7D300] active:scale-95"
-          asChild
-        >
+        <Button variant="kakao" size="lg" className="w-full" asChild>
           <TriggerButton />
         </Button>
       </DrawerTrigger>
