@@ -69,4 +69,13 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 }));
 
-useAuthStore.getState().checkAuth();
+// 백엔드 없이 가입 퍼널 화면만 확인하기 위한 개발용 우회 스위치입니다.
+// import.meta.env.DEV 로 한 번 더 막아 두어 프로덕션 빌드에서는 활성화되지 않습니다.
+const isDevAuthBypassed =
+  import.meta.env.DEV && import.meta.env.VITE_DEV_BYPASS_AUTH === "true";
+
+if (isDevAuthBypassed) {
+  useAuthStore.setState({ isAuthenticated: AuthStatus.NOT_COMPLETED });
+} else {
+  useAuthStore.getState().checkAuth();
+}
