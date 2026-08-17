@@ -29,7 +29,7 @@ function Navigation({ currentPage = "home" }: NavigationProps) {
         activitySection.scrollIntoView({ behavior: "smooth" });
       }
     } else {
-      navigate("/");
+      navigate("/#activity");
       setTimeout(() => {
         const activitySection = document.getElementById("activity");
         if (activitySection) {
