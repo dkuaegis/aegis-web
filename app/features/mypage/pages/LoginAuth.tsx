@@ -1,24 +1,14 @@
 import { createApiUrl } from "@app/lib/apiBaseUrl";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import loginImage from "../assets/loginImage.webp";
 import Button from "../components/Button";
 import { useAuth } from "../contexts/AuthContext";
-import { useExternalBrowser } from "../hooks/useExternalBrowser";
 import "../style/LoginAuth.css";
 
 const LoginAuth = () => {
-  const navigate = useNavigate();
   const { checkAuthStatus } = useAuth();
-  const { isInAppBrowser } = useExternalBrowser();
 
   useEffect(() => {
-    // 인앱 브라우저 체크 후 리디렉션
-    if (isInAppBrowser) {
-      navigate("/mypage/login/redirect");
-      return;
-    }
-
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get("login") === "success") {
       const verifyAuth = async () => {
@@ -27,7 +17,7 @@ const LoginAuth = () => {
 
       verifyAuth();
     }
-  }, [navigate, checkAuthStatus, isInAppBrowser]);
+  }, [checkAuthStatus]);
 
   const handleGoogleLogin = () => {
     // 브라우저 호환성을 위한 OAuth 리다이렉트 처리

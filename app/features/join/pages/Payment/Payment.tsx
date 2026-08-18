@@ -10,7 +10,6 @@ import Coupon from "../Coupon/Coupon";
 import AdminInfoDrawer from "./Payment.AdminInfoDrawer";
 import PaymentAmount from "./Payment.Amount";
 import Information from "./Payment.Information";
-import NoticeModal from "./Payment.NoticeModal";
 import { usePaymentPolling } from "./usePaymentPolling";
 
 const Complete = React.lazy(
@@ -52,7 +51,6 @@ const Payment = () => {
   const [currentView, setCurrentView] = useState<"coupon" | "payment">(
     "payment"
   );
-  const [showNoticeModal, setShowNoticeModal] = useState(true);
   const completeRegistration = useAuthStore(
     (state) => state.completeRegistration
   );
@@ -80,11 +78,6 @@ const Payment = () => {
 
   return (
     <div className="relative">
-      {/* 송금 안내 모달 */}
-      {!isValid && (
-        <NoticeModal open={showNoticeModal} onOpenChange={setShowNoticeModal} />
-      )}
-
       <div className={cn("line-breaks space-y-8")}>
         {!isValid ? (
           <>

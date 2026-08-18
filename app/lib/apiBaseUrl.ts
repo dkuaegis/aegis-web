@@ -22,9 +22,7 @@ export function getApiBaseUrl() {
     return undefined;
   }
 
-  return normalizeApiBaseUrl(
-    import.meta.env.VITE_API_URL ?? import.meta.env.VITE_API_BASE_URL
-  );
+  return normalizeApiBaseUrl(import.meta.env.VITE_API_URL);
 }
 
 export function createApiUrl(path: string) {

@@ -1,12 +1,10 @@
 import { createApiUrl } from "@app/lib/apiBaseUrl";
 import { Button } from "@study/components/ui/button";
 import { Card, CardContent } from "@study/components/ui/card";
-import { useExternalBrowser } from "@study/hooks/useExternalBrowser";
 import { gsap } from "gsap";
 import type { LucideIcon } from "lucide-react";
 import { BrainCircuit, CodeXml, Gamepad2, Globe, Lock } from "lucide-react";
 import { useEffect, useRef } from "react";
-import BrowserRedirectPage from "./BrowserRedirectPage";
 
 interface IconConfig {
   id: string;
@@ -36,7 +34,6 @@ const INITIAL_STATE = {
 } as const;
 
 const LoginPage = () => {
-  const { isInAppBrowser } = useExternalBrowser();
   const iconsRef = useRef<(HTMLDivElement | null)[]>([]);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
@@ -105,10 +102,6 @@ const LoginPage = () => {
       tl.kill();
     };
   }, []);
-
-  if (isInAppBrowser) {
-    return <BrowserRedirectPage />;
-  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-100 p-4">

@@ -36,7 +36,7 @@ const normalizeProxyTarget = (value: string | undefined) => {
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, appRoot, "");
   const apiProxyTarget = normalizeProxyTarget(
-    env.VITE_API_PROXY_TARGET ?? env.VITE_API_URL ?? env.VITE_API_BASE_URL
+    env.VITE_API_PROXY_TARGET ?? env.VITE_API_URL
   );
 
   return {

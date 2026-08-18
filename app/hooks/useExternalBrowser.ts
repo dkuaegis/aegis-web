@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 
-// 인앱 브라우저 식별을 위한 User Agent 패턴과 표시 이름
 const IN_APP_BROWSER_PATTERNS = [
   { pattern: "kakaotalk", name: "카카오톡" },
   { pattern: "instagram", name: "인스타그램" },
@@ -12,25 +11,20 @@ const IN_APP_BROWSER_PATTERNS = [
   { pattern: "snapchat", name: "스냅챗" },
   { pattern: "tiktok", name: "틱톡" },
   { pattern: "whatsapp", name: "왓츠앱" },
-];
+] as const;
 
 export function useExternalBrowser() {
   const [isInAppBrowser, setIsInAppBrowser] = useState(false);
-  const [browserName, setBrowserName] = useState<string>("인앱 브라우저");
+  const [browserName, setBrowserName] = useState("인앱 브라우저");
 
   useEffect(() => {
     const ua = navigator.userAgent.toLowerCase();
-    const detected = IN_APP_BROWSER_PATTERNS.find((browser) =>
-      ua.includes(browser.pattern)
+    const detected = IN_APP_BROWSER_PATTERNS.find(({ pattern }) =>
+      ua.includes(pattern)
     );
 
-    if (detected) {
-      setIsInAppBrowser(true);
-      setBrowserName(detected.name);
-    } else {
-      setIsInAppBrowser(false);
-      setBrowserName("인앱 브라우저");
-    }
+    setIsInAppBrowser(Boolean(detected));
+    setBrowserName(detected?.name ?? "인앱 브라우저");
   }, []);
 
   const openInDefaultBrowser = useCallback(() => {
@@ -39,27 +33,21 @@ export function useExternalBrowser() {
     const ua = navigator.userAgent.toLowerCase();
     const isAndroid = ua.includes("android");
     const isIOS = /iphone|ipad|ipod/.test(ua);
-
     const currentUrl = window.location.href;
 
     if (isAndroid) {
-      const urlObj = new URL(currentUrl);
-      const intentBody = urlObj.host + urlObj.pathname + urlObj.search;
+      const url = new URL(currentUrl);
+      const intentBody = url.host + url.pathname + url.search + url.hash;
       location.href =
-        "intent://" +
-        intentBody +
-        "#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=" +
-        encodeURIComponent(currentUrl) +
-        ";end;";
+        `intent://${intentBody}` +
+        "#Intent;scheme=https;package=com.android.chrome;" +
+        `S.browser_fallback_url=${encodeURIComponent(currentUrl)};end;`;
       return;
     }
 
     if (isIOS && browserName === "카카오톡") {
       location.href = `kakaotalk://web/openExternal?url=${encodeURIComponent(currentUrl)}`;
-      return;
     }
-
-    // iOS 기타 인앱 브라우저: 자동 전환 불가, 안내 페이지 표시
   }, [isInAppBrowser, browserName]);
 
   return { isInAppBrowser, browserName, openInDefaultBrowser };
