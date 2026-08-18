@@ -1,6 +1,8 @@
 import type { LinksFunction } from "react-router";
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 import { checkAuth } from "./api/auth";
+import BrowserRedirectPage from "./components/BrowserRedirectPage";
+import { useExternalBrowser } from "./hooks/useExternalBrowser";
 import "./index.css";
 
 export const links: LinksFunction = () => [
@@ -31,6 +33,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  const { isInAppBrowser } = useExternalBrowser();
+
+  if (isInAppBrowser) {
+    return <BrowserRedirectPage />;
+  }
+
   return <Outlet />;
 }
 

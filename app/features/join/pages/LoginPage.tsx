@@ -1,21 +1,13 @@
 import { createApiUrl } from "@app/lib/apiBaseUrl";
 import { Button } from "@join/components/ui/button";
-import { useExternalBrowser } from "@join/hooks/useExternalBrowser";
 import { Analytics } from "@join/service/analytics";
 import { ExternalLinkIcon } from "lucide-react";
-import BrowserRedirectPage from "./BrowserRedirectPage";
 
 const GOOGLE_LOGIN_URL = createApiUrl("oauth2/authorization/google");
 const AEGIS_HOMEPAGE_URL = "/";
 const GMAIL_GUIDE_URL = "https://sites.google.com/dankook.ac.kr/help";
 
 const LoginPage = () => {
-  const { isKakaoInApp } = useExternalBrowser();
-
-  if (isKakaoInApp) {
-    return <BrowserRedirectPage />;
-  }
-
   return (
     <div className="line-breaks flex min-h-screen flex-col items-center justify-center bg-background">
       <div className="w-full max-w-[400px] space-y-6 p-4">
