@@ -17,6 +17,8 @@ const JoinReason = () => {
       </Label>
       <Textarea
         id="joinReason"
+        className="join-reason-textarea"
+        rows={8}
         placeholder="동아리에서 어떤 활동을 하고 싶으신가요? 자유롭게 작성해주세요!"
         maxLength={510}
         {...register("joinReason")}

@@ -1,4 +1,3 @@
-import { Stack } from "@join/components/layout/Stack";
 import { JOIN_STEP_KOREAN_MAP } from "@join/constants/joinSteps";
 import useFunnel from "@join/hooks/useFunnel";
 import { ArrowLeftIcon } from "lucide-react";
@@ -14,26 +13,16 @@ const Title = ({ currentStep }: TitleProps) => {
   const isFirstStep = currentStep === stepKeys[0];
   const isLastStep = currentStep === stepKeys[stepKeys.length - 1];
 
-  if (isFirstStep || isLastStep) {
-    return (
-      <div className="flex h-9 items-center justify-center">
-        <h1 className="font-bold text-2xl">
-          {JOIN_STEP_KOREAN_MAP[currentStep]}
-        </h1>
-      </div>
-    );
-  } else {
-    return (
-      <Stack>
+  return (
+    <header className="join-heading">
+      {!isFirstStep && !isLastStep && (
         <Button variant="icon" aria-label="Go back" onClick={prev}>
           <ArrowLeftIcon size={28} />
         </Button>
-        <h1 className="font-bold text-2xl">
-          {JOIN_STEP_KOREAN_MAP[currentStep]}
-        </h1>
-      </Stack>
-    );
-  }
+      )}
+      <h1>{JOIN_STEP_KOREAN_MAP[currentStep]}</h1>
+    </header>
+  );
 };
 
 export default Title;
