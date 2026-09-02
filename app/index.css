@@ -102,6 +102,39 @@
   }
 }
 
+.auth-continue-page {
+  display: grid;
+  min-height: 100dvh;
+  place-content: center;
+  justify-items: center;
+  gap: 1rem;
+  color: #626269;
+  background: #f8f8f7;
+  font-family:
+    "Pretendard Variable", Pretendard, "Apple SD Gothic Neo", sans-serif;
+}
+
+.auth-continue-page p {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.auth-continue-spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid rgb(24 24 27 / 16%);
+  border-top-color: #2852d8;
+  border-radius: 50%;
+  animation: auth-continue-spin 700ms linear infinite;
+}
+
+@keyframes auth-continue-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .hero {
   min-height: 100vh;
   padding: 32px 72px 80px;

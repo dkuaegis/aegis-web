@@ -1,4 +1,4 @@
-import { apiClient } from "@study/lib/apiClient";
+import { api } from "@app/lib/api";
 import { API_ENDPOINTS } from "@study/lib/apiEndpoints";
 import { handleHTTPError } from "@study/lib/apiUtils";
 import { isValidId } from "@study/lib/utils";
@@ -74,9 +74,10 @@ export async function fetchStudyApplications(
   signal?: AbortSignal
 ): Promise<ApplicationApiResponse[]> {
   try {
-    return await apiClient
-      .get(API_ENDPOINTS.STUDY_APPLICATIONS(studyId), { signal })
-      .json<ApplicationApiResponse[]>();
+    return await api.get<ApplicationApiResponse[]>(
+      API_ENDPOINTS.STUDY_APPLICATIONS(studyId),
+      signal
+    );
   } catch (error: unknown) {
     handleHTTPError(error, ERROR_MESSAGES.fetchApplications);
   }
@@ -88,11 +89,10 @@ export async function fetchApplicationText(
   signal?: AbortSignal
 ): Promise<ApplicationTextResponse> {
   try {
-    return await apiClient
-      .get(API_ENDPOINTS.APPLICATION_DETAIL(studyId, applicationId), {
-        signal,
-      })
-      .json<ApplicationTextResponse>();
+    return await api.get<ApplicationTextResponse>(
+      API_ENDPOINTS.APPLICATION_DETAIL(studyId, applicationId),
+      signal
+    );
   } catch (error: unknown) {
     handleHTTPError(error, ERROR_MESSAGES.fetchApplicationText);
   }
@@ -105,12 +105,10 @@ export async function updateApplicationStatus(
   signal?: AbortSignal
 ): Promise<void> {
   try {
-    await apiClient.patch(
+    await api.patch(
       API_ENDPOINTS.UPDATE_APPLICATION_STATUS(studyId, applicationId),
-      {
-        json: payload,
-        signal,
-      }
+      payload,
+      signal
     );
   } catch (error: unknown) {
     handleHTTPError(error, ERROR_MESSAGES.updateStatus);
@@ -123,11 +121,10 @@ export async function approveApplication(
   signal?: AbortSignal
 ): Promise<void> {
   try {
-    await apiClient.put(
+    await api.put(
       API_ENDPOINTS.APPROVE_APPLICATION(studyId, applicationId),
-      {
-        signal,
-      }
+      undefined,
+      signal
     );
   } catch (error: unknown) {
     handleHTTPError(error, ERROR_MESSAGES.approve);
@@ -140,11 +137,10 @@ export async function rejectApplication(
   signal?: AbortSignal
 ): Promise<void> {
   try {
-    await apiClient.put(
+    await api.put(
       API_ENDPOINTS.REJECT_APPLICATION(studyId, applicationId),
-      {
-        signal,
-      }
+      undefined,
+      signal
     );
   } catch (error: unknown) {
     handleHTTPError(error, ERROR_MESSAGES.reject);

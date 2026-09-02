@@ -1,5 +1,5 @@
+import { api } from "@app/lib/api";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { httpClient } from "@join/api/api";
 import NavigationButtons from "@join/components/ui/custom/navigationButton";
 import { useNextStep } from "@join/hooks/useNextStep";
 import { useSurveyStore } from "@join/stores/surveyStore";
@@ -10,7 +10,7 @@ import JoinReason from "./Survey.JoinReason";
 import { type SurveyFormValues, surveySchema } from "./Survey.schema";
 
 const submitSurveyData = async (data: SurveyFormValues) => {
-  return httpClient.post("/survey", data);
+  return api.post("/survey", data);
 };
 
 const Survey = () => {

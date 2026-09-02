@@ -1,4 +1,4 @@
-import { createApiUrl } from "@app/lib/apiBaseUrl";
+import { googleLoginUrl } from "@app/lib/api";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { type AuthUser, checkAuth } from "../api/auth";
@@ -14,7 +14,6 @@ function Navigation({ currentPage = "home" }: NavigationProps) {
     status: null,
   });
   const navigate = useNavigate();
-  const googleLoginUrl = createApiUrl("oauth2/authorization/google");
 
   useEffect(() => {
     checkAuth().then(setAuthUser);

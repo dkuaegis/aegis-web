@@ -18,12 +18,6 @@ function Authentication({ children }: AuthenticationProps) {
   const location = useLocation();
 
   if (isAuthenticated === AuthStatus.LOADING) {
-    if (
-      location.pathname === JOIN_BASE_PATH ||
-      location.pathname === `${JOIN_BASE_PATH}/login`
-    ) {
-      return children;
-    }
     return null;
   }
 
@@ -32,7 +26,7 @@ function Authentication({ children }: AuthenticationProps) {
       location.pathname === JOIN_BASE_PATH ||
       location.pathname === `${JOIN_BASE_PATH}/login`
     ) {
-      return children;
+      return <Navigate to="/auth/continue?intent=join" replace />;
     } else {
       // 로그인 페이지로 강제 이동될 때 이벤트 기록
       Analytics.safeTrack("Redirect_To_Login", {

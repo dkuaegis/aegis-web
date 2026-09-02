@@ -1,4 +1,4 @@
-import { apiClient, HTTPError } from "@study/lib/apiClient";
+import { ApiError, api } from "@app/lib/api";
 
 export interface AttendanceCodeResponse {
   code: string;
@@ -53,13 +53,13 @@ export async function fetchAttendanceCode(
   studyId: number
 ): Promise<AttendanceCodeResponse> {
   try {
-    const res = await apiClient
-      .post(`studies/${studyId}/attendance-code`)
-      .json<AttendanceCodeResponse>();
+    const res = await api.post<AttendanceCodeResponse>(
+      `studies/${studyId}/attendance-code`
+    );
     return res;
   } catch (err: unknown) {
-    if (err instanceof HTTPError) {
-      const message = getAttendanceCodeErrorMessage(err.response.status);
+    if (err instanceof ApiError) {
+      const message = getAttendanceCodeErrorMessage(err.status);
       throw new Error(message);
     }
     throw new Error("출석 코드 발급 중 오류가 발생했습니다.");
@@ -71,15 +71,14 @@ export async function submitAttendanceCode(
   code: string
 ): Promise<AttendanceSubmissionResponse> {
   try {
-    const res = await apiClient
-      .post(`studies/${studyId}/attendance`, {
-        json: { code },
-      })
-      .json<AttendanceSubmissionResponse>();
+    const res = await api.post<AttendanceSubmissionResponse>(
+      `studies/${studyId}/attendance`,
+      { code }
+    );
     return res;
   } catch (err: unknown) {
-    if (err instanceof HTTPError) {
-      const message = getAttendanceErrorMessage(err.response.status);
+    if (err instanceof ApiError) {
+      const message = getAttendanceErrorMessage(err.status);
       throw new Error(message);
     }
     throw new Error("출석 처리 중 오류가 발생했습니다.");
@@ -108,13 +107,14 @@ export async function fetchAttendanceInstructor(
   signal?: AbortSignal
 ): Promise<AttendanceInstructorResponse> {
   try {
-    const res = await apiClient
-      .get(`studies/${studyId}/attendance-instructor`, { signal })
-      .json<AttendanceInstructorResponse>();
+    const res = await api.get<AttendanceInstructorResponse>(
+      `studies/${studyId}/attendance-instructor`,
+      signal
+    );
     return res;
   } catch (err: unknown) {
-    if (err instanceof HTTPError) {
-      const message = getAttendanceInstructorErrorMessage(err.response.status);
+    if (err instanceof ApiError) {
+      const message = getAttendanceInstructorErrorMessage(err.status);
       throw new Error(message);
     }
     throw new Error("출석 정보를 불러오는 중 오류가 발생했습니다.");

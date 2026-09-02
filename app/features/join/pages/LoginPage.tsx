@@ -1,9 +1,8 @@
-import { createApiUrl } from "@app/lib/apiBaseUrl";
+import { googleLoginUrl } from "@app/lib/api";
 import { Button } from "@join/components/ui/button";
 import { Analytics } from "@join/service/analytics";
 import { ExternalLinkIcon } from "lucide-react";
 
-const GOOGLE_LOGIN_URL = createApiUrl("oauth2/authorization/google");
 const AEGIS_HOMEPAGE_URL = "/";
 const GMAIL_GUIDE_URL = "https://sites.google.com/dankook.ac.kr/help";
 
@@ -34,7 +33,7 @@ const LoginPage = () => {
           className="w-full"
           asChild
         >
-          <a href={GOOGLE_LOGIN_URL}>Google로 로그인</a>
+          <a href={googleLoginUrl}>Google로 로그인</a>
         </Button>
         <Button
           onClick={() => {

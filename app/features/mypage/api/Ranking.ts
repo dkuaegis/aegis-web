@@ -5,7 +5,6 @@ import type {
   RankingListItemData,
 } from "../model/Ranking";
 import NoneIcon from "../public/NONE.svg";
-import { getAxiosErrorMessage, mypageApiClient } from "./client";
 
 export async function getRankingData(): Promise<{
   info: RankingInfoProps;
@@ -29,12 +28,9 @@ export async function getRankingData(): Promise<{
   };
 
   try {
-    const response = await mypageApiClient.get<typeof json>("/points/ranking", {
-      headers: { accept: "application/json" },
-    });
-    json = response.data;
+    json = await api.get<typeof json>("/points/ranking");
   } catch (error) {
-    throw new Error(getAxiosErrorMessage(error, "랭킹 조회 실패"));
+    throw new Error(getApiErrorMessage(error, "랭킹 조회 실패"));
   }
 
   const sortedTop10 = [...json.top10].sort((a, b) => a.rank - b.rank);
@@ -59,3 +55,5 @@ export async function getRankingData(): Promise<{
       : null,
   };
 }
+
+import { api, getApiErrorMessage } from "@app/lib/api";
