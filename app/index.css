@@ -129,6 +129,17 @@
   animation: auth-continue-spin 700ms linear infinite;
 }
 
+.auth-continue-retry {
+  padding: 0.7rem 1.25rem;
+  border: 0;
+  border-radius: 0.6rem;
+  background: #2852d8;
+  color: white;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+
 @keyframes auth-continue-spin {
   to {
     transform: rotate(360deg);

@@ -22,10 +22,7 @@ function Authentication({ children }: AuthenticationProps) {
   }
 
   if (isAuthenticated === AuthStatus.UNAUTHORIZED) {
-    if (
-      location.pathname === JOIN_BASE_PATH ||
-      location.pathname === `${JOIN_BASE_PATH}/login`
-    ) {
+    if (location.pathname === JOIN_BASE_PATH) {
       return <Navigate to="/auth/continue?intent=join" replace />;
     } else {
       // 로그인 페이지로 강제 이동될 때 이벤트 기록
@@ -33,13 +30,7 @@ function Authentication({ children }: AuthenticationProps) {
         category: "Auth",
         from_path: location.pathname, // 어느 페이지에 접근하려 했는지 기록
       });
-      return (
-        <Navigate
-          to={`${JOIN_BASE_PATH}/login`}
-          state={{ from: location }}
-          replace
-        />
-      );
+      return <Navigate to="/auth/continue?intent=join" replace />;
     }
   }
 

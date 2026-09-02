@@ -11,7 +11,6 @@ import Title from "./components/ui/custom/title";
 import useFunnel from "./hooks/useFunnel";
 import Agreement from "./pages/Agreement/Agreement";
 import JoinComplete from "./pages/JoinComplete/JoinComplete";
-import LoginPage from "./pages/LoginPage";
 import { Analytics } from "./service/analytics";
 
 const useAnalyticsSetup = () => {
@@ -80,8 +79,6 @@ const App = () => {
         <Toaster position="bottom-center" />
 
         <Routes>
-          <Route index element={<LoginPage />} />
-          <Route path="login" element={<LoginPage />} />
           <Route path="complete" element={<JoinComplete />} />
 
           <Route element={<FunnelLayout />}>

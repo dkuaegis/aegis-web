@@ -1,7 +1,23 @@
-const configuredApiUrl = import.meta.env.VITE_API_URL?.trim();
-const API_BASE_URL = (
-  configuredApiUrl || "https://dev-api.dkuaegis.org"
-).replace(/\/+$/, "");
+const DEFAULT_API_URL = "https://dev-api.dkuaegis.org";
+
+function getSafeApiUrl(value: string | undefined): string | undefined {
+  const trimmed = value?.trim();
+  if (!trimmed) return undefined;
+
+  try {
+    const url = new URL(trimmed);
+    const isSecure = url.protocol === "https:";
+    const isLocalhost =
+      url.protocol === "http:" && url.hostname === "localhost";
+
+    return isSecure || isLocalhost ? trimmed.replace(/\/+$/, "") : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+const configuredApiUrl = getSafeApiUrl(import.meta.env.VITE_API_URL);
+const API_BASE_URL = configuredApiUrl ?? DEFAULT_API_URL;
 
 export class ApiError extends Error {
   readonly status: number;
@@ -20,7 +36,7 @@ export function getApiErrorMessage(error: unknown, fallback: string): string {
     if (typeof error.details === "string" && error.details.trim()) {
       return error.details;
     }
-    return `HTTP ${error.status}`;
+    return error.message.trim() ? error.message : fallback;
   }
   return error instanceof Error ? error.message : fallback;
 }
