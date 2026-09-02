@@ -22,6 +22,9 @@ const Chat = () => {
   const allJoined = Object.values(joined).every(Boolean);
 
   const handleJoin = (key: keyof JoinedState) => {
+    Analytics.safeTrack("Kakao_External_Open", {
+      category: "Kakao",
+    });
     setJoined((prev) => ({ ...prev, [key]: true }));
   };
 

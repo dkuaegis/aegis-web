@@ -194,6 +194,7 @@
   --join-muted: #626269;
   --join-line: rgb(24 24 27 / 18%);
   --join-blue: #2852d8;
+
   min-height: 100dvh;
   color: var(--join-ink);
   background:
