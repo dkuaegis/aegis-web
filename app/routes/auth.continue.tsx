@@ -1,5 +1,5 @@
 import { ApiError, api, googleLoginUrl } from "@app/lib/api";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate, useSearchParams } from "react-router-dom";
 import type { AuthCheckResponse } from "../api/auth";
 import { storeLoginIntent } from "../lib/authIntent";
@@ -10,31 +10,38 @@ export default function AuthContinuePage() {
   const [destination, setDestination] = useState<string | null>(null);
   const [error, setError] = useState(false);
   const [retryKey, setRetryKey] = useState(0);
-  const loginStarted = useRef(false);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: retryKey explicitly triggers a manual authentication retry.
   useEffect(() => {
-    if (loginStarted.current) return;
-    loginStarted.current = true;
+    const controller = new AbortController();
+    const request = { intent, retryKey } as const;
+    let active = true;
+
     setError(false);
 
     api
-      .get<AuthCheckResponse>("/auth/check")
+      .get<AuthCheckResponse>("/auth/check", controller.signal)
       .then((user) => {
+        if (!active) return;
         if (user.status === "COMPLETED") {
           setDestination("/");
           return;
         }
-        setDestination(intent === "join" ? "/join" : "/");
+        setDestination(request.intent === "join" ? "/join" : "/");
       })
       .catch((caught) => {
+        if (!active) return;
         if (caught instanceof ApiError && caught.status === 401) {
-          storeLoginIntent(intent);
+          storeLoginIntent(request.intent);
           window.location.replace(googleLoginUrl);
           return;
         }
         setError(true);
       });
+
+    return () => {
+      active = false;
+      controller.abort(`Authentication request ${request.retryKey} superseded`);
+    };
   }, [intent, retryKey]);
 
   if (destination) return <Navigate to={destination} replace />;
@@ -46,10 +53,7 @@ export default function AuthContinuePage() {
         <button
           className="auth-continue-retry"
           type="button"
-          onClick={() => {
-            loginStarted.current = false;
-            setRetryKey((current) => current + 1);
-          }}
+          onClick={() => setRetryKey((current) => current + 1)}
         >
           다시 시도
         </button>
