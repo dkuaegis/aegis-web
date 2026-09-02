@@ -74,7 +74,9 @@ export async function apiRequest<T>(
   ) {
     headers.set("Content-Type", "application/json");
   }
-  headers.set("Accept", "application/json, text/plain;q=0.9");
+  if (!headers.has("Accept")) {
+    headers.set("Accept", "application/json, text/plain;q=0.9");
+  }
 
   const contentType = headers.get("Content-Type");
   const requestPath = path.startsWith("/") ? path : `/${path}`;
