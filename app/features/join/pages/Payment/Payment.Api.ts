@@ -1,4 +1,4 @@
-import { httpClient } from "@join/api/api";
+import { api } from "@app/lib/api";
 import { Analytics } from "@join/service/analytics";
 
 export const makePayment = async (selectedCoupons: number[]) => {
@@ -8,7 +8,7 @@ export const makePayment = async (selectedCoupons: number[]) => {
       category: "Payment",
       coupon_count: selectedCoupons.length,
     });
-    const res = await httpClient.post("/payments", payload);
+    const res = await api.post("/payments", payload);
     Analytics.safeTrack("Payment_Create_Success", { category: "Payment" });
     return res;
   } catch (err) {
@@ -27,7 +27,7 @@ interface PaymentPollingResult {
 
 export const pollPaymentStatus = async (): Promise<PaymentPollingResult> => {
   try {
-    const res = await httpClient.get<PaymentPollingResult>("/payments/status");
+    const res = await api.get<PaymentPollingResult>("/payments/status");
     Analytics.safeTrack("Payment_Poll_Tick", {
       category: "Payment",
       status: res.status,

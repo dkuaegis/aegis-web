@@ -1,6 +1,7 @@
 import type { LinksFunction } from "react-router";
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 import { checkAuth } from "./api/auth";
+import { AuthIntentRedirect } from "./components/AuthIntentRedirect";
 import BrowserRedirectPage from "./components/BrowserRedirectPage";
 import { useExternalBrowser } from "./hooks/useExternalBrowser";
 import "./index.css";
@@ -39,7 +40,12 @@ export default function App() {
     return <BrowserRedirectPage />;
   }
 
-  return <Outlet />;
+  return (
+    <>
+      <AuthIntentRedirect />
+      <Outlet />
+    </>
+  );
 }
 
 export function HydrateFallback() {

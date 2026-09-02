@@ -1,4 +1,4 @@
-import { createApiUrl } from "@app/lib/apiBaseUrl";
+import { googleLoginUrl } from "@app/lib/api";
 import { Button } from "@study/components/ui/button";
 import { Card, CardContent } from "@study/components/ui/card";
 import { gsap } from "gsap";
@@ -156,9 +156,7 @@ const LoginPage = () => {
               className="h-12 w-full py-0 text-xl opacity-0"
               asChild
             >
-              <a href={createApiUrl("oauth2/authorization/google")}>
-                단국대 Gmail로 로그인
-              </a>
+              <a href={googleLoginUrl}>단국대 Gmail로 로그인</a>
             </Button>
           </div>
         </CardContent>

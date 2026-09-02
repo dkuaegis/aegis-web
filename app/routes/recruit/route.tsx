@@ -67,7 +67,7 @@ function Recruit() {
                 Aegis에 함께할 멤버를 모집합니다.
               </p>
               <a
-                href="/join/login"
+                href="/auth/continue?intent=join"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="recruit-cta-btn"

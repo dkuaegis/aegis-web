@@ -2,7 +2,7 @@ import { Menu, X } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 import { Link } from "react-router-dom";
 import type { AuthUser } from "../../api/auth";
-import { createApiUrl } from "../../lib/apiBaseUrl";
+import { googleLoginUrl } from "../../lib/api";
 
 interface HomeHeaderProps {
   authUser: AuthUser;
@@ -12,11 +12,14 @@ interface HomeHeaderProps {
 export function HomeHeader({ authUser, loading }: HomeHeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuId = useId();
-  const googleLoginUrl = createApiUrl("oauth2/authorization/google");
   const items = !authUser.isAuthenticated
     ? [
         { label: "로그인", href: googleLoginUrl },
-        { label: "가입하기", href: "/join", emphasis: true },
+        {
+          label: "가입하기",
+          href: "/auth/continue?intent=join",
+          emphasis: true,
+        },
       ]
     : authUser.status === "PENDING"
       ? [{ label: "가입하기", href: "/join", emphasis: true }]

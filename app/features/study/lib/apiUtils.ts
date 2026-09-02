@@ -1,11 +1,11 @@
-import { HTTPError } from "@study/lib/apiClient";
+import { ApiError } from "@app/lib/api";
 
 export function handleHTTPError(
   error: unknown,
   errorMessages: Record<number | "default", string>
 ): never {
-  if (error instanceof HTTPError) {
-    const status = error.response.status;
+  if (error instanceof ApiError) {
+    const status = error.status;
     const message = (status && errorMessages[status]) || errorMessages.default;
     throw new Error(message);
   }

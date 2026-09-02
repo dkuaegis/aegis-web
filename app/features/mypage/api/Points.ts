@@ -4,7 +4,6 @@ import type {
   RawPointSummaryRes,
   RawPointTransaction,
 } from "../model/Points";
-import { mypageApiClient } from "./client";
 
 type ApiResp<T> = { data: T } | T;
 
@@ -15,11 +14,9 @@ function unwrap<T>(j: ApiResp<T>): T {
 }
 
 export async function getPointSummary(): Promise<PointSummaryView> {
-  const response = await mypageApiClient.get<ApiResp<RawPointSummaryRes>>(
-    "/points/summary",
-    { headers: { accept: "application/json" } }
-  );
-  const data = unwrap<RawPointSummaryRes>(response.data);
+  const response =
+    await api.get<ApiResp<RawPointSummaryRes>>("/points/summary");
+  const data = unwrap<RawPointSummaryRes>(response);
   const balance: number = Number(data.balance ?? 0);
 
   const rawList: unknown = Array.isArray(data.history) ? data.history : [];
@@ -44,3 +41,5 @@ export async function getPointSummary(): Promise<PointSummaryView> {
 
   return { balance, history };
 }
+
+import { api } from "@app/lib/api";

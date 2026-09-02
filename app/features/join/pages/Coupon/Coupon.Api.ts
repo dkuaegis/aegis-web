@@ -1,8 +1,8 @@
-import { httpClient } from "@join/api/api";
+import { api } from "@app/lib/api";
 import type { Coupon } from "./Coupon.Types";
 
 export const fetchCoupon = async (): Promise<Coupon[]> => {
-  return httpClient.get<Coupon[]>("/coupons/me/valid");
+  return api.get<Coupon[]>("/coupons/me/valid");
 };
 
 export const submitCoupon = async (selectedCoupons: number[]) => {
@@ -11,7 +11,7 @@ export const submitCoupon = async (selectedCoupons: number[]) => {
     return;
   }
 
-  await httpClient.put("/payments", payload);
+  await api.put("/payments", payload);
 };
 
 export const submitAndFetchCouponCode = async (
@@ -19,7 +19,7 @@ export const submitAndFetchCouponCode = async (
 ): Promise<Coupon[]> => {
   const payload = { code: couponCode };
 
-  await httpClient.post("/coupons/code", payload);
+  await api.post("/coupons/code", payload);
 
   return fetchCoupon();
 };

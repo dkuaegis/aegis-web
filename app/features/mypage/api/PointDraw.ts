@@ -1,23 +1,12 @@
-import axios from "axios";
+import { ApiError, api } from "@app/lib/api";
 import type { DrawResponse } from "../model/Draw";
 import { showError } from "../utils/alert";
-import { mypageApiClient } from "./client";
 
 export async function drawPoint(): Promise<DrawResponse> {
   try {
-    const { data } = await mypageApiClient.post<DrawResponse>(
-      "/point-shop/draw",
-      undefined,
-      {
-        headers: {
-          accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    return data;
+    return await api.post<DrawResponse>("/point-shop/draw");
   } catch (e) {
-    if (axios.isAxiosError(e) && e.response?.status === 400) {
+    if (e instanceof ApiError && e.status === 400) {
       showError("잔액이 부족합니다.");
       throw new Error("잔액 부족");
     }

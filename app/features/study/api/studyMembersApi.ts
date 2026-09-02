@@ -1,4 +1,4 @@
-import { apiClient, HTTPError } from "@study/lib/apiClient";
+import { ApiError, api } from "@app/lib/api";
 import { API_ENDPOINTS } from "@study/lib/apiEndpoints";
 
 export interface StudyMemberApiResponse {
@@ -23,14 +23,15 @@ export async function fetchStudyMembers(
   signal?: AbortSignal
 ): Promise<StudyMemberApiResponse[]> {
   try {
-    return await apiClient
-      .get(API_ENDPOINTS.STUDY_MEMBERS_INSTRUCTOR(studyId), { signal })
-      .json<StudyMemberApiResponse[]>();
+    return await api.get<StudyMemberApiResponse[]>(
+      API_ENDPOINTS.STUDY_MEMBERS_INSTRUCTOR(studyId),
+      signal
+    );
   } catch (err: unknown) {
     if (err instanceof Error && err.name === "AbortError") throw err;
 
-    if (err instanceof HTTPError) {
-      const message = getStudyMembersErrorMessage(err.response.status);
+    if (err instanceof ApiError) {
+      const message = getStudyMembersErrorMessage(err.status);
       throw new Error(message);
     }
     throw new Error("스터디원 정보를 불러오지 못했습니다.");

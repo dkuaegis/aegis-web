@@ -1,4 +1,4 @@
-import { createApiUrl } from "@app/lib/apiBaseUrl";
+import { googleLoginUrl } from "@app/lib/api";
 import { useEffect } from "react";
 import loginImage from "../assets/loginImage.webp";
 import Button from "../components/Button";
@@ -21,12 +21,10 @@ const LoginAuth = () => {
 
   const handleGoogleLogin = () => {
     // 브라우저 호환성을 위한 OAuth 리다이렉트 처리
-    const oauthUrl = createApiUrl("oauth2/authorization/google");
-
     // 네이버 브라우저 등 특수 브라우저를 위한 추가 파라미터
     const currentUrl = encodeURIComponent(window.location.origin);
     const userAgent = encodeURIComponent(navigator.userAgent);
-    const finalUrl = `${oauthUrl}?redirect_uri=${currentUrl}&user_agent=${userAgent}`;
+    const finalUrl = `${googleLoginUrl}?redirect_uri=${currentUrl}&user_agent=${userAgent}`;
 
     // 브라우저별 특수 처리
     const isNaverBrowser =

@@ -1,4 +1,4 @@
-import { httpClient } from "@join/api/api";
+import { api } from "@app/lib/api";
 import { Analytics } from "@join/service/analytics";
 import { usePersonalInfoStore } from "@join/stores/personalInfoStore";
 import { CheckCircle2, ExternalLink, MessageCircle } from "lucide-react";
@@ -29,7 +29,7 @@ const JoinComplete = () => {
           identifiedRef.current = true;
           return;
         }
-        const profile = await httpClient.get<RequiredMemberInfo>("/members");
+        const profile = await api.get<RequiredMemberInfo>("/members");
         if (profile.studentId) {
           Analytics.identifyStudent(String(profile.studentId), profile.name);
           identifiedRef.current = true;

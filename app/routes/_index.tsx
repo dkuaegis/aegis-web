@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { type AuthUser, checkAuth } from "../api/auth";
 import { HomeFooter } from "../features/home/HomeFooter";
 import { HomeHeader } from "../features/home/HomeHeader";
-import { createApiUrl } from "../lib/apiBaseUrl";
+import { googleLoginUrl } from "../lib/api";
 
 import "../features/home/home-page.css";
 
@@ -162,7 +162,7 @@ export default function HomePage() {
 
   const isMember = authUser.status === "COMPLETED";
   const isGuest = authUser.status === "PENDING";
-  const joinHref = "/join";
+  const joinHref = isGuest ? "/join" : "/auth/continue?intent=join";
   const memberActions = [
     { label: "스터디 둘러보기", href: "/study" },
     { label: "내 활동 보기", href: "/mypage" },
@@ -356,7 +356,7 @@ export default function HomePage() {
                       가입 정보 보기 <ArrowDown aria-hidden="true" />
                     </Link>
                   ) : (
-                    <a href={createApiUrl("oauth2/authorization/google")}>
+                    <a href={googleLoginUrl}>
                       로그인 <ExternalMark />
                     </a>
                   )}
