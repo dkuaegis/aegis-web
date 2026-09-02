@@ -38,9 +38,9 @@ export default function NavigationButtons({
           animate="animate"
           exit="exit"
           transition={{ type: "spring", stiffness: 200, damping: 20 }}
-          className="fixed right-0 bottom-0 left-0 flex justify-center bg-background/80 p-3 pb-[calc(1rem+env(safe-area-inset-bottom))] backdrop-blur-sm"
+          className="join-navigation"
         >
-          <div className="w-full max-w-md px-4">
+          <div className="join-navigation-inner">
             <Button
               type="submit"
               onClick={onClick}

@@ -1,4 +1,4 @@
-import { Progress } from "@join/components/ui/progress";
+import { JOIN_STEP_KOREAN_MAP, JOIN_STEPS } from "@join/constants/joinSteps";
 import Chat from "@join/pages/Chat/Chat";
 import Payment from "@join/pages/Payment/Payment";
 import PersonalInfo from "@join/pages/PersonalInfo/PersonalInfo";
@@ -36,14 +36,38 @@ const AnalyticsTracker = () => {
 };
 
 const FunnelLayout = () => {
-  const { currentStep, progress } = useFunnel();
+  const { currentStep } = useFunnel();
+  const currentIndex = JOIN_STEPS.indexOf(currentStep);
 
   return (
-    <div className="mx-auto mb-8 w-full max-w-md px-4 py-8 pb-28">
-      <Title currentStep={currentStep} />
-      <Progress value={progress} className="mt-4 mb-8 h-0.5 w-full" />
-
-      <Outlet />
+    <div className="join-page-shell">
+      <main className="join-main">
+        <div className="join-workspace">
+          <Title currentStep={currentStep} />
+          <nav className="join-progress" aria-label="가입 진행 단계">
+            <ol className="join-stepper">
+              {JOIN_STEPS.map((step, index) => (
+                <li
+                  key={step}
+                  className={
+                    index === currentIndex
+                      ? "is-current"
+                      : index < currentIndex
+                        ? "is-complete"
+                        : undefined
+                  }
+                >
+                  <span>{index < currentIndex ? "✓" : index + 1}</span>
+                  <strong>{JOIN_STEP_KOREAN_MAP[step]}</strong>
+                </li>
+              ))}
+            </ol>
+          </nav>
+          <div className="join-content">
+            <Outlet />
+          </div>
+        </div>
+      </main>
     </div>
   );
 };
