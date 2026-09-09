@@ -1,18 +1,15 @@
-import { Button } from "@join/components/ui/button";
+import "./Payment.css";
 import NavigationButtons from "@join/components/ui/custom/navigationButton";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@join/components/ui/dialog";
 import { Analytics } from "@join/service/analytics";
 import { useAuthStore } from "@join/stores/authStore";
-import { Label } from "@radix-ui/react-label";
+import { ChevronRight } from "lucide-react";
 import React, { Suspense, useEffect, useState } from "react";
 import Coupon from "../Coupon/Coupon";
+import { fetchCoupon } from "../Coupon/Coupon.Api";
+import type { Coupon as CouponType } from "../Coupon/Coupon.Types";
 import AdminInfoDrawer from "./Payment.AdminInfoDrawer";
 import PaymentAmount from "./Payment.Amount";
+import PaymentDialog from "./Payment.Dialog";
 import Information from "./Payment.Information";
 import { usePaymentPolling } from "./usePaymentPolling";
 
@@ -26,9 +23,35 @@ const Payment = () => {
   const [currentView, setCurrentView] = useState<"coupon" | "payment">(
     "payment"
   );
+  const [coupons, setCoupons] = useState<CouponType[]>([]);
   const completeRegistration = useAuthStore(
     (state) => state.completeRegistration
   );
+
+  useEffect(() => {
+    let active = true;
+    const loadCoupons = async () => {
+      try {
+        Analytics.safeTrack("Coupon_Fetch_Start", { category: "Payment" });
+        const data = await fetchCoupon();
+        if (active) setCoupons(data);
+        Analytics.safeTrack("Coupon_Fetch_Success", {
+          category: "Payment",
+          coupon_count: data.length,
+        });
+      } catch (error) {
+        console.error("쿠폰 불러오는데 오류 발생:", error);
+        Analytics.safeTrack("Coupon_Fetch_Failed", {
+          category: "Payment",
+          error_message: error instanceof Error ? error.message : String(error),
+        });
+      }
+    };
+    void loadCoupons();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (status === "error") {
@@ -55,25 +78,27 @@ const Payment = () => {
     <div className="relative">
       <div className="line-breaks space-y-8">
         {!isValid ? (
-          <>
-            <Label className="text-xl">납부 금액</Label>
+          <div className="join-payment-layout">
             <PaymentAmount amount={finalPrice} />
             <Information />
-            <Button
-              size="lg"
-              className="w-full items-center"
-              variant="default"
-              onClick={() => {
-                Analytics.safeTrack("Payment_Open_Coupon_Click", {
-                  category: "Payment",
-                });
-                setCurrentView("coupon");
-              }}
-            >
-              쿠폰 적용하기
-            </Button>
-            <AdminInfoDrawer />
-          </>
+            <div className="join-payment-extras">
+              <button
+                className="join-payment-coupon-action"
+                type="button"
+                onClick={() => {
+                  Analytics.safeTrack("Payment_Open_Coupon_Click", {
+                    category: "Payment",
+                  });
+                  setCurrentView("coupon");
+                }}
+              >
+                <span>할인 쿠폰</span>
+                <strong>{coupons.length}장</strong>
+                <ChevronRight aria-hidden="true" />
+              </button>
+              <AdminInfoDrawer />
+            </div>
+          </div>
         ) : (
           <Suspense>
             <Complete message="납부가 완료됐어요" />
@@ -89,29 +114,25 @@ const Payment = () => {
           </Suspense>
         )}
       </div>
-      <Dialog
+      <PaymentDialog
         open={!isValid && currentView === "coupon"}
         onOpenChange={(open) => {
           if (!open) setCurrentView("payment");
         }}
+        title="할인 쿠폰"
       >
-        <DialogContent className="max-h-[90vh] overflow-y-auto border-white/30 bg-white p-0 shadow-2xl sm:max-w-[560px]">
-          <DialogHeader className="border-b px-6 py-5 text-left">
-            <DialogTitle className="text-xl">할인 쿠폰</DialogTitle>
-          </DialogHeader>
-          <div className="px-6 pb-6">
-            <Coupon
-              onClose={() => {
-                Analytics.safeTrack("Coupon_Apply_And_Fetch_And_Close", {
-                  category: "Coupon",
-                });
-                refreshFinalPrice();
-                setCurrentView("payment");
-              }}
-            />
-          </div>
-        </DialogContent>
-      </Dialog>
+        <Coupon
+          coupons={coupons}
+          onCouponsChange={setCoupons}
+          onClose={() => {
+            Analytics.safeTrack("Coupon_Apply_And_Fetch_And_Close", {
+              category: "Coupon",
+            });
+            void refreshFinalPrice();
+            setCurrentView("payment");
+          }}
+        />
+      </PaymentDialog>
     </div>
   );
 };

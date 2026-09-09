@@ -1,41 +1,33 @@
-import { Button } from "@join/components/ui/button";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@join/components/ui/drawer";
+import { ChevronRight } from "lucide-react";
+import { useId, useState } from "react";
 
 const AdminInfoDrawer = () => {
+  const [open, setOpen] = useState(false);
+  const detailsId = useId();
+
   return (
-    <Drawer>
-      <DrawerTrigger>
-        <p className="text-start text-slate-500 underline">
-          입금과정에서 초과납부 등의 문제 발생 시
-          <span className="font-extrabold"> 회장/총무에게 문의해주세요.</span>
-        </p>
-      </DrawerTrigger>
-      <DrawerContent>
-        <DrawerHeader>
-          <DrawerTitle>연락처</DrawerTitle>
-          <DrawerDescription>
-            전화번호: {import.meta.env.VITE_ADMIN_PHONE} <br />
-            카카오톡: {import.meta.env.VITE_ADMIN_KAKAO}
-          </DrawerDescription>
-        </DrawerHeader>
-        <DrawerFooter>
-          <DrawerClose asChild>
-            <Button variant="outline" className="w-full">
-              닫기
-            </Button>
-          </DrawerClose>
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
+    <div className="join-payment-inquiry">
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls={detailsId}
+        onClick={() => setOpen((current) => !current)}
+      >
+        입금 관련 문의
+        <ChevronRight aria-hidden="true" />
+      </button>
+      <div
+        id={detailsId}
+        className="join-payment-inquiry-details"
+        hidden={!open}
+      >
+        <strong>{import.meta.env.VITE_ADMIN_PHONE}</strong>
+        {import.meta.env.VITE_ADMIN_KAKAO && (
+          <span>카카오톡: {import.meta.env.VITE_ADMIN_KAKAO}</span>
+        )}
+        <span>문의 시 이름과 학과를 함께 보내 주세요.</span>
+      </div>
+    </div>
   );
 };
 
