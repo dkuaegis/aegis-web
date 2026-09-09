@@ -1,49 +1,26 @@
-import AlertBox from "@join/components/ui/custom/alertbox";
-import NavigationButtons from "@join/components/ui/custom/navigationButton";
-import { Label } from "@join/components/ui/label";
+import { Button } from "@join/components/ui/button";
+import { Input } from "@join/components/ui/input";
 import { Analytics } from "@join/service/analytics";
-import { AnimatePresence, motion } from "framer-motion";
-import { CircleAlert } from "lucide-react";
-import { useEffect, useState } from "react";
-import { fetchCoupon, submitCoupon } from "./Coupon.Api";
+import { CircleAlert, Loader2 } from "lucide-react";
+import { type FormEvent, useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import {
+  fetchCoupon,
+  submitAndFetchCouponCode,
+  submitCoupon,
+} from "./Coupon.Api";
 import { CouponList } from "./Coupon.CouponList";
-import InputCouponCode from "./Coupon.InputCouponCode";
-import { TotalAmount } from "./Coupon.TotalAmount";
 import type { Coupon as CouponType } from "./Coupon.Types";
 
 interface CouponProps {
   onClose: () => void;
 }
 
-const buttonWrapperVariants = {
-  // 초기 상태: 화면 아래에 숨겨져 있음
-  initial: {
-    opacity: 0,
-  },
-  // 보이는 상태: 제자리로 올라옴
-  animate: {
-    opacity: 1,
-    transition: {
-      duration: 0.2,
-      ease: "easeInOut",
-      // 부모 애니메이션이 끝날 즈음 시작되도록 약간의 딜레이를 줍니다.
-      delay: 0.3,
-    },
-  },
-  // 사라지는 상태: 다시 화면 아래로 내려감
-  exit: {
-    opacity: 0,
-    transition: {
-      duration: 0.2,
-      ease: "easeInOut",
-    },
-  },
-} as const;
-
 const Coupon = ({ onClose }: CouponProps) => {
   const [coupons, setCoupons] = useState<CouponType[]>([]);
   const [selectedCoupons, setSelectedCoupons] = useState<number[]>([]);
-  const [isExiting, setIsExiting] = useState<boolean>(false);
+  const [couponCode, setCouponCode] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,12 +41,11 @@ const Coupon = ({ onClose }: CouponProps) => {
         });
       }
     };
-
     fetchData();
   }, []);
 
-  const handleSubmit = async () => {
-    setIsExiting(true);
+  const handleApply = async () => {
+    setIsSubmitting(true);
     try {
       Analytics.safeTrack("Coupon_Apply_Start", {
         category: "Payment",
@@ -89,27 +65,59 @@ const Coupon = ({ onClose }: CouponProps) => {
           error instanceof Error ? error.message : String(error ?? ""),
       });
     } finally {
+      setIsSubmitting(false);
       onClose();
     }
   };
 
-  return (
-    <div className="space-y-8 pb-20">
-      <div className="space-y-5 rounded-2xl bg-slate-50 p-6">
-        <div>
-          <Label className="text-xl">할인 금액</Label>
-          <TotalAmount coupons={coupons} selectedCoupons={selectedCoupons} />
-        </div>
-        <InputCouponCode setCoupons={setCoupons} />
-      </div>
+  const handleCodeSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+    const code = couponCode.trim();
+    if (!code) {
+      toast.error("쿠폰 코드를 입력해주세요");
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      setCoupons(await submitAndFetchCouponCode(code));
+      setCouponCode("");
+      toast.success("쿠폰을 등록했습니다.");
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "쿠폰을 등록하지 못했습니다."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
-      <div className="border-t py-4">
+  return (
+    <div className="space-y-4 pt-3">
+      <form
+        className="flex overflow-hidden rounded-lg border border-slate-300 focus-within:border-blue-500"
+        onSubmit={handleCodeSubmit}
+      >
+        <Input
+          aria-label="쿠폰 코드"
+          className="rounded-none border-0 shadow-none focus-visible:ring-0"
+          placeholder="쿠폰 코드 입력"
+          value={couponCode}
+          onChange={(event) => setCouponCode(event.target.value)}
+        />
+        <Button
+          className="h-12 rounded-none px-5"
+          type="submit"
+          disabled={isSubmitting}
+        >
+          등록
+        </Button>
+      </form>
+      <div className="max-h-[min(45vh,360px)] overflow-y-auto py-1">
         {coupons.length === 0 ? (
-          <AlertBox
-            icon={<CircleAlert className="h-4 w-4" />}
-            title="쿠폰이 없습니다"
-            description={["쿠폰을 등록하거나, 결제 페이지로 이동해주세요"]}
-          />
+          <div className="flex items-center gap-2 rounded-lg bg-slate-50 p-4 text-slate-500 text-sm">
+            <CircleAlert className="h-4 w-4 shrink-0" />
+            <p>사용 가능한 쿠폰이 없습니다.</p>
+          </div>
         ) : (
           <CouponList
             coupons={coupons}
@@ -118,22 +126,18 @@ const Coupon = ({ onClose }: CouponProps) => {
           />
         )}
       </div>
-      <AnimatePresence onExitComplete={onClose}>
-        {!isExiting && (
-          <motion.div
-            variants={buttonWrapperVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-          >
-            <NavigationButtons
-              disabled={false}
-              text="쿠폰 적용하기"
-              onClick={handleSubmit}
-            />
-          </motion.div>
+      <Button
+        className="w-full"
+        size="lg"
+        disabled={isSubmitting}
+        onClick={handleApply}
+      >
+        {isSubmitting ? (
+          <Loader2 className="h-5 w-5 animate-spin" />
+        ) : (
+          "선택한 쿠폰 적용"
         )}
-      </AnimatePresence>
+      </Button>
     </div>
   );
 };
