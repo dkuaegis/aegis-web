@@ -2,13 +2,13 @@ interface PaymentAmountProps {
   amount: number;
 }
 
-const PaymentAmount = ({ amount }: PaymentAmountProps) => {
-  return (
-    <div className="mt-2 p-2 text-center">
-      <span className="font-bold text-5xl">{amount.toLocaleString()}</span>
-      <span className="text-lg"> 원</span>
+const PaymentAmount = ({ amount }: PaymentAmountProps) => (
+  <section className="join-payment-summary" aria-label="납부 금액">
+    <div>
+      <span>납부 금액</span>
+      <strong>{amount.toLocaleString()}원</strong>
     </div>
-  );
-};
+  </section>
+);
 
 export default PaymentAmount;

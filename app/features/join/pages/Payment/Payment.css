@@ -1,0 +1,401 @@
+.join-payment-layout,
+.join-payment-info {
+  display: grid;
+}
+
+.join-payment-info > div {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.8rem;
+  border-bottom: 1px solid var(--join-line);
+}
+
+.join-payment-info > div:last-child {
+  border-bottom: 0;
+}
+
+.join-payment-info strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.join-payment-copy {
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  border: 1px solid var(--join-line);
+  cursor: pointer;
+}
+
+.join-payment-copy:hover:not(:disabled) {
+  background: rgb(24 24 27 / 7%);
+}
+
+.join-payment-copy:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.join-payment-layout {
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.join-payment-summary {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem 0;
+  border-block: 1px solid #d5d5d2;
+}
+
+.join-payment-summary > div {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.join-payment-summary > :where(div) > span {
+  color: var(--join-muted);
+  font-size: 0.875rem;
+}
+
+.join-payment-summary strong {
+  font-size: clamp(2.25rem, 7vw, 3rem);
+  font-weight: 760;
+  letter-spacing: -0.015em;
+}
+
+.join-payment-info {
+  border-bottom: 1px solid var(--join-line);
+}
+
+.join-payment-info > div {
+  min-height: 56px;
+  padding-block: 0.75rem;
+  padding-inline: 0;
+}
+
+.join-payment-copy {
+  width: 32px;
+  height: 32px;
+}
+
+.join-payment-copy svg {
+  width: 17px;
+  height: 17px;
+}
+
+.join-payment-info > :where(div) > span {
+  color: var(--join-ink);
+  font-size: 0.9rem;
+  font-weight: 750;
+}
+
+.join-payment-info > :where(div) > strong {
+  font-weight: 400;
+}
+
+.join-payment-extras {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.join-payment-coupon-action {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1rem;
+  font: inherit;
+  text-align: left;
+  background: #eeeeec;
+  border: 0;
+  cursor: pointer;
+}
+
+.join-payment-coupon-action:hover {
+  background: #e7e7e4;
+}
+
+.join-payment-coupon-action > span,
+.join-payment-coupon-action svg {
+  color: var(--join-muted);
+}
+
+.join-payment-coupon-action > span {
+  font-size: 0.875rem;
+}
+
+.join-payment-inquiry {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.join-payment-inquiry > button {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0;
+  color: var(--join-muted);
+  font: inherit;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.join-payment-inquiry > button svg {
+  transition: transform 160ms ease;
+}
+
+.join-payment-inquiry > button[aria-expanded="true"] svg {
+  transform: rotate(90deg);
+}
+
+.join-payment-inquiry-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.6rem;
+  align-items: baseline;
+  font-size: 0.875rem;
+}
+
+.join-payment-inquiry-details strong {
+  color: var(--join-ink);
+  font-size: 0.95rem;
+  font-weight: 720;
+}
+
+.join-payment-inquiry-details span {
+  color: var(--join-muted);
+}
+
+.join-payment-inquiry-details[hidden] {
+  display: none;
+}
+
+/* Dialog portals live outside the join page, so define their theme locally. */
+.join-payment-dialog {
+  --join-ink: #18181b;
+  --join-muted: #626269;
+  --join-blue: #2852d8;
+
+  position: fixed;
+  z-index: 101;
+  top: 50%;
+  left: 50%;
+  width: min(calc(100% - 2rem), 560px);
+  max-height: min(90dvh, 760px);
+  overflow: auto;
+  color: var(--join-ink);
+  background: white;
+  border: 1px solid rgb(255 255 255 / 30%);
+  border-radius: 0;
+  box-shadow: 0 30px 90px rgb(0 0 0 / 30%);
+  font-family:
+    "Pretendard Variable", Pretendard, "Apple SD Gothic Neo", sans-serif;
+  line-height: 1.5;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  transform: translate(-50%, -50%);
+}
+
+.join-payment-dialog *,
+.join-payment-dialog *::before,
+.join-payment-dialog *::after {
+  box-sizing: border-box;
+}
+
+.join-payment-overlay {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  background: rgb(24 24 27 / 62%);
+}
+
+.join-payment-dialog-header {
+  position: sticky;
+  z-index: 2;
+  top: 0;
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.2rem 1.4rem 0.75rem;
+  background: white;
+}
+
+.join-payment-dialog-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.join-payment-dialog-close {
+  display: inline-grid;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  place-items: center;
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.join-payment-dialog-close:hover {
+  background: rgb(24 24 27 / 7%);
+}
+
+.join-payment-dialog-content {
+  padding: 0.5rem 1.4rem 1.4rem;
+}
+
+.join-payment-button {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.72rem 1.25rem;
+  color: white;
+  background: var(--join-blue);
+  border: 1px solid var(--join-blue);
+  border-radius: 0;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 820;
+  cursor: pointer;
+  transition:
+    background 150ms,
+    opacity 150ms;
+}
+
+.join-payment-button:hover:not(:disabled) {
+  background: #183fb9;
+}
+
+.join-payment-button.is-dark {
+  background: var(--join-ink);
+  border-color: var(--join-ink);
+}
+
+.join-payment-button.is-full {
+  width: 100%;
+}
+
+.join-payment-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.join-payment-layout button:focus-visible,
+.join-payment-dialog button:focus-visible,
+.join-coupon-ticket input:focus-visible {
+  outline: 2px solid #526bb3;
+  outline-offset: 3px;
+}
+
+.join-coupon-code-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  border: 1px solid #c9c9c6;
+}
+
+.join-coupon-code-form:focus-within {
+  border-color: #526bb3;
+}
+
+.join-coupon-code-form input {
+  width: 100%;
+  min-width: 0;
+  min-height: 49px;
+  padding: 0.8rem 0.9rem;
+  color: var(--join-ink);
+  background: white;
+  border: 0;
+  border-radius: 0;
+  font: inherit;
+  outline: 0;
+  box-shadow: none;
+}
+
+.join-coupon-list {
+  min-width: 0;
+  margin: 0 0 1rem;
+  padding: 0;
+  border: 0;
+}
+
+.join-coupon-empty {
+  margin: 0;
+  color: var(--join-muted);
+  line-height: 1.5;
+}
+
+.join-coupon-tickets {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.join-coupon-ticket {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.75rem;
+  cursor: pointer;
+}
+
+.join-coupon-ticket.is-selected {
+  color: var(--join-blue);
+  background: #eef1fa;
+}
+
+.join-coupon-ticket input {
+  flex: none;
+  accent-color: var(--join-blue);
+}
+
+.join-coupon-ticket span {
+  display: grid;
+  min-width: 0;
+  gap: 0.2rem;
+  overflow-wrap: anywhere;
+}
+
+.join-coupon-ticket strong {
+  font-weight: 700;
+}
+
+.join-coupon-ticket small {
+  color: var(--join-muted);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 720px) {
+  .join-payment-info > div {
+    grid-template-columns: 5rem minmax(0, 1fr) auto;
+  }
+
+  .join-payment-summary {
+    align-items: start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 390px) {
+  .join-payment-info > div {
+    min-height: 72px;
+  }
+}
