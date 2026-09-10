@@ -1,3 +1,4 @@
+import { LanguageToggle, useI18n } from "@app/i18n";
 import { ArrowLeft, X } from "lucide-react";
 import React, { useState } from "react";
 import { Button } from "./button";
@@ -12,6 +13,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ onBack }) => {
+  const { t } = useI18n();
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -27,7 +29,7 @@ const Header: React.FC<HeaderProps> = ({ onBack }) => {
                 className="mr-4 text-gray-500 hover:text-gray-900"
               >
                 <ArrowLeft className="mr-1 h-4 w-4" />
-                뒤로가기
+                {t("study.nav.back")}
               </Button>
             )}
             <span
@@ -41,6 +43,7 @@ const Header: React.FC<HeaderProps> = ({ onBack }) => {
           </div>
 
           <div className="hidden items-center gap-3 md:flex">
+            <LanguageToggle className="study-language" size="compact" />
             {NAV_LINKS.map((link) => (
               <a
                 key={link.label}
@@ -52,16 +55,19 @@ const Header: React.FC<HeaderProps> = ({ onBack }) => {
             ))}
           </div>
 
-          <button
-            type="button"
-            className="flex flex-col items-center justify-center gap-1.5 md:hidden"
-            onClick={() => setMenuOpen(true)}
-            aria-label="메뉴 열기"
-          >
-            <span className="block h-0.5 w-6 rounded-sm bg-gray-900 transition-all duration-300"></span>
-            <span className="block h-0.5 w-6 rounded-sm bg-gray-900 transition-all duration-300"></span>
-            <span className="block h-0.5 w-6 rounded-sm bg-gray-900 transition-all duration-300"></span>
-          </button>
+          <div className="flex items-center gap-3 md:hidden">
+            <LanguageToggle className="study-language" size="compact" />
+            <button
+              type="button"
+              className="flex flex-col items-center justify-center gap-1.5"
+              onClick={() => setMenuOpen(true)}
+              aria-label={t("common.openMenu")}
+            >
+              <span className="block h-0.5 w-6 rounded-sm bg-gray-900 transition-all duration-300"></span>
+              <span className="block h-0.5 w-6 rounded-sm bg-gray-900 transition-all duration-300"></span>
+              <span className="block h-0.5 w-6 rounded-sm bg-gray-900 transition-all duration-300"></span>
+            </button>
+          </div>
         </div>
       </header>
 
@@ -83,7 +89,7 @@ const Header: React.FC<HeaderProps> = ({ onBack }) => {
             type="button"
             className="flex h-8 w-8 items-center justify-center"
             onClick={() => setMenuOpen(false)}
-            aria-label="메뉴 닫기"
+            aria-label={t("common.closeMenu")}
           >
             <X className="h-6 w-6 text-gray-900" aria-hidden="true" />
           </button>
@@ -108,7 +114,7 @@ const Header: React.FC<HeaderProps> = ({ onBack }) => {
           menuOpen ? "visible opacity-100" : "invisible opacity-0"
         }`}
         onClick={() => setMenuOpen(false)}
-        aria-label="메뉴 닫기"
+        aria-label={t("common.closeMenu")}
       />
     </>
   );

@@ -1,4 +1,5 @@
-import { JOIN_STEP_KOREAN_MAP, JOIN_STEPS } from "@join/constants/joinSteps";
+import { useI18n } from "@app/i18n";
+import { JOIN_STEPS, joinStepLabelKey } from "@join/constants/joinSteps";
 import Chat from "@join/pages/Chat/Chat";
 import Payment from "@join/pages/Payment/Payment";
 import PersonalInfo from "@join/pages/PersonalInfo/PersonalInfo";
@@ -35,6 +36,7 @@ const AnalyticsTracker = () => {
 };
 
 const FunnelLayout = () => {
+  const { t } = useI18n();
   const { currentStep } = useFunnel();
   const currentIndex = JOIN_STEPS.indexOf(currentStep);
 
@@ -43,7 +45,7 @@ const FunnelLayout = () => {
       <main className="join-main">
         <div className="join-workspace">
           <Title currentStep={currentStep} />
-          <nav className="join-progress" aria-label="가입 진행 단계">
+          <nav className="join-progress" aria-label={t("join.steps.progressLabel")}>
             <ol className="join-stepper">
               {JOIN_STEPS.map((step, index) => (
                 <li
@@ -57,7 +59,7 @@ const FunnelLayout = () => {
                   }
                 >
                   <span>{index < currentIndex ? "✓" : index + 1}</span>
-                  <strong>{JOIN_STEP_KOREAN_MAP[step]}</strong>
+                  <strong>{t(joinStepLabelKey(step))}</strong>
                 </li>
               ))}
             </ol>

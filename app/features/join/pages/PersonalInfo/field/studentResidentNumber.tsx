@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { ErrorMessage } from "@join/components/ui/custom/error-message";
 import { Input } from "@join/components/ui/input";
 import { Label } from "@join/components/ui/label";
@@ -5,6 +6,7 @@ import { forwardRef } from "react";
 import { useControllerField } from "../PersonalInfo.ControlledField";
 
 const StudentResidentNumber = forwardRef<HTMLDivElement>((props, ref) => {
+  const { t } = useI18n();
   const {
     field: birthDateField,
     error: birthDateError,
@@ -19,12 +21,14 @@ const StudentResidentNumber = forwardRef<HTMLDivElement>((props, ref) => {
 
   return (
     <div className="space-y-2" ref={ref} {...props}>
-      <Label htmlFor="registrationNumber">주민등록번호</Label>
+      <Label htmlFor="registrationNumber">
+        {t("join.personalInfo.residentNumberLabel")}
+      </Label>
       <div className="flex items-center space-x-2">
         <Input
           type="text"
           inputMode="numeric"
-          placeholder="생년월일 6자리"
+          placeholder={t("join.personalInfo.birthDatePlaceholder")}
           className="h-12 text-left text-base"
           maxLength={6}
           aria-invalid={!isBirthDateValid}
@@ -55,10 +59,12 @@ const StudentResidentNumber = forwardRef<HTMLDivElement>((props, ref) => {
       </div>
       <ErrorMessage
         isShown={!!birthDateError || !!residentNumberBackError}
-        message="유효하지 않은 주민등록번호입니다"
+        message={t("join.personalInfo.residentNumberError")}
       />
     </div>
   );
 });
+
+StudentResidentNumber.displayName = "StudentResidentNumber";
 
 export default StudentResidentNumber;

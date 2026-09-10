@@ -8,13 +8,10 @@ export const JOIN_STEPS: readonly string[] = [
 ] as const;
 
 // 각 단계의 타입을 추론
-type JoinStep = (typeof JOIN_STEPS)[number];
+export type JoinStep = (typeof JOIN_STEPS)[number];
 
-// 각 단계별 한글 이름을 매핑하는 객체
-export const JOIN_STEP_KOREAN_MAP: { [key in JoinStep]: string } = {
-  agreement: "회칙 동의",
-  "personal-info": "기본 인적사항",
-  survey: "가입 설문",
-  chat: "팀채팅방 가입",
-  payment: "회비 납부",
-};
+/**
+ * 단계 이름은 언어별 사전(`join.steps.<step>`)에서 가져옵니다.
+ * 이 헬퍼는 키를 만드는 곳을 한 군데로 모아 둡니다.
+ */
+export const joinStepLabelKey = (step: string) => `join.steps.${step}`;

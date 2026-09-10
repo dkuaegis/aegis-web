@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { lazy, Suspense } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import useAuth from "./hooks/useAuth";
@@ -25,6 +26,7 @@ const StudyMembersWrapper = lazy(
 const STUDY_BASE_PATH = "/study";
 
 const App = () => {
+  const { t } = useI18n();
   const { isAuthenticated, isLoading, isPending } = useAuth();
   const navigate = useNavigate();
   const shouldTrackPageView = !isLoading;
@@ -35,7 +37,7 @@ const App = () => {
   if (isLoading) {
     return (
       <div className="study flex min-h-screen items-center justify-center bg-white">
-        <div className="text-gray-500">로딩 중...</div>
+        <div className="text-gray-500">{t("study.loading.general")}</div>
       </div>
     );
   }
@@ -50,7 +52,7 @@ const App = () => {
       <Suspense
         fallback={
           <div className="study flex min-h-screen items-center justify-center bg-white">
-            <div className="text-gray-500">로딩 중...</div>
+            <div className="text-gray-500">{t("study.loading.general")}</div>
           </div>
         }
       >

@@ -15,7 +15,8 @@ export interface RawPointSummaryRes {
 
 export interface PointTransactionView extends RawPointTransaction {
   sign: "+" | "-";
-  label: "적립" | "사용";
+  /** 표시 문구는 `mypage.points.typeLabels`에서 가져옵니다. */
+  labelKey: "EARN" | "SPEND";
   signedAmount: number;
 }
 

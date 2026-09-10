@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import StudyConfirmationDialog from "@study/components/study/StudyConfirmationDialog";
 import StudyFormFields from "@study/components/study/StudyFormFields";
 import { Button } from "@study/components/ui/button";
@@ -15,6 +16,7 @@ const StudyFormContent = ({
   submitText,
   submittingText,
 }: StudyFormContentProps) => {
+  const { t } = useI18n();
   const { form, onSubmit, isEditMode } = useStudyFormContext();
   const [confirmOpen, setConfirmOpen] = useState(false);
 
@@ -34,16 +36,22 @@ const StudyFormContent = ({
           <span aria-hidden="true" className="dialog-btn-ripple-container">
             <span aria-hidden="true" className="dialog-btn-ripple" />
           </span>
-          <span className="dialog-btn-text">취소</span>
+          <span className="dialog-btn-text">{t("common.cancel")}</span>
         </Button>
         <StudyConfirmationDialog
           onConfirm={form.handleSubmit(onSubmit)}
           isSubmitting={form.formState.isSubmitting}
           submitText={submitText}
           submittingText={submittingText}
-          title={isEditMode ? "스터디 수정 확인" : "스터디 개설 확인"}
+          title={
+            isEditMode
+              ? t("study.form.editConfirmTitle")
+              : t("study.form.createConfirmTitle")
+          }
           description={
-            isEditMode ? "정말로 수정하시겠습니까?" : "정말로 개설하시겠습니까?"
+            isEditMode
+              ? t("study.form.editConfirmDescription")
+              : t("study.form.createConfirmDescription")
           }
           open={confirmOpen}
           onOpenChange={setConfirmOpen}

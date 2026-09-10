@@ -1,3 +1,4 @@
+import { t } from "@app/i18n/store";
 import { apiRequest, getApiErrorMessage } from "@app/lib/api";
 
 export interface QRIssueRes {
@@ -16,6 +17,6 @@ export async function issueQRCode(): Promise<string> {
     });
     return data.trim();
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "QR 코드 발급 실패"));
+    throw new Error(getApiErrorMessage(error, t("mypage.errors.qrIssue")));
   }
 }

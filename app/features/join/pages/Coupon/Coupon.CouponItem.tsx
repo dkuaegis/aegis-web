@@ -1,9 +1,12 @@
+import { useI18n } from "@app/i18n";
 import CouponIcon from "@join/assets/coupon.svg?react";
 import { cn } from "@join/lib/utils";
 import { Check } from "lucide-react";
 import type { CouponItemProps } from "./Coupon.Types";
 
 const CouponItem = ({ coupon, isSelected, setSelect }: CouponItemProps) => {
+  const { t } = useI18n();
+
   return (
     <button
       type="button"
@@ -21,7 +24,9 @@ const CouponItem = ({ coupon, isSelected, setSelect }: CouponItemProps) => {
           {coupon.couponName}
         </strong>
         <small className="text-slate-500">
-          {coupon.discountAmount.toLocaleString()}원 할인
+          {t("join.coupon.discountAmount", {
+            amount: coupon.discountAmount.toLocaleString(),
+          })}
         </small>
       </span>
       <span

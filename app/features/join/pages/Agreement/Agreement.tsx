@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import {
   Collapsible,
   CollapsibleContent,
@@ -12,6 +13,7 @@ import { useState } from "react";
 import AgreementConsent from "./Agreement.Consent";
 
 const Agreement = () => {
+  const { t, tList, language } = useI18n();
   const [openChapters, setOpenChapters] = useState<string[]>([]);
   const [consent, setConsent] = useState<ConsentState>({
     regulations: false,
@@ -33,13 +35,17 @@ const Agreement = () => {
 
   const allConsentsGiven = Object.values(consent).every(Boolean);
 
-  const renderArticleContent = (content: string | string[]) => {
-    if (Array.isArray(content)) {
+  /**
+   * An article is either a single paragraph or a list of clauses. `tList`
+   * returns one entry for the former and many for the latter, so the shape of
+   * the copy decides the markup.
+   */
+  const renderArticleContent = (paragraphs: string[]) => {
+    if (paragraphs.length > 1) {
       return (
         <ul className="ml-4 space-y-2">
-          {content.map((item, index) => (
-            // biome-ignore lint/suspicious/noArrayIndexKey: 이 목록은 정적이며 순서가 바뀌지 않으므로 인덱스를 key로 사용합니다.
-            <li key={index} className="flex items-start space-x-2">
+          {paragraphs.map((item) => (
+            <li key={item} className="flex items-start space-x-2">
               <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-gray-400"></span>
               <span className="text-gray-700 text-sm leading-relaxed">
                 {item}
@@ -49,11 +55,21 @@ const Agreement = () => {
         </ul>
       );
     }
-    return <p className="text-gray-700 text-sm leading-relaxed">{content}</p>;
+    return (
+      <p className="text-gray-700 text-sm leading-relaxed">{paragraphs[0]}</p>
+    );
   };
 
   return (
     <div className="flex h-100 flex-col">
+      {/* The Korean text is the binding version, so every other language gets
+          told so before it is asked to agree. */}
+      {language !== "ko" && (
+        <p className="join-agreement-notice">
+          {t("join.regulation.translationNotice")}
+        </p>
+      )}
+
       <ScrollArea className="h-100 flex-1">
         <div className="space-y-3">
           {chapters.map((chapter) => (
@@ -66,7 +82,7 @@ const Agreement = () => {
                   <div className="flex cursor-pointer items-center justify-between p-4 hover:bg-gray-50">
                     <div className="flex items-center space-x-3">
                       <span className="font-medium text-base text-gray-900">
-                        {chapter.title}
+                        {t(`join.regulation.chapters.${chapter.id}.title`)}
                       </span>
                     </div>
                     {openChapters.includes(chapter.id) ? (
@@ -80,14 +96,20 @@ const Agreement = () => {
                 <CollapsibleContent>
                   <div className="border-gray-100 border-t px-4 pb-4">
                     <div className="mt-4 space-y-4">
-                      {chapter.articles.map((article) => (
-                        <div key={article.number} className="space-y-2">
-                          <h4 className="font-medium text-gray-900 text-sm">
-                            제{article.number}조 {article.title}
-                          </h4>
-                          {renderArticleContent(article.content)}
-                        </div>
-                      ))}
+                      {chapter.articles.map((number) => {
+                        const base = `join.regulation.chapters.${chapter.id}.articles.${number}`;
+                        return (
+                          <div key={number} className="space-y-2">
+                            <h4 className="font-medium text-gray-900 text-sm">
+                              {t("join.regulation.articleLabel", {
+                                number,
+                                title: t(`${base}.title`),
+                              })}
+                            </h4>
+                            {renderArticleContent(tList(`${base}.content`))}
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 </CollapsibleContent>
@@ -103,7 +125,7 @@ const Agreement = () => {
       />
 
       <NavigationButtons
-        text="동의하고 계속하기"
+        text={t("join.actions.agreeAndContinue")}
         disabled={!allConsentsGiven}
         onClick={next}
       />

@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { Button } from "@join/components/ui/button";
 import { Input } from "@join/components/ui/input";
 import { Analytics } from "@join/service/analytics";
@@ -17,6 +18,7 @@ interface CouponProps {
 }
 
 const Coupon = ({ onClose }: CouponProps) => {
+  const { t } = useI18n();
   const [coupons, setCoupons] = useState<CouponType[]>([]);
   const [selectedCoupons, setSelectedCoupons] = useState<number[]>([]);
   const [couponCode, setCouponCode] = useState("");
@@ -74,17 +76,19 @@ const Coupon = ({ onClose }: CouponProps) => {
     event.preventDefault();
     const code = couponCode.trim();
     if (!code) {
-      toast.error("쿠폰 코드를 입력해주세요");
+      toast.error(t("join.coupon.codeRequired"));
       return;
     }
     setIsSubmitting(true);
     try {
       setCoupons(await submitAndFetchCouponCode(code));
       setCouponCode("");
-      toast.success("쿠폰을 등록했습니다.");
+      toast.success(t("join.coupon.registerSuccess"));
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "쿠폰을 등록하지 못했습니다."
+        error instanceof Error
+          ? error.message
+          : t("join.coupon.registerFailure")
       );
     } finally {
       setIsSubmitting(false);
@@ -98,9 +102,9 @@ const Coupon = ({ onClose }: CouponProps) => {
         onSubmit={handleCodeSubmit}
       >
         <Input
-          aria-label="쿠폰 코드"
+          aria-label={t("join.coupon.codeInputLabel")}
           className="rounded-none border-0 shadow-none focus-visible:ring-0"
-          placeholder="쿠폰 코드 입력"
+          placeholder={t("join.coupon.codeInputPlaceholder")}
           value={couponCode}
           onChange={(event) => setCouponCode(event.target.value)}
         />
@@ -109,14 +113,14 @@ const Coupon = ({ onClose }: CouponProps) => {
           type="submit"
           disabled={isSubmitting}
         >
-          등록
+          {t("join.coupon.register")}
         </Button>
       </form>
       <div className="max-h-[min(45vh,360px)] overflow-y-auto py-1">
         {coupons.length === 0 ? (
           <div className="flex items-center gap-2 rounded-lg bg-slate-50 p-4 text-slate-500 text-sm">
             <CircleAlert className="h-4 w-4 shrink-0" />
-            <p>사용 가능한 쿠폰이 없습니다.</p>
+            <p>{t("join.coupon.empty")}</p>
           </div>
         ) : (
           <CouponList
@@ -135,7 +139,7 @@ const Coupon = ({ onClose }: CouponProps) => {
         {isSubmitting ? (
           <Loader2 className="h-5 w-5 animate-spin" />
         ) : (
-          "선택한 쿠폰 적용"
+          t("join.coupon.applySelected")
         )}
       </Button>
     </div>

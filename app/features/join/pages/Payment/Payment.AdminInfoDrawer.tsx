@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { Button } from "@join/components/ui/button";
 import {
   Drawer,
@@ -11,26 +12,32 @@ import {
 } from "@join/components/ui/drawer";
 
 const AdminInfoDrawer = () => {
+  const { t } = useI18n();
+
   return (
     <Drawer>
       <DrawerTrigger>
         <p className="text-start text-slate-500 underline">
-          입금과정에서 초과납부 등의 문제 발생 시
-          <span className="font-extrabold"> 회장/총무에게 문의해주세요.</span>
+          {t("join.payment.adminDrawer.triggerLead")}
+          <span className="font-extrabold">
+            {t("join.payment.adminDrawer.triggerStrong")}
+          </span>
         </p>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>연락처</DrawerTitle>
+          <DrawerTitle>{t("join.payment.adminDrawer.title")}</DrawerTitle>
           <DrawerDescription>
-            전화번호: {import.meta.env.VITE_ADMIN_PHONE} <br />
-            카카오톡: {import.meta.env.VITE_ADMIN_KAKAO}
+            {t("join.payment.adminDrawer.phoneLabel")}:{" "}
+            {import.meta.env.VITE_ADMIN_PHONE} <br />
+            {t("join.payment.adminDrawer.kakaoLabel")}:{" "}
+            {import.meta.env.VITE_ADMIN_KAKAO}
           </DrawerDescription>
         </DrawerHeader>
         <DrawerFooter>
           <DrawerClose asChild>
             <Button variant="outline" className="w-full">
-              닫기
+              {t("common.close")}
             </Button>
           </DrawerClose>
         </DrawerFooter>

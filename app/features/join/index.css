@@ -690,3 +690,16 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Shown above the club rules in any language other than Korean: the Korean
+   text is the binding version. */
+.join-agreement-notice {
+  margin: 0 0 0.75rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid rgb(148 163 184 / 45%);
+  border-radius: 0.5rem;
+  background: rgb(241 245 249 / 70%);
+  color: #475569;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}

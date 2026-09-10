@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { Button } from "@join/components/ui/button";
 import NavigationButtons from "@join/components/ui/custom/navigationButton";
 import {
@@ -21,6 +22,7 @@ const Complete = React.lazy(
 );
 
 const Payment = () => {
+  const { t } = useI18n();
   const { isValid, finalPrice, status, refreshFinalPrice } =
     usePaymentPolling();
   const [currentView, setCurrentView] = useState<"coupon" | "payment">(
@@ -43,9 +45,7 @@ const Payment = () => {
   if (status === "error") {
     return (
       <div className="text-center text-red-500">
-        <p className="my-7">
-          결제 상태를 불러오는 데 실패했습니다. 나중에 다시 시도해주세요.
-        </p>
+        <p className="my-7">{t("join.payment.loadError")}</p>
         <AdminInfoDrawer />
       </div>
     );
@@ -56,7 +56,9 @@ const Payment = () => {
       <div className="line-breaks space-y-8">
         {!isValid ? (
           <>
-            <Label className="text-xl">납부 금액</Label>
+            <Label className="text-xl">
+              {t("join.payment.amountLabel")}
+            </Label>
             <PaymentAmount amount={finalPrice} />
             <Information />
             <Button
@@ -70,13 +72,13 @@ const Payment = () => {
                 setCurrentView("coupon");
               }}
             >
-              쿠폰 적용하기
+              {t("join.payment.applyCoupon")}
             </Button>
             <AdminInfoDrawer />
           </>
         ) : (
           <Suspense>
-            <Complete message="납부가 완료됐어요" />
+            <Complete message={t("join.payment.completeMessage")} />
             <NavigationButtons
               disabled={!isValid}
               onClick={() => {
@@ -97,7 +99,9 @@ const Payment = () => {
       >
         <DialogContent className="max-h-[90vh] overflow-y-auto border-white/30 bg-white p-0 shadow-2xl sm:max-w-[560px]">
           <DialogHeader className="border-b px-6 py-5 text-left">
-            <DialogTitle className="text-xl">할인 쿠폰</DialogTitle>
+            <DialogTitle className="text-xl">
+              {t("join.payment.couponDialogTitle")}
+            </DialogTitle>
           </DialogHeader>
           <div className="px-6 pb-6">
             <Coupon

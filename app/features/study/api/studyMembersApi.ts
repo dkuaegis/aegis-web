@@ -1,3 +1,4 @@
+import { t } from "@app/i18n/store";
 import { ApiError, api } from "@app/lib/api";
 import { API_ENDPOINTS } from "@study/lib/apiEndpoints";
 
@@ -10,11 +11,11 @@ export interface StudyMemberApiResponse {
 export function getStudyMembersErrorMessage(statusCode: number): string {
   switch (statusCode) {
     case 403:
-      return "스터디장이 아닙니다.";
+      return t("study.errors.notInstructor");
     case 404:
-      return "스터디를 찾을 수 없습니다.";
+      return t("study.errors.studyNotFound");
     default:
-      return "스터디원 정보를 불러오지 못했습니다.";
+      return t("study.errors.membersFetch");
   }
 }
 
@@ -34,6 +35,6 @@ export async function fetchStudyMembers(
       const message = getStudyMembersErrorMessage(err.status);
       throw new Error(message);
     }
-    throw new Error("스터디원 정보를 불러오지 못했습니다.");
+    throw new Error(t("study.errors.membersFetch"));
   }
 }

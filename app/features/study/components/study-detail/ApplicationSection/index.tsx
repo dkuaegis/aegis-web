@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import {
   Card,
   CardContent,
@@ -79,16 +80,17 @@ export const ApplicationSection = ({
 export default ApplicationSection;
 
 const StatusMessage = ({ type }: { type: "APPROVED" | "REJECTED" }) => {
+  const { t } = useI18n();
   const config = {
     APPROVED: {
-      text: "스터디에 참여 중입니다!",
+      text: t("study.application.statusMessage.approved"),
       textColor: "text-green-600",
       subText: null,
     },
     REJECTED: {
-      text: "신청이 거절되었습니다.",
+      text: t("study.application.statusMessage.rejected"),
       textColor: "text-red-600",
-      subText: "다른 스터디를 찾아보세요.",
+      subText: t("study.application.statusMessage.rejectedSub"),
     },
   };
   const { text, textColor, subText } = config[type];

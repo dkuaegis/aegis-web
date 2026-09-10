@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import type {
   AttendanceCodeResponse,
   AttendanceInstructorResponse,
@@ -28,6 +29,7 @@ interface AttendanceProps {
 }
 
 const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
+  const { t } = useI18n();
   const {
     isInstructor,
     isLoading: isRoleLoading,
@@ -67,7 +69,7 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
         const message =
           error instanceof Error
             ? error.message
-            : "출석 데이터를 불러오는데 실패했습니다.";
+            : t("study.attendance.loadError");
         setAttendanceError(message);
         toast({ description: message });
       } finally {
@@ -86,7 +88,7 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
       <div className="min-h-screen bg-gray-50">
         <Header onBack={() => onBack(studyId)} />
         <div className="flex min-h-screen items-center justify-center">
-          <div className="text-gray-500">권한 정보를 불러오는 중...</div>
+          <div className="text-gray-500">{t("study.loading.role")}</div>
         </div>
       </div>
     );
@@ -99,7 +101,7 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
   if (!isOwner) {
     return (
       <ForbiddenPage
-        message="이 스터디의 출석을 관리할 수 있는 권한이 없습니다."
+        message={t("study.forbidden.attendance")}
         onBack={() => onBack(studyId)}
       />
     );
@@ -110,7 +112,9 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
       <div className="min-h-screen bg-gray-50">
         <Header onBack={() => onBack(studyId)} />
         <div className="flex min-h-screen items-center justify-center">
-          <div className="text-gray-500">출석 데이터를 불러오는 중...</div>
+          <div className="text-gray-500">
+            {t("study.loading.attendance")}
+          </div>
         </div>
       </div>
     );
@@ -132,7 +136,7 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
       <div className="min-h-screen bg-gray-50">
         <Header onBack={() => onBack(studyId)} />
         <div className="flex min-h-screen items-center justify-center">
-          <div className="text-gray-500">출석 데이터가 없습니다.</div>
+          <div className="text-gray-500">{t("study.attendance.noData")}</div>
         </div>
       </div>
     );
@@ -149,7 +153,7 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
       setAttendanceCode(res.code);
     } catch (err: unknown) {
       const message =
-        err instanceof Error ? err.message : "출석 코드 발급에 실패했습니다.";
+        err instanceof Error ? err.message : t("study.attendance.codeError");
       toast({ description: message });
     } finally {
       inFlight.current = false;
@@ -172,10 +176,10 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Calendar className="h-5 w-5" />
-              출석 현황
+              {t("study.attendance.statusTitle")}
             </CardTitle>
             <CardDescription>
-              스터디의 출석 현황을 확인할 수 있습니다.
+              {t("study.attendance.statusDescription")}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -185,18 +189,20 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
                   <thead>
                     <tr className="bg-gray-50">
                       <th className="min-w-[100px] border border-gray-200 p-3 text-left font-medium">
-                        이름
+                        {t("study.attendance.nameColumn")}
                       </th>
                       {sessions.map((session, idx) => (
                         <th
                           key={session.sessionId}
                           className="min-w-[65px] border border-gray-200 p-3 text-center font-medium"
                         >
-                          {idx + 1}회차
+                          {t("study.attendance.sessionColumn", {
+                            index: idx + 1,
+                          })}
                         </th>
                       ))}
                       <th className="min-w-[80px] border border-gray-200 p-3 text-center font-medium">
-                        출석률
+                        {t("study.attendance.rateColumn")}
                       </th>
                     </tr>
                   </thead>
@@ -248,19 +254,21 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Timer className="h-5 w-5" />
-                출석 코드 관리
+                {t("study.attendance.codeSectionTitle")}
               </CardTitle>
-              <CardDescription>출석 코드를 생성합니다.</CardDescription>
+              <CardDescription>
+                {t("study.attendance.codeSectionDescription")}
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex flex-col items-center gap-4 sm:flex-row">
                 <StudyConfirmationDialog
                   onConfirm={generateAttendanceCode}
                   isSubmitting={isGenerating}
-                  submitText="생성"
-                  submittingText="생성 중..."
-                  title="출석 코드 생성 확인"
-                  description="정말로 생성하시겠습니까? 생성된 출석 코드는 생성한 당일에만 유효합니다."
+                  submitText={t("study.attendance.generateShort")}
+                  submittingText={t("study.attendance.generating")}
+                  title={t("study.attendance.generateConfirmTitle")}
+                  description={t("study.attendance.generateConfirmDescription")}
                 >
                   <Button
                     disabled={isGenerating}
@@ -276,14 +284,18 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
                       />
                     </span>
                     <span className="relative z-10">
-                      {isGenerating ? "생성 중..." : "출석 코드 생성"}
+                      {isGenerating
+                        ? t("study.attendance.generating")
+                        : t("study.attendance.generate")}
                     </span>
                   </Button>
                 </StudyConfirmationDialog>
                 {attendanceCode && (
                   <div className="flex items-center gap-4">
                     <div className="text-center">
-                      <p className="text-gray-600 text-sm">출석 코드</p>
+                      <p className="text-gray-600 text-sm">
+                        {t("study.attendance.codeLabel")}
+                      </p>
                       <p className="font-bold font-mono text-2xl text-[#3b82f6]">
                         {attendanceCode}
                       </p>

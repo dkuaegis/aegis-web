@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import fireData from "@study/assets/Fire Element Effect Animation.json";
 import ApplicationCard from "@study/components/study/ApplicationCard";
 import { Badge } from "@study/components/ui/badge";
@@ -40,6 +41,7 @@ const FireLottie = () => {
 };
 
 const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
+  const { t } = useI18n();
   const {
     isInstructor,
     isLoading: isRoleLoading,
@@ -70,8 +72,8 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
               <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-[#3b82f6] border-b-2"></div>
               <p className="text-gray-500">
                 {isRoleLoading
-                  ? "권한 정보를 불러오는 중..."
-                  : "지원자 데이터를 불러오는 중..."}
+                  ? t("study.loading.role")
+                  : t("study.loading.applicants")}
               </p>
             </div>
           </div>
@@ -87,7 +89,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
   if (!isOwner) {
     return (
       <ForbiddenPage
-        message="이 스터디의 지원현황을 볼 수 있는 권한이 없습니다."
+        message={t("study.forbidden.applications")}
         onBack={onBack}
       />
     );
@@ -103,9 +105,11 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
               <FireLottie />
             </div>
             <p className="font-medium text-gray-600 text-xl">
-              선착순 모집 스터디입니다.
+              {t("study.applications.fcfsTitle")}
             </p>
-            <p className="mt-2 text-gray-500">지원 현황이 없습니다.</p>
+            <p className="mt-2 text-gray-500">
+              {t("study.applications.fcfsSubtitle")}
+            </p>
           </div>
         </div>
       </div>
@@ -128,7 +132,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
                 onClick={() => window.location.reload()}
                 className="mt-4 rounded-full bg-gradient-to-br from-[#3b82f6] to-[#2563eb] px-6 py-2.5 text-white font-semibold shadow-[0_4px_20px_rgba(59,130,246,0.4),0_8px_32px_rgba(59,130,246,0.2)] transition-all duration-300 hover:-translate-y-0.5 hover:from-[#2563eb] hover:to-[#1d4ed8] hover:shadow-[0_6px_28px_rgba(59,130,246,0.5),0_12px_40px_rgba(59,130,246,0.3)]"
               >
-                다시 시도
+                {t("common.retry")}
               </button>
             </div>
           </div>
@@ -148,7 +152,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
                 <User className="h-8 w-8 text-gray-400" />
               </div>
               <p className="text-gray-500 text-lg">
-                해당 스터디의 지원자가 아직 없습니다.
+                {t("study.applications.noApplicants")}
               </p>
             </div>
           </div>
@@ -160,7 +164,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
   const filterOptions = [
     {
       key: "ALL" as const,
-      label: "전체",
+      label: t("study.applications.filters.all"),
       count: stats.total,
       icon: User,
       color: "text-[#3b82f6]",
@@ -170,7 +174,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
     },
     {
       key: ApplicationStatus.PENDING as const,
-      label: "검토 중",
+      label: t("study.applications.filters.pending"),
       count: stats.pending,
       icon: Clock,
       color: "text-yellow-600",
@@ -180,7 +184,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
     },
     {
       key: ApplicationStatus.APPROVED as const,
-      label: "승인",
+      label: t("study.applications.filters.approved"),
       count: stats.approved,
       icon: CheckCircle,
       color: "text-green-600",
@@ -190,7 +194,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
     },
     {
       key: ApplicationStatus.REJECTED as const,
-      label: "거절",
+      label: t("study.applications.filters.rejected"),
       count: stats.rejected,
       icon: XCircle,
       color: "text-red-600",
@@ -208,7 +212,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
         <div className="flex flex-col gap-6 lg:flex-row">
           <aside className="w-full rounded-lg border border-gray-200 bg-white p-6 lg:h-fit lg:w-80">
             <h2 className="mb-4 font-semibold text-gray-900 text-lg">
-              지원자 필터
+              {t("study.applications.filterTitle")}
             </h2>
             <div className="flex gap-2 overflow-x-auto pb-2 lg:flex-col lg:overflow-x-visible lg:pb-0">
               {filterOptions.map((option) => {
@@ -264,10 +268,12 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
                       filterOptions.find((opt) => opt.key === selectedFilter)
                         ?.label
                     }{" "}
-                    지원자
+                    {t("study.applications.applicantsTitle")}
                   </CardTitle>
                   <Badge variant="outline" className="text-gray-600">
-                    {filteredApplications.length}명
+                    {t("study.applications.applicantsCount", {
+                      count: filteredApplications.length,
+                    })}
                   </Badge>
                 </div>
               </CardHeader>
@@ -278,7 +284,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
                       <User className="h-8 w-8 text-gray-400" />
                     </div>
                     <p className="text-gray-500 text-lg">
-                      해당하는 지원자가 없습니다.
+                      {t("study.applications.noneMatchFilter")}
                     </p>
                   </div>
                 ) : (

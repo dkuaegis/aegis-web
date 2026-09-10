@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { Alert, AlertDescription } from "@join/components/ui/alert";
 import { Button } from "@join/components/ui/button";
 import { Copy } from "lucide-react";
@@ -16,49 +17,51 @@ interface AccountDetails {
   accountHolder: string;
 }
 
-const InfoRow: React.FC<InfoRowProps> = ({ label, value, onCopy }) => (
-  <div className="flex items-center">
-    <span className="w-16 pr-2 font-medium">{label}</span>
-    <span>{value}</span>
-    {onCopy && (
-      <Button
-        variant="icon"
-        size="lg"
-        onClick={onCopy}
-        aria-label={`${label} 복사하기`}
-      >
-        <Copy size={16} />
-      </Button>
-    )}
-  </div>
-);
+const InfoRow: React.FC<InfoRowProps> = ({ label, value, onCopy }) => {
+  const { t } = useI18n();
+
+  return (
+    <div className="flex items-center">
+      <span className="w-16 pr-2 font-medium">{label}</span>
+      <span>{value}</span>
+      {onCopy && (
+        <Button
+          variant="icon"
+          size="lg"
+          onClick={onCopy}
+          aria-label={t("join.payment.account.copyLabel", { label })}
+        >
+          <Copy size={16} />
+        </Button>
+      )}
+    </div>
+  );
+};
 
 const Information: React.FC = () => {
+  const { t } = useI18n();
   const accountString = import.meta.env.VITE_ADMIN_ACCOUNT_NUMBER;
+  const accountHolder = t("join.payment.account.defaultHolder");
 
   const accountDetails = useMemo<AccountDetails>(() => {
     if (!accountString) {
-      return { bankName: "", accountNumber: "", accountHolder: "권대근" };
+      return { bankName: "", accountNumber: "", accountHolder };
     }
     const lastSpaceIndex = accountString.lastIndexOf(" ");
     const bankName = accountString.slice(0, lastSpaceIndex);
     const accountNumber = accountString.slice(lastSpaceIndex + 1);
 
-    return {
-      bankName,
-      accountNumber,
-      accountHolder: "권대근",
-    };
-  }, []);
+    return { bankName, accountNumber, accountHolder };
+  }, [accountString, accountHolder]);
 
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(
         import.meta.env.VITE_ADMIN_ACCOUNT_NUMBER
       );
-      toast.success("복사되었습니다.");
+      toast.success(t("join.payment.account.copySuccess"));
     } catch (error) {
-      toast.error("복사에 실패했습니다. 브라우저 권한을 확인해주세요.");
+      toast.error(t("join.payment.account.copyFailure"));
       console.error("copy failed:", error);
     }
   };
@@ -66,13 +69,19 @@ const Information: React.FC = () => {
   return (
     <Alert>
       <AlertDescription className="space-y-2 text-sm sm:text-base">
-        <InfoRow label="은행" value={accountDetails.bankName} />
         <InfoRow
-          label="계좌번호"
+          label={t("join.payment.account.bank")}
+          value={accountDetails.bankName}
+        />
+        <InfoRow
+          label={t("join.payment.account.accountNumber")}
           value={accountDetails.accountNumber}
           onCopy={handleCopy}
         />
-        <InfoRow label="예금주명" value={accountDetails.accountHolder} />
+        <InfoRow
+          label={t("join.payment.account.accountHolder")}
+          value={accountDetails.accountHolder}
+        />
       </AlertDescription>
     </Alert>
   );

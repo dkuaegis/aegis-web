@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { Button } from "@join/components/ui/button";
 import { cn } from "@join/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
@@ -22,12 +23,15 @@ const variants = {
 
 export default function NavigationButtons({
   onClick,
-  text = "다음",
+  text,
   disabled = false,
   isLoading = false,
   isVisible = true,
   isVisuallyDisabled = false,
 }: NavigationButtonsProps) {
+  const { t } = useI18n();
+  const label = text ?? t("join.actions.next");
+
   // AnimatePresence: isVisible 값이 바뀔 때 exit 애니메이션을 실행
   return (
     <AnimatePresence>
@@ -49,7 +53,7 @@ export default function NavigationButtons({
               size="lg"
             >
               {/* isLoading 상태일 때 로딩 아이콘 표시 */}
-              {isLoading ? <Loader2 className="h-6 w-6 animate-spin" /> : text}
+              {isLoading ? <Loader2 className="h-6 w-6 animate-spin" /> : label}
             </Button>
           </div>
         </motion.div>

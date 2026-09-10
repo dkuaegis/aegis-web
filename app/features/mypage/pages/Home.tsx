@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getMyPage } from "../api/Mypage";
@@ -9,6 +10,7 @@ import Profile from "../components/Profile";
 import QRModal from "../components/QRModal";
 
 const Home: React.FC = () => {
+  const { t } = useI18n();
   const [mypage, setMypage] = useState<{
     name: string;
     profileIcon: string;
@@ -55,7 +57,7 @@ const Home: React.FC = () => {
         <Button
           text={
             <span className="point-info">
-              <img src={pointImg} alt="포인트" />
+              <img src={pointImg} alt={t("mypage.home.pointIconAlt")} />
               <span className="point-text">
                 {mypage?.pointBalance?.toLocaleString()}
               </span>
@@ -67,11 +69,15 @@ const Home: React.FC = () => {
       </div>
       <div className="main-button-group">
         <Button
-          text={"선물함"}
+          text={t("mypage.home.giftbox")}
           type={"MAIN"}
           onClick={() => navigate("/mypage/category/giftbox/history")}
         />
-        <Button text={"QR코드"} type={"MAIN"} onClick={onClickQR} />
+        <Button
+          text={t("mypage.home.qrCode")}
+          type={"MAIN"}
+          onClick={onClickQR}
+        />
       </div>
       <ActivitySection />
 

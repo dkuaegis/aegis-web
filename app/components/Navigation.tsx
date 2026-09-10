@@ -1,3 +1,4 @@
+import { LanguageToggle, useI18n } from "@app/i18n";
 import { googleLoginUrl } from "@app/lib/api";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -8,6 +9,7 @@ interface NavigationProps {
 }
 
 function Navigation({ currentPage = "home" }: NavigationProps) {
+  const { t } = useI18n();
   const [menuOpen, setMenuOpen] = useState(false);
   const [authUser, setAuthUser] = useState<AuthUser>({
     isAuthenticated: false,
@@ -113,6 +115,7 @@ function Navigation({ currentPage = "home" }: NavigationProps) {
               </>
             )}
           </div>
+          <LanguageToggle className="nav-language" />
           {renderAuthLinks()}
         </div>
 
@@ -121,7 +124,7 @@ function Navigation({ currentPage = "home" }: NavigationProps) {
           type="button"
           className="hamburger"
           onClick={() => setMenuOpen(true)}
-          aria-label="메뉴 열기"
+          aria-label={t("common.openMenu")}
         >
           <span></span>
           <span></span>
@@ -139,7 +142,7 @@ function Navigation({ currentPage = "home" }: NavigationProps) {
             type="button"
             className="mobile-menu-close"
             onClick={() => setMenuOpen(false)}
-            aria-label="메뉴 닫기"
+            aria-label={t("common.closeMenu")}
           >
             <svg
               aria-hidden="true"
@@ -183,6 +186,7 @@ function Navigation({ currentPage = "home" }: NavigationProps) {
               </Link>
             </>
           )}
+          <LanguageToggle className="nav-language is-mobile" />
           {renderAuthLinks(true)}
         </div>
       </div>
@@ -193,7 +197,7 @@ function Navigation({ currentPage = "home" }: NavigationProps) {
           type="button"
           className="mobile-menu-overlay"
           onClick={() => setMenuOpen(false)}
-          aria-label="메뉴 닫기"
+          aria-label={t("common.closeMenu")}
         />
       )}
     </>

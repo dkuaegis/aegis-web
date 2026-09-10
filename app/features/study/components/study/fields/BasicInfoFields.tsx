@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import {
   Card,
   CardContent,
@@ -19,25 +20,28 @@ const INTRODUCTION_MAX_LENGTH = 1000;
 const TITLE_MAX_LENGTH = 30;
 
 const BasicInfoFields = () => {
+  const { t } = useI18n();
   const { difficulties, categories } = useStudyFormContext();
 
   return (
     <Card className="border-gray-200">
       <CardHeader>
         <CardTitle className="font-semibold text-gray-900 text-lg">
-          기본 정보
+          {t("study.form.basicInfo")}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <FormField
           name="title"
-          label="스터디명"
+          label={t("study.form.titleLabel")}
           required
           rules={{
-            required: "스터디명을 입력하세요.",
+            required: t("study.form.titleRequired"),
             maxLength: {
               value: TITLE_MAX_LENGTH,
-              message: `스터디명은 ${TITLE_MAX_LENGTH}자 이내로 입력해주세요.`,
+              message: t("study.form.titleMaxLength", {
+                max: TITLE_MAX_LENGTH,
+              }),
             },
           }}
         >
@@ -45,7 +49,7 @@ const BasicInfoFields = () => {
             <Textarea
               {...field}
               maxLength={TITLE_MAX_LENGTH}
-              placeholder="스터디명을 입력하세요"
+              placeholder={t("study.form.titlePlaceholder")}
               className={
                 hasError && isDirty
                   ? "border-red-500 focus:border-red-500 focus:ring-red-500"
@@ -57,9 +61,9 @@ const BasicInfoFields = () => {
         <div className="grid grid-cols-2 gap-4">
           <FormField
             name="category"
-            label="카테고리"
+            label={t("study.form.categoryLabel")}
             required
-            rules={{ required: "카테고리를 선택하세요." }}
+            rules={{ required: t("study.form.categoryRequired") }}
           >
             {(field, { hasError, isDirty }) => (
               <Select
@@ -79,7 +83,9 @@ const BasicInfoFields = () => {
                       : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                   }
                 >
-                  <SelectValue placeholder="카테고리를 선택하세요" />
+                  <SelectValue
+                    placeholder={t("study.form.categoryPlaceholder")}
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((category) => (
@@ -93,9 +99,9 @@ const BasicInfoFields = () => {
           </FormField>
           <FormField
             name="difficulty"
-            label="난이도"
+            label={t("study.form.difficultyLabel")}
             required
-            rules={{ required: "난이도를 선택하세요." }}
+            rules={{ required: t("study.form.difficultyRequired") }}
           >
             {(field, { hasError, isDirty }) => (
               <Select
@@ -115,7 +121,9 @@ const BasicInfoFields = () => {
                       : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                   }
                 >
-                  <SelectValue placeholder="난이도를 선택하세요" />
+                  <SelectValue
+                    placeholder={t("study.form.difficultyPlaceholder")}
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   {difficulties.map((difficulty) => (
@@ -130,13 +138,15 @@ const BasicInfoFields = () => {
         </div>
         <FormField
           name="introduction"
-          label="스터디 소개"
+          label={t("study.form.introductionLabel")}
           required
           rules={{
-            required: "스터디 소개를 입력하세요.",
+            required: t("study.form.introductionRequired"),
             maxLength: {
               value: INTRODUCTION_MAX_LENGTH,
-              message: `스터디 소개는 ${INTRODUCTION_MAX_LENGTH}자 이내로 입력해주세요.`,
+              message: t("study.form.introductionMaxLength", {
+                max: INTRODUCTION_MAX_LENGTH,
+              }),
             },
           }}
         >
@@ -144,7 +154,7 @@ const BasicInfoFields = () => {
             <Textarea
               {...field}
               maxLength={INTRODUCTION_MAX_LENGTH}
-              placeholder="스터디에 대한 자세한 소개를 작성해주세요"
+              placeholder={t("study.form.introductionPlaceholder")}
               className={
                 hasError && isDirty
                   ? "border-red-500 focus:border-red-500 focus:ring-red-500"

@@ -1,3 +1,4 @@
+import { LanguageToggle, useI18n } from "@app/i18n";
 import MypageApp from "@mypage/App";
 import { initGoogleAnalytics } from "@mypage/utils/analytics";
 import { useEffect, useState } from "react";
@@ -13,6 +14,7 @@ const NAV_LINKS = [
 ] as const;
 
 function MypageSiteHeader() {
+  const { t } = useI18n();
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -23,32 +25,36 @@ function MypageSiteHeader() {
             AEGIS
           </Link>
 
-          <nav className="mypage-site-nav" aria-label="주요 메뉴">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.label}
-                to={link.href}
-                className={`mypage-site-nav-link${
-                  link.href === "/mypage" ? " is-active" : ""
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
+          <div className="mypage-site-header-actions">
+            <nav className="mypage-site-nav" aria-label={t("common.mainMenu")}>
+              {NAV_LINKS.map((link) => (
+                <Link
+                  key={link.label}
+                  to={link.href}
+                  className={`mypage-site-nav-link${
+                    link.href === "/mypage" ? " is-active" : ""
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
 
-          <button
-            type="button"
-            className="mypage-site-menu-button"
-            onClick={() => setMenuOpen(true)}
-            aria-label="메뉴 열기"
-            aria-expanded={menuOpen}
-            aria-controls="mypage-site-mobile-menu"
-          >
-            <span />
-            <span />
-            <span />
-          </button>
+            <LanguageToggle className="mypage-site-language" size="compact" />
+
+            <button
+              type="button"
+              className="mypage-site-menu-button"
+              onClick={() => setMenuOpen(true)}
+              aria-label={t("common.openMenu")}
+              aria-expanded={menuOpen}
+              aria-controls="mypage-site-mobile-menu"
+            >
+              <span />
+              <span />
+              <span />
+            </button>
+          </div>
         </div>
       </header>
 
@@ -68,13 +74,16 @@ function MypageSiteHeader() {
             type="button"
             className="mypage-site-menu-close"
             onClick={() => setMenuOpen(false)}
-            aria-label="메뉴 닫기"
+            aria-label={t("common.closeMenu")}
           >
             <span aria-hidden="true">X</span>
           </button>
         </div>
 
-        <nav className="mypage-site-mobile-nav" aria-label="모바일 주요 메뉴">
+        <nav
+          className="mypage-site-mobile-nav"
+          aria-label={t("common.mobileMainMenu")}
+        >
           {NAV_LINKS.map((link) => (
             <Link
               key={link.label}
@@ -94,7 +103,7 @@ function MypageSiteHeader() {
         type="button"
         className={`mypage-site-menu-overlay${menuOpen ? " is-open" : ""}`}
         onClick={() => setMenuOpen(false)}
-        aria-label="메뉴 닫기"
+        aria-label={t("common.closeMenu")}
       />
     </>
   );

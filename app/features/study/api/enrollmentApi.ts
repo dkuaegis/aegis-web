@@ -1,3 +1,4 @@
+import { t } from "@app/i18n/store";
 import { ApiError, api } from "@app/lib/api";
 import { API_ENDPOINTS } from "@study/lib/apiEndpoints";
 import { handleHTTPError } from "@study/lib/apiUtils";
@@ -41,25 +42,25 @@ export interface UpdateApplicationPayload {
 
 const ERROR_MESSAGES = {
   enrollment: {
-    400: "잘못된 요청 데이터입니다.",
-    403: "지원 기간이 아닙니다.",
-    404: "스터디를 찾을 수 없습니다.",
-    409: "이미 신청된 상태입니다.",
-    default: "스터디 신청 중 오류가 발생했습니다.",
+    400: "study.errors.badRequestData",
+    403: "study.errors.notRecruitmentPeriod",
+    404: "study.errors.studyNotFound",
+    409: "study.errors.alreadyApplied",
+    default: "study.errors.enrollmentApply",
   },
   cancel: {
-    400: "잘못된 요청입니다.",
-    404: "스터디를 찾을 수 없습니다.",
-    default: "신청 취소 중 오류가 발생했습니다.",
+    400: "study.errors.badRequest",
+    404: "study.errors.studyNotFound",
+    default: "study.errors.enrollmentCancel",
   },
   userApplication: {
-    404: "지원서를 찾을 수 없습니다.",
-    default: "지원서 조회 중 오류가 발생했습니다.",
+    404: "study.errors.applicationNotFound",
+    default: "study.errors.applicationLookup",
   },
   updateApplication: {
-    400: "잘못된 요청 데이터입니다.",
-    404: "지원서를 찾을 수 없습니다.",
-    default: "지원서 수정 중 오류가 발생했습니다.",
+    400: "study.errors.badRequestData",
+    404: "study.errors.applicationNotFound",
+    default: "study.errors.applicationUpdate",
   },
 } as const;
 
@@ -97,7 +98,7 @@ export async function enrollInStudy(
     );
 
     const fallback: EnrollmentResponse = {
-      message: "지원이 완료되었습니다.",
+      message: t("study.errors.applySuccess"),
       status: "PENDING",
     };
     return response ?? fallback;
@@ -122,7 +123,7 @@ export async function getStudyStatus(
     if (error instanceof Error) {
       throw error;
     }
-    throw new Error(`스터디 상태 조회 중 오류: ${String(error)}`);
+    throw new Error(`${t("study.errors.statusLookup")}: ${String(error)}`);
   }
 }
 

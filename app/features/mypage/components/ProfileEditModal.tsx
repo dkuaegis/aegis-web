@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { IconKey } from "../constants/ProfileIcons";
@@ -19,6 +20,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
   onSelectKey,
   onClose,
 }) => {
+  const { t } = useI18n();
   const [tempKey, setTempKey] = useState<IconKey>(selectedKey);
   const [mypage, setMypage] = useState<{
     name: string;
@@ -94,9 +96,14 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
     <div className="profile-modal-overlay">
       <div className="profile-modal">
         <h2 className="profile-title">
-          {mypage?.name}님,
-          <br />
-          프로필 이미지를 꾸며보세요
+          {t("mypage.profile.editTitle", { name: mypage?.name ?? "" })
+            .split("\n")
+            .map((line, index) => (
+              <span key={line}>
+                {index > 0 && <br />}
+                {line}
+              </span>
+            ))}
         </h2>
         <img
           src={PROFILE_ICONS[tempKey]}
@@ -119,7 +126,11 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
             </div>
           ))}
         </div>
-        <div className="pager" role="tablist" aria-label="페이지 인디케이터">
+        <div
+          className="pager"
+          role="tablist"
+          aria-label={t("mypage.profile.pagerLabel")}
+        >
           {pageIndexes.map((page) => (
             <button
               key={page.id}
@@ -128,13 +139,23 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
               onClick={() => scrollToPage(page.index)}
               role="tab"
               aria-selected={page.index === currentPage}
-              aria-label={`페이지 ${page.index + 1}로 이동`}
+              aria-label={t("mypage.profile.goToPage", {
+                page: page.index + 1,
+              })}
             />
           ))}
         </div>
         <div className="button-group">
-          <Button text={"나가기"} type={"EDITRETURN"} onClick={onClose} />
-          <Button text={"저장"} type={"EDITSAVE"} onClick={handleSave} />
+          <Button
+            text={t("mypage.profile.leave")}
+            type={"EDITRETURN"}
+            onClick={onClose}
+          />
+          <Button
+            text={t("mypage.profile.save")}
+            type={"EDITSAVE"}
+            onClick={handleSave}
+          />
         </div>
       </div>
     </div>

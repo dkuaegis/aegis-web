@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { Checkbox } from "@join/components/ui/checkbox";
 import type { ConsentState } from "@join/constants/regulation";
 
@@ -10,6 +11,8 @@ const AgreementConsent = ({
   consent,
   onConsentChange,
 }: AgreementConsentProps) => {
+  const { t } = useI18n();
+
   return (
     <div className="my-6 space-y-4 border-t p-4 pb-18">
       <div className="space-y-3">
@@ -26,8 +29,10 @@ const AgreementConsent = ({
             htmlFor="regulations"
             className="cursor-pointer text-gray-700 text-sm"
           >
-            <span className="text-red-500">[필수]</span> Aegis 동아리 회칙에
-            동의합니다
+            <span className="text-red-500">
+              {t("join.regulation.consent.requiredTag")}
+            </span>
+            {t("join.regulation.consent.regulations")}
           </label>
         </div>
 
@@ -44,8 +49,10 @@ const AgreementConsent = ({
             htmlFor="privacy"
             className="cursor-pointer text-gray-700 text-sm"
           >
-            <span className="text-red-500">[필수]</span> 개인정보 수집 및 이용에
-            동의합니다
+            <span className="text-red-500">
+              {t("join.regulation.consent.requiredTag")}
+            </span>
+            {t("join.regulation.consent.privacy")}
           </label>
         </div>
       </div>

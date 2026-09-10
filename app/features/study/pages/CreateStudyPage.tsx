@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import StudyFormContent from "@study/components/study/StudyFormContent";
 import Header from "@study/components/ui/Header";
 import { useToast } from "@study/components/ui/useToast";
@@ -5,6 +6,7 @@ import { StudyFormProvider } from "@study/hooks/useStudyForm";
 import { useNavigate } from "react-router-dom";
 
 const CreateStudyPage = () => {
+  const { t } = useI18n();
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -13,7 +15,7 @@ const CreateStudyPage = () => {
   };
 
   const handleSuccess = () => {
-    toast({ description: "스터디가 성공적으로 개설되었습니다!" });
+    toast({ description: t("study.form.createSuccess") });
     handleBack();
   };
 
@@ -31,8 +33,8 @@ const CreateStudyPage = () => {
         >
           <StudyFormContent
             onCancel={handleBack}
-            submitText="스터디 개설하기"
-            submittingText="개설 중..."
+            submitText={t("study.form.createSubmit")}
+            submittingText={t("study.form.createSubmitting")}
           />
         </StudyFormProvider>
       </div>

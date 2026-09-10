@@ -1,39 +1,44 @@
+import { t } from "@app/i18n/store";
 import { Department, Grade } from "@join/types/api/member";
 import { z } from "zod";
 import { isValidBirthDate } from "./PersonalInfo.helper";
 
-// 생년월일 유효성 검사 함수 (YYMMDD 형식, 월/일 범위만 체크)
-
+/**
+ * Every message is a function rather than a string. The schema is built once at
+ * module load, but validation can run long after the visitor has switched
+ * language, so the message has to be resolved at validation time.
+ */
 export const personalInfoSchema = z.object({
   birthDate: z
     .string()
-    .length(6, { error: "생년월일을 6자리로 입력해주세요 (YYMMDD)" })
-    .refine(
-      isValidBirthDate,
-      "유효하지 않은 생년월일입니다 (월/일 범위: 1~12, 1~31)"
-    ),
-  residentNumber_back: z
-    .string()
-    .regex(/^[1-8]$/, { error: "성별은 1에서 8 사이의 숫자여야 합니다." }),
+    .length(6, { error: () => t("join.personalInfo.validation.birthDateLength") })
+    .refine(isValidBirthDate, {
+      error: () => t("join.personalInfo.validation.birthDateInvalid"),
+    }),
+  residentNumber_back: z.string().regex(/^[1-8]$/, {
+    error: () => t("join.personalInfo.validation.genderDigit"),
+  }),
   studentId: z
     .string()
-    .length(8, { error: "학번은 8자리여야 합니다" })
-    .refine(
-      (val) => /^32\d{6}$/.test(val),
-      "학번은 32로 시작하는 8자리 숫자여야 합니다"
-    ),
+    .length(8, { error: () => t("join.personalInfo.validation.studentIdLength") })
+    .refine((val) => /^32\d{6}$/.test(val), {
+      error: () => t("join.personalInfo.validation.studentIdFormat"),
+    }),
   phoneNumber: z
     .string()
-    .min(1, { error: "전화번호를 입력해주세요" })
-    .refine((val) => {
-      const phoneRegex = /^(01[016789])-?[0-9]{3,4}-?[0-9]{4}$/;
-      return phoneRegex.test(val);
-    }, "전화번호 형식이 올바르지 않습니다"),
+    .min(1, { error: () => t("join.personalInfo.validation.phoneRequired") })
+    .refine(
+      (val) => {
+        const phoneRegex = /^(01[016789])-?[0-9]{3,4}-?[0-9]{4}$/;
+        return phoneRegex.test(val);
+      },
+      { error: () => t("join.personalInfo.validation.phoneFormat") }
+    ),
   department: z.enum(Object.values(Department) as [string, ...string[]], {
-    error: "학과를 선택해주세요",
+    error: () => t("join.personalInfo.validation.departmentRequired"),
   }),
   grade: z.enum(Object.values(Grade) as [string, ...string[]], {
-    error: "학년을 선택해주세요",
+    error: () => t("join.personalInfo.validation.gradeRequired"),
   }),
 });
 

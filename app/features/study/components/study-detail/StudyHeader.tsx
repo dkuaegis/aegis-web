@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { submitAttendanceCode } from "@study/api/attendanceApi";
 import { Badge } from "@study/components/ui/badge";
 import { Button } from "@study/components/ui/button";
@@ -7,7 +8,7 @@ import { Label } from "@study/components/ui/label";
 import { useToast } from "@study/components/ui/useToast";
 import {
   ApplicationStatus,
-  StudyCategoryLabels,
+  studyCategoryLabelKey,
   type StudyDetail,
   StudyRecruitmentMethod,
   type UserApplicationStatus,
@@ -36,6 +37,7 @@ export const StudyHeader = ({
   onViewMembers,
   onManageAttendance,
 }: StudyHeaderProps) => {
+  const { t } = useI18n();
   const [attendanceCode, setAttendanceCode] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const submittingRef = useRef(false);
@@ -49,7 +51,7 @@ export const StudyHeader = ({
   const handleAttendanceSubmit = async () => {
     if (submittingRef.current || isSubmitting) return;
     if (attendanceCode.length !== 4) {
-      toast({ description: "4자리 숫자 출석코드를 입력해주세요." });
+      toast({ description: t("study.detail.attendance.invalidLength") });
       return;
     }
 
@@ -57,13 +59,13 @@ export const StudyHeader = ({
     submittingRef.current = true;
     try {
       await submitAttendanceCode(study.id, attendanceCode);
-      toast({ description: "출석이 완료되었습니다!" });
+      toast({ description: t("study.detail.attendance.success") });
       setAttendanceCode(""); // 성공 시 입력 필드 초기화
     } catch (error: unknown) {
       const message =
         error instanceof Error
           ? error.message
-          : "출석 처리 중 오류가 발생했습니다.";
+          : t("study.detail.attendance.failure");
       toast({ description: message });
     } finally {
       setIsSubmitting(false);
@@ -80,22 +82,32 @@ export const StudyHeader = ({
         variant="secondary"
         className={`${isRecruiting ? "bg-blue-100 text-blue-800" : "bg-gray-100 text-gray-800"}`}
       >
-        {isRecruiting ? "모집중" : "모집완료"}
+        {isRecruiting ? t("study.list.recruiting") : t("study.list.closed")}
       </Badge>
     );
   };
 
   const getApplicationStatusBadge = () => {
     if (isMember) {
-      return <Badge className="bg-green-100 text-green-800">참여 중</Badge>;
+      return (
+        <Badge className="bg-green-100 text-green-800">
+          {t("study.detail.badges.participating")}
+        </Badge>
+      );
     }
     switch (userApplicationStatus) {
       case ApplicationStatus.PENDING:
         return (
-          <Badge className="bg-yellow-100 text-yellow-800">신청 대기 중</Badge>
+          <Badge className="bg-yellow-100 text-yellow-800">
+            {t("study.detail.badges.pending")}
+          </Badge>
         );
       case ApplicationStatus.REJECTED:
-        return <Badge className="bg-red-100 text-red-800">신청 거절됨</Badge>;
+        return (
+          <Badge className="bg-red-100 text-red-800">
+            {t("study.detail.badges.rejected")}
+          </Badge>
+        );
       default:
         return null;
     }
@@ -112,7 +124,7 @@ export const StudyHeader = ({
                 variant="outline"
                 className="border-gray-300 text-gray-600"
               >
-                #{StudyCategoryLabels[study.category]}
+                #{t(studyCategoryLabelKey(study.category))}
               </Badge>
               {getApplicationStatusBadge()}
             </div>
@@ -129,7 +141,7 @@ export const StudyHeader = ({
                   className="border-blue-600 text-blue-600 hover:bg-blue-50"
                 >
                   <Settings className="mr-1 h-4 w-4" />
-                  스터디 수정
+                  {t("study.detail.ownerActions.edit")}
                 </Button>
                 {study.recruitmentMethod !== StudyRecruitmentMethod.FCFS && (
                   <Button
@@ -139,7 +151,7 @@ export const StudyHeader = ({
                     className="border-green-600 text-green-600 hover:bg-green-50"
                   >
                     <UsersIcon className="mr-1 h-4 w-4" />
-                    스터디 지원현황
+                    {t("study.detail.ownerActions.applications")}
                   </Button>
                 )}
                 <Button
@@ -149,7 +161,7 @@ export const StudyHeader = ({
                   className="border-purple-600 text-purple-600 hover:bg-purple-50"
                 >
                   <Users className="mr-1 h-4 w-4" />
-                  스터디원 관리
+                  {t("study.detail.ownerActions.members")}
                 </Button>
                 <Button
                   variant="outline"
@@ -158,7 +170,7 @@ export const StudyHeader = ({
                   className="border-orange-600 text-orange-600 hover:bg-orange-50"
                 >
                   <UserCheck className="mr-1 h-4 w-4" />
-                  출석 관리
+                  {t("study.detail.ownerActions.attendance")}
                 </Button>
               </div>
             )}
@@ -172,12 +184,12 @@ export const StudyHeader = ({
                     htmlFor={`attendance-code-${study.id}`}
                     className="font-medium text-sm"
                   >
-                    출석코드
+                    {t("study.detail.attendance.label")}
                   </Label>
                   <Input
                     type="text"
                     id={`attendance-code-${study.id}`}
-                    placeholder="4자리 숫자"
+                    placeholder={t("study.detail.attendance.placeholder")}
                     value={attendanceCode}
                     onChange={(e) => handleAttendanceCodeChange(e.target.value)}
                     disabled={isSubmitting}
@@ -196,7 +208,9 @@ export const StudyHeader = ({
                   size="sm"
                   className="h-9"
                 >
-                  {isSubmitting ? "제출 중..." : "제출"}
+                  {isSubmitting
+                    ? t("study.detail.attendance.submitting")
+                    : t("study.detail.attendance.submit")}
                 </Button>
               </div>
             </div>

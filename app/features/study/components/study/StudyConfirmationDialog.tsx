@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,25 +30,31 @@ const StudyConfirmationDialog = ({
   isSubmitting,
   submitText,
   submittingText,
-  title = "스터디 개설 확인",
-  description = "정말로 개설하시겠습니까?",
+  title,
+  description,
   open,
   onOpenChange,
 }: StudyConfirmationDialogProps) => {
+  const { t } = useI18n();
+
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
       <AlertDialogContent className="study-dialog-content">
         <AlertDialogHeader>
-          <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription>{description}</AlertDialogDescription>
+          <AlertDialogTitle>
+            {title ?? t("study.form.createConfirmTitle")}
+          </AlertDialogTitle>
+          <AlertDialogDescription>
+            {description ?? t("study.form.createConfirmDescription")}
+          </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel className="group dialog-btn-cancel">
             <span aria-hidden="true" className="dialog-btn-ripple-container">
               <span aria-hidden="true" className="dialog-btn-ripple" />
             </span>
-            <span className="dialog-btn-text">취소</span>
+            <span className="dialog-btn-text">{t("common.cancel")}</span>
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={onConfirm}
