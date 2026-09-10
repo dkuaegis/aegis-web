@@ -6,12 +6,19 @@ interface PaymentAmountProps {
 
 const PaymentAmount = ({ amount }: PaymentAmountProps) => {
   const { t } = useI18n();
+  const label = t("join.payment.amountLabel");
 
   return (
-    <div className="mt-2 p-2 text-center">
-      <span className="font-bold text-5xl">{amount.toLocaleString()}</span>
-      <span className="text-lg">{t("join.payment.currencyUnit")}</span>
-    </div>
+    <section className="join-payment-summary" aria-label={label}>
+      <div>
+        <span>{label}</span>
+        <strong>
+          {t("join.payment.amountWithUnit", {
+            amount: amount.toLocaleString(),
+          })}
+        </strong>
+      </div>
+    </section>
   );
 };
 
