@@ -24,22 +24,32 @@ const Payment = () => {
     "payment"
   );
   const [coupons, setCoupons] = useState<CouponType[]>([]);
+  const [couponStatus, setCouponStatus] = useState<
+    "loading" | "success" | "error"
+  >("loading");
+  const [couponFetchAttempt, setCouponFetchAttempt] = useState(0);
   const completeRegistration = useAuthStore(
     (state) => state.completeRegistration
   );
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: 재시도 또는 쿠폰 적용 후 조회 횟수가 바뀌면 쿠폰을 다시 조회합니다.
   useEffect(() => {
     let active = true;
     const loadCoupons = async () => {
+      setCouponStatus("loading");
       try {
         Analytics.safeTrack("Coupon_Fetch_Start", { category: "Payment" });
         const data = await fetchCoupon();
-        if (active) setCoupons(data);
+        if (active) {
+          setCoupons(data);
+          setCouponStatus("success");
+        }
         Analytics.safeTrack("Coupon_Fetch_Success", {
           category: "Payment",
           coupon_count: data.length,
         });
       } catch (error) {
+        if (active) setCouponStatus("error");
         console.error("쿠폰 불러오는데 오류 발생:", error);
         Analytics.safeTrack("Coupon_Fetch_Failed", {
           category: "Payment",
@@ -51,7 +61,28 @@ const Payment = () => {
     return () => {
       active = false;
     };
-  }, []);
+  }, [couponFetchAttempt]);
+
+  const couponFeedback =
+    couponStatus === "error" ? (
+      <div role="alert" className="space-y-2 text-sm">
+        <p className="text-red-600">쿠폰을 불러오지 못했습니다.</p>
+        <button
+          type="button"
+          className="underline underline-offset-4"
+          onClick={() => {
+            setCouponStatus("loading");
+            setCouponFetchAttempt((attempt) => attempt + 1);
+          }}
+        >
+          다시 시도
+        </button>
+      </div>
+    ) : (
+      <p role="status" className="text-sm">
+        쿠폰을 불러오는 중입니다.
+      </p>
+    );
 
   useEffect(() => {
     if (status === "error") {
@@ -85,6 +116,7 @@ const Payment = () => {
               <button
                 className="join-payment-coupon-action"
                 type="button"
+                disabled={couponStatus !== "success"}
                 onClick={() => {
                   Analytics.safeTrack("Payment_Open_Coupon_Click", {
                     category: "Payment",
@@ -93,9 +125,16 @@ const Payment = () => {
                 }}
               >
                 <span>할인 쿠폰</span>
-                <strong>{coupons.length}장</strong>
+                <strong>
+                  {couponStatus === "success"
+                    ? `${coupons.length}장`
+                    : couponStatus === "error"
+                      ? "조회 실패"
+                      : "불러오는 중"}
+                </strong>
                 <ChevronRight aria-hidden="true" />
               </button>
+              {couponStatus === "error" && couponFeedback}
               <AdminInfoDrawer />
             </div>
           </div>
@@ -121,17 +160,23 @@ const Payment = () => {
         }}
         title="할인 쿠폰"
       >
-        <Coupon
-          coupons={coupons}
-          onCouponsChange={setCoupons}
-          onClose={() => {
-            Analytics.safeTrack("Coupon_Apply_And_Fetch_And_Close", {
-              category: "Coupon",
-            });
-            void refreshFinalPrice();
-            setCurrentView("payment");
-          }}
-        />
+        {couponStatus === "success" ? (
+          <Coupon
+            coupons={coupons}
+            onCouponsChange={setCoupons}
+            onClose={() => {
+              Analytics.safeTrack("Coupon_Apply_And_Fetch_And_Close", {
+                category: "Coupon",
+              });
+              void refreshFinalPrice();
+              setCouponStatus("loading");
+              setCouponFetchAttempt((attempt) => attempt + 1);
+              setCurrentView("payment");
+            }}
+          />
+        ) : (
+          couponFeedback
+        )}
       </PaymentDialog>
     </div>
   );

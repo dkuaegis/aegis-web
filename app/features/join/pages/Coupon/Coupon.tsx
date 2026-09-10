@@ -17,6 +17,11 @@ const Coupon = ({ onClose, coupons, onCouponsChange }: CouponProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleApply = async () => {
+    if (selectedCoupons.length === 0) {
+      toast.error("적용할 쿠폰을 선택해주세요");
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       Analytics.safeTrack("Coupon_Apply_Start", {
