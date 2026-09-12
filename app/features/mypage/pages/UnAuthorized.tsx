@@ -1,31 +1,32 @@
+import { useI18n } from "@app/i18n";
 import UnAuthImage from "../assets/UnAuthorizedImage.webp";
 import Button from "../components/Button";
 import "../style/UnAuthorized.css";
 
 const UnAuthorized = () => {
+  const { t } = useI18n();
+
   return (
     <div className="login-unauth-container">
       <div className="login-unauth-image">
         <img src={UnAuthImage} alt="login unauth" />
       </div>
       <h1 className="login-unauth-title">
-        잠깐!
+        {t("mypage.unauthorized.titleLine1")}
         <br />
-        Aegis 동아리가
+        {t("mypage.unauthorized.titleLine2")}
         <br />
-        처음이신가요?
+        {t("mypage.unauthorized.titleLine3")}
       </h1>
-      <p className="login-unauth-desc">
-        동아리 가입 페이지 또는 소개 페이지로 이동해주세요
-      </p>
+      <p className="login-unauth-desc">{t("mypage.unauthorized.description")}</p>
       <div className="button-group-section">
         <Button
-          text={"동아리가입하기"}
+          text={t("mypage.unauthorized.join")}
           type={"SIGNUP"}
           onClick={() => (window.location.href = "/join")}
         />
         <Button
-          text={"Aegis 소개"}
+          text={t("mypage.unauthorized.about")}
           type={"LOGIN"}
           onClick={() =>
             (window.location.href =

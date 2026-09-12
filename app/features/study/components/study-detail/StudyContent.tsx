@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import {
   Card,
   CardContent,
@@ -12,12 +13,14 @@ interface StudyContentProps {
 }
 
 export const StudyContent = ({ study }: StudyContentProps) => {
+  const { t } = useI18n();
+
   return (
     <div className="space-y-6 lg:col-span-2">
       <Card className="border-gray-200">
         <CardHeader>
           <CardTitle className="font-semibold text-gray-900 text-lg">
-            스터디 소개
+            {t("study.detail.about")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -30,7 +33,7 @@ export const StudyContent = ({ study }: StudyContentProps) => {
       <Card className="border-gray-200">
         <CardHeader>
           <CardTitle className="font-semibold text-gray-900 text-lg">
-            커리큘럼
+            {t("study.detail.curriculum")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -52,7 +55,7 @@ export const StudyContent = ({ study }: StudyContentProps) => {
       <Card className="border-gray-200">
         <CardHeader>
           <CardTitle className="font-semibold text-gray-900 text-lg">
-            지원 자격
+            {t("study.detail.qualifications")}
           </CardTitle>
         </CardHeader>
         <CardContent>

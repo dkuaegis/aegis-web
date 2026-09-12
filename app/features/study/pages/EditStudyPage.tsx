@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import {
   type StudyFormData,
   useUpdateStudyMutation,
@@ -30,6 +31,7 @@ interface FormValues {
 }
 
 const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
+  const { t } = useI18n();
   const toast = useToast();
 
   // 사용자 역할 확인
@@ -69,7 +71,7 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
   };
 
   const handleSuccess = () => {
-    toast({ description: "스터디가 성공적으로 수정되었습니다!" });
+    toast({ description: t("study.form.editSuccess") });
     onBack();
   };
 
@@ -77,7 +79,7 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
     const message =
       error instanceof Error
         ? error.message
-        : "스터디 수정 중 오류가 발생했습니다.";
+        : t("study.form.editError");
     toast({
       description: message,
     });
@@ -101,8 +103,8 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
         <div className="flex min-h-screen items-center justify-center">
           <div className="text-gray-500">
             {isRoleLoading
-              ? "권한 정보를 불러오는 중..."
-              : "스터디 정보를 불러오는 중..."}
+              ? t("study.loading.role")
+              : t("study.loading.study")}
           </div>
         </div>
       </div>
@@ -118,7 +120,7 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
   if (!isOwner) {
     return (
       <ForbiddenPage
-        message="이 스터디를 수정할 수 있는 권한이 없습니다."
+        message={t("study.forbidden.edit")}
         onBack={onBack}
       />
     );
@@ -129,7 +131,7 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
       <div className="min-h-screen bg-gray-50">
         <Header onBack={onBack} />
         <div className="flex min-h-screen items-center justify-center">
-          <div className="text-red-500">스터디 정보를 불러올 수 없습니다.</div>
+          <div className="text-red-500">{t("study.form.editLoadError")}</div>
         </div>
       </div>
     );
@@ -168,8 +170,8 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
         >
           <StudyFormContent
             onCancel={onBack}
-            submitText="수정 완료"
-            submittingText="수정 중..."
+            submitText={t("study.form.editSubmit")}
+            submittingText={t("study.form.editSubmitting")}
           />
         </StudyFormProvider>
       </div>

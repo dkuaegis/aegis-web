@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { ErrorMessage } from "@join/components/ui/custom/error-message";
 import { Label } from "@join/components/ui/label";
 import {
@@ -10,44 +11,41 @@ import {
 import { forwardRef } from "react";
 import { useControllerField } from "../PersonalInfo.ControlledField";
 
-//학년 필드 배열
-const grades = [
-  { value: "ONE", label: "1학년" },
-  { value: "TWO", label: "2학년" },
-  { value: "THREE", label: "3학년" },
-  { value: "FOUR", label: "4학년" },
-  { value: "FIVE", label: "5학년" },
-];
+/** API가 기대하는 학년 값. 표시 이름은 언어별 사전에서 가져옵니다. */
+const GRADE_VALUES = ["ONE", "TWO", "THREE", "FOUR", "FIVE"] as const;
 
 interface StudentGradeProps {
-  name: string; // name prop 추가
+  name: string;
 }
 
 export const StudentGrade = forwardRef<HTMLDivElement, StudentGradeProps>(
   ({ name, ...props }, ref) => {
+    const { t } = useI18n();
     const { field, error, isValid } = useControllerField({ name });
 
     return (
       <div className="space-y-2" {...props} ref={ref}>
-        <Label htmlFor="grade">학년</Label>
+        <Label htmlFor="grade">{t("join.personalInfo.gradeLabel")}</Label>
         <Select value={field.value ?? ""} onValueChange={field.onChange}>
           <SelectTrigger
             aria-invalid={!isValid}
             className="h-12 w-full text-lg"
           >
-            <SelectValue placeholder="학년 선택" />
+            <SelectValue
+              placeholder={t("join.personalInfo.gradePlaceholder")}
+            />
           </SelectTrigger>
           <SelectContent>
-            {grades.map((grade) => (
-              <SelectItem key={grade.value} value={grade.value}>
-                {grade.label}
+            {GRADE_VALUES.map((grade) => (
+              <SelectItem key={grade} value={grade}>
+                {t(`join.personalInfo.grades.${grade}`)}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
         <ErrorMessage
           isShown={!!error && !isValid}
-          message="학년을 선택해주세요"
+          message={t("join.personalInfo.gradeError")}
         />
       </div>
     );

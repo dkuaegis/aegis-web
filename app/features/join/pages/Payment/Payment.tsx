@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import "./Payment.css";
 import NavigationButtons from "@join/components/ui/custom/navigationButton";
 import { Analytics } from "@join/service/analytics";
@@ -18,6 +19,7 @@ const Complete = React.lazy(
 );
 
 const Payment = () => {
+  const { t } = useI18n();
   const { isValid, finalPrice, status, refreshFinalPrice } =
     usePaymentPolling();
   const [currentView, setCurrentView] = useState<"coupon" | "payment">(
@@ -66,7 +68,7 @@ const Payment = () => {
   const couponFeedback =
     couponStatus === "error" ? (
       <div role="alert" className="space-y-2 text-sm">
-        <p className="text-red-600">쿠폰을 불러오지 못했습니다.</p>
+        <p className="text-red-600">{t("join.payment.couponLoadError")}</p>
         <button
           type="button"
           className="underline underline-offset-4"
@@ -75,12 +77,12 @@ const Payment = () => {
             setCouponFetchAttempt((attempt) => attempt + 1);
           }}
         >
-          다시 시도
+          {t("common.retry")}
         </button>
       </div>
     ) : (
       <p role="status" className="text-sm">
-        쿠폰을 불러오는 중입니다.
+        {t("join.payment.couponLoading")}
       </p>
     );
 
@@ -97,9 +99,7 @@ const Payment = () => {
   if (status === "error") {
     return (
       <div className="text-center text-red-500">
-        <p className="my-7">
-          결제 상태를 불러오는 데 실패했습니다. 나중에 다시 시도해주세요.
-        </p>
+        <p className="my-7">{t("join.payment.loadError")}</p>
         <AdminInfoDrawer />
       </div>
     );
@@ -124,13 +124,13 @@ const Payment = () => {
                   setCurrentView("coupon");
                 }}
               >
-                <span>할인 쿠폰</span>
+                <span>{t("join.payment.couponDialogTitle")}</span>
                 <strong>
                   {couponStatus === "success"
-                    ? `${coupons.length}장`
+                    ? t("join.payment.couponCount", { count: coupons.length })
                     : couponStatus === "error"
-                      ? "조회 실패"
-                      : "불러오는 중"}
+                      ? t("join.payment.couponFetchFailed")
+                      : t("join.payment.couponFetching")}
                 </strong>
                 <ChevronRight aria-hidden="true" />
               </button>
@@ -140,7 +140,7 @@ const Payment = () => {
           </div>
         ) : (
           <Suspense>
-            <Complete message="납부가 완료됐어요" />
+            <Complete message={t("join.payment.completeMessage")} />
             <NavigationButtons
               disabled={!isValid}
               onClick={() => {
@@ -158,7 +158,7 @@ const Payment = () => {
         onOpenChange={(open) => {
           if (!open) setCurrentView("payment");
         }}
-        title="할인 쿠폰"
+        title={t("join.payment.couponDialogTitle")}
       >
         {couponStatus === "success" ? (
           <Coupon

@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import type { ReactNode } from "react";
@@ -15,6 +16,8 @@ export default function PaymentDialog({
   title,
   children,
 }: PaymentDialogProps) {
+  const { t } = useI18n();
+
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
@@ -27,7 +30,7 @@ export default function PaymentDialog({
             <Dialog.Title>{title}</Dialog.Title>
             <Dialog.Close
               className="join-payment-dialog-close"
-              aria-label="닫기"
+              aria-label={t("common.close")}
             >
               <X aria-hidden="true" />
             </Dialog.Close>

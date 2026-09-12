@@ -1,3 +1,4 @@
+import { t } from "@app/i18n/store";
 import { ApiError, api } from "@app/lib/api";
 import { STUDY_DETAIL_QUERY_KEY } from "@study/api/studyDetailApi";
 import { API_ENDPOINTS } from "@study/lib/apiEndpoints";
@@ -43,13 +44,13 @@ export interface StudyFormData {
 export function getEditStudyErrorMessage(statusCode: number): string {
   switch (statusCode) {
     case 400:
-      return "잘못된 요청 데이터입니다.";
+      return t("study.errors.badRequestData");
     case 403:
-      return "스터디장이 아닙니다.";
+      return t("study.errors.notInstructor");
     case 404:
-      return "스터디를 찾을 수 없습니다.";
+      return t("study.errors.studyNotFound");
     default:
-      return "스터디 수정 중 오류가 발생했습니다.";
+      return t("study.errors.studyUpdate");
   }
 }
 
@@ -92,7 +93,7 @@ export async function updateStudy(
       const message = getEditStudyErrorMessage(err.status);
       throw new Error(message);
     }
-    throw new Error("스터디 수정 중 오류가 발생했습니다.");
+    throw new Error(t("study.errors.studyUpdate"));
   }
 }
 

@@ -1,10 +1,13 @@
-import { type StudyDetail, StudyRecruitmentMethod } from "@study/types/study";
+import { t } from "@app/i18n/store";
+import {
+  type StudyDetail,
+  StudyRecruitmentMethod,
+  studyRecruitmentMethodLongLabelKey,
+} from "@study/types/study";
 
 export const getRecruitmentMethodText = (
   method: StudyRecruitmentMethod
-): string => {
-  return method === StudyRecruitmentMethod.FCFS ? "선착순 모집" : "지원서 심사";
-};
+): string => t(studyRecruitmentMethodLongLabelKey(method));
 
 export const getApplicationSectionTitle = (
   status: "APPROVED" | "PENDING" | "REJECTED" | null,
@@ -12,15 +15,15 @@ export const getApplicationSectionTitle = (
 ): string => {
   switch (status) {
     case "PENDING":
-      return "신청 현황";
+      return t("study.application.sectionTitle.pending");
     case "APPROVED":
-      return "참여 현황";
+      return t("study.application.sectionTitle.approved");
     case "REJECTED":
-      return "신청 결과";
+      return t("study.application.sectionTitle.rejected");
     default:
       return recruitmentMethod === StudyRecruitmentMethod.FCFS
-        ? "지원하기"
-        : "지원서 작성";
+        ? t("study.application.sectionTitle.applyFcfs")
+        : t("study.application.sectionTitle.applyForm");
   }
 };
 

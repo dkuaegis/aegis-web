@@ -1,3 +1,5 @@
+import { t } from "@app/i18n/store";
+
 const DEFAULT_API_URL = "https://dev-api.dkuaegis.org";
 
 function getSafeApiUrl(value: string | undefined): string | undefined {
@@ -53,12 +55,14 @@ const getErrorMessage = (status: number, body: unknown) => {
     if (typeof message === "string" && message.trim()) return message;
   }
 
-  if (status === 400) return "입력 내용을 다시 확인해 주세요.";
-  if (status === 401) return "로그인이 필요합니다.";
-  if (status === 403) return "이 작업을 수행할 권한이 없습니다.";
-  if (status === 404) return "요청한 정보를 찾을 수 없습니다.";
-  if (status === 409) return "이미 처리된 요청입니다.";
-  return "요청을 처리하지 못했습니다. 잠시 후 다시 시도해 주세요.";
+  // Read at call time so the message matches the language in effect when the
+  // request actually failed, not whichever one was active at module load.
+  if (status === 400) return t("common.error.badRequest");
+  if (status === 401) return t("common.error.unauthorized");
+  if (status === 403) return t("common.error.forbidden");
+  if (status === 404) return t("common.error.notFound");
+  if (status === 409) return t("common.error.conflict");
+  return t("common.error.unknown");
 };
 
 export async function apiRequest<T>(

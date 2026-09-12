@@ -1,3 +1,4 @@
+import { LanguageToggle, useI18n } from "@app/i18n";
 import { Menu, X } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 import { Link } from "react-router-dom";
@@ -10,22 +11,23 @@ interface HomeHeaderProps {
 }
 
 export function HomeHeader({ authUser, loading }: HomeHeaderProps) {
+  const { t } = useI18n();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuId = useId();
   const items = !authUser.isAuthenticated
     ? [
-        { label: "로그인", href: googleLoginUrl },
+        { label: t("home.nav.login"), href: googleLoginUrl },
         {
-          label: "가입하기",
+          label: t("home.nav.join"),
           href: "/auth/continue?intent=join",
           emphasis: true,
         },
       ]
     : authUser.status === "PENDING"
-      ? [{ label: "가입하기", href: "/join", emphasis: true }]
+      ? [{ label: t("home.nav.join"), href: "/join", emphasis: true }]
       : [
-          { label: "스터디", href: "/study" },
-          { label: "마이페이지", href: "/mypage" },
+          { label: t("home.nav.study"), href: "/study" },
+          { label: t("home.nav.mypage"), href: "/mypage" },
         ];
 
   useEffect(() => {
@@ -44,22 +46,26 @@ export function HomeHeader({ authUser, loading }: HomeHeaderProps) {
       <Link
         className="home-site-brand"
         to="/"
-        aria-label="AEGIS 홈"
+        aria-label={t("home.nav.brandHome")}
         onClick={() => setMenuOpen(false)}
       >
         AEGIS
       </Link>
 
-      <button
-        className="home-site-menu-button"
-        type="button"
-        aria-controls={menuId}
-        aria-expanded={menuOpen}
-        aria-label={menuOpen ? "메뉴 닫기" : "메뉴 열기"}
-        onClick={() => setMenuOpen((current) => !current)}
-      >
-        {menuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
-      </button>
+      <div className="home-site-header-actions">
+        <LanguageToggle className="home-site-language" />
+
+        <button
+          className="home-site-menu-button"
+          type="button"
+          aria-controls={menuId}
+          aria-expanded={menuOpen}
+          aria-label={menuOpen ? t("common.closeMenu") : t("common.openMenu")}
+          onClick={() => setMenuOpen((current) => !current)}
+        >
+          {menuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
+        </button>
+      </div>
 
       <nav
         id={menuId}
@@ -70,7 +76,7 @@ export function HomeHeader({ authUser, loading }: HomeHeaderProps) {
         ]
           .filter(Boolean)
           .join(" ")}
-        aria-label="주요 메뉴"
+        aria-label={t("common.mainMenu")}
       >
         {items.map((item) => (
           <a

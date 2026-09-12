@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,6 +18,7 @@ interface Iprops {
 }
 
 const ApplicationForm = ({ recruiting }: Iprops) => {
+  const { t } = useI18n();
   const {
     isApplying,
     isApplicationModalOpen,
@@ -29,7 +31,7 @@ const ApplicationForm = ({ recruiting }: Iprops) => {
   return (
     <>
       <p className="mb-2 text-center text-gray-500 text-xs">
-        지원 동기 및 각오를 작성해주세요
+        {t("study.application.form.hint")}
       </p>
       <Button
         onClick={() => setIsApplicationModalOpen(true)}
@@ -42,7 +44,9 @@ const ApplicationForm = ({ recruiting }: Iprops) => {
           className="pointer-events-none absolute inset-0 z-0 flex h-56 w-56 scale-0 transform items-center justify-center rounded-full bg-white opacity-0 transition-opacity transition-transform duration-500 ease-out group-hover:scale-100 group-hover:opacity-20 motion-reduce:transform-none motion-reduce:transition-none"
         ></span>
         <span className="relative z-10">
-          {isApplying ? "처리 중..." : "지원서 작성하기"}
+          {isApplying
+            ? t("study.application.form.processing")
+            : t("study.application.form.openButton")}
         </span>
       </Button>
 
@@ -52,21 +56,23 @@ const ApplicationForm = ({ recruiting }: Iprops) => {
       >
         <AlertDialogContent className="max-h-[80vh] max-w-[calc(100vw-12rem)] sm:max-w-4xl">
           <AlertDialogHeader>
-            <AlertDialogTitle>지원서 작성</AlertDialogTitle>
+            <AlertDialogTitle>
+              {t("study.application.form.dialogTitle")}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              지원 동기 및 각오를 작성해주세요.
+              {t("study.application.form.dialogDescription")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <Textarea
             id="application"
-            placeholder="스터디에 지원하는 이유와 목표, 각오 등을 자유롭게 작성해주세요."
+            placeholder={t("study.application.form.placeholder")}
             value={applicationText}
             onChange={(e) => setApplicationText(e.target.value)}
             className="mt-2 max-h-[min(300px,60vh)] min-h-[120px] resize-y overflow-y-auto border-gray-300 focus:border-blue-500 focus:ring-blue-500 sm:min-h-[200px]"
           />
           <AlertDialogFooter>
             <AlertDialogCancel onClick={() => setIsApplicationModalOpen(false)}>
-              닫기
+              {t("common.close")}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={async () => {
@@ -75,7 +81,9 @@ const ApplicationForm = ({ recruiting }: Iprops) => {
               disabled={!applicationText.trim() || isApplying}
               className="bg-blue-600 hover:bg-blue-700"
             >
-              {isApplying ? "처리 중..." : "제출"}
+              {isApplying
+                ? t("study.application.form.processing")
+                : t("study.application.form.submit")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

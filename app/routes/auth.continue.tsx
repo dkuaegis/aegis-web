@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { ApiError, api, googleLoginUrl } from "@app/lib/api";
 import { useEffect, useState } from "react";
 import { Navigate, useSearchParams } from "react-router-dom";
@@ -5,6 +6,7 @@ import type { AuthCheckResponse } from "../api/auth";
 import { storeLoginIntent } from "../lib/authIntent";
 
 export default function AuthContinuePage() {
+  const { t } = useI18n();
   const [searchParams] = useSearchParams();
   const intent = searchParams.get("intent") === "join" ? "join" : "home";
   const [destination, setDestination] = useState<string | null>(null);
@@ -49,13 +51,13 @@ export default function AuthContinuePage() {
   if (error) {
     return (
       <main className="auth-continue-page">
-        <p role="alert">로그인 상태를 확인하지 못했습니다.</p>
+        <p role="alert">{t("pages.authContinue.failed")}</p>
         <button
           className="auth-continue-retry"
           type="button"
           onClick={() => setRetryKey((current) => current + 1)}
         >
-          다시 시도
+          {t("pages.authContinue.retry")}
         </button>
       </main>
     );
@@ -64,7 +66,7 @@ export default function AuthContinuePage() {
   return (
     <main className="auth-continue-page" aria-busy="true">
       <span className="auth-continue-spinner" aria-hidden="true" />
-      <p>로그인 정보를 확인하고 있습니다.</p>
+      <p>{t("pages.authContinue.checking")}</p>
     </main>
   );
 }

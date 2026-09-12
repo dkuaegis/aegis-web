@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { useStudyListQuery } from "@study/api/studyListApi";
 import { Badge } from "@study/components/ui/badge";
 import { Button } from "@study/components/ui/button";
@@ -5,8 +6,8 @@ import { Card, CardContent } from "@study/components/ui/card";
 import Header from "@study/components/ui/Header";
 import { cn } from "@study/lib/utils";
 import {
-  StudyCategoryLabels,
-  StudyLevelLabels,
+  studyCategoryLabelKey,
+  studyLevelLabelKey,
   type StudyListItem,
 } from "@study/types/study";
 import { BarChart3, Clock, User, Users } from "lucide-react";
@@ -58,6 +59,7 @@ interface StudyCardProps {
 }
 
 const StudyCard = memo(({ study, onViewStudyDetail }: StudyCardProps) => {
+  const { t } = useI18n();
   const isOpen =
     study.participantCount < study.maxParticipants ||
     study.maxParticipants === 0;
@@ -93,7 +95,7 @@ const StudyCard = memo(({ study, onViewStudyDetail }: StudyCardProps) => {
                   : "bg-gray-100 text-gray-600"
               }
             >
-              {isOpen ? "모집중" : "모집완료"}
+              {isOpen ? t("study.list.recruiting") : t("study.list.closed")}
             </Badge>
           </div>
 
@@ -104,7 +106,7 @@ const StudyCard = memo(({ study, onViewStudyDetail }: StudyCardProps) => {
           <div className="flex-1 space-y-3 text-gray-500 text-sm">
             <div className="flex items-center">
               <BarChart3 className="mr-2 h-4 w-4 shrink-0" />
-              <span>{StudyLevelLabels[study.level]}</span>
+              <span>{t(studyLevelLabelKey(study.level))}</span>
             </div>
             <div className="flex items-center">
               <Clock className="mr-2 h-4 w-4 shrink-0" />
@@ -114,8 +116,11 @@ const StudyCard = memo(({ study, onViewStudyDetail }: StudyCardProps) => {
               <Users className="mr-2 h-4 w-4 shrink-0" />
               <span>
                 {study.maxParticipants === 0
-                  ? "제한 없음"
-                  : `${study.participantCount}/${study.maxParticipants}명`}
+                  ? t("study.list.noLimit")
+                  : t("study.list.participants", {
+                      current: study.participantCount,
+                      max: study.maxParticipants,
+                    })}
               </span>
             </div>
           </div>
@@ -129,7 +134,7 @@ const StudyCard = memo(({ study, onViewStudyDetail }: StudyCardProps) => {
               variant="outline"
               className="shrink-0 border-gray-200 text-gray-500"
             >
-              #{StudyCategoryLabels[study.category]}
+              #{t(studyCategoryLabelKey(study.category))}
             </Badge>
           </div>
         </div>
@@ -149,6 +154,7 @@ const StudyList = ({
   onCreateStudy,
   onViewStudyDetail,
 }: StudyListMainProps) => {
+  const { t } = useI18n();
   const { data: studies = [], isLoading: loading, error } = useStudyListQuery();
 
   return (
@@ -168,7 +174,9 @@ const StudyList = ({
               className="h-56 w-56 scale-0 transform rounded-full bg-white opacity-0 transition-opacity transition-transform duration-500 ease-out group-hover:scale-100 group-hover:opacity-20 motion-reduce:transform-none motion-reduce:transition-none"
             />
           </span>
-          <span className="relative z-10">스터디 개설하기</span>
+          <span className="relative z-10">
+            {t("study.list.createStudy")}
+          </span>
         </Button>
       </div>
       <main className="mx-auto max-w-7xl items-center px-6 pb-6 md:px-12 lg:px-24">
@@ -179,13 +187,11 @@ const StudyList = ({
             ))
           ) : error ? (
             <div className="col-span-full flex items-center justify-center py-8">
-              <div className="text-red-500">
-                스터디 목록을 불러오는데 실패했습니다.
-              </div>
+              <div className="text-red-500">{t("study.list.loadError")}</div>
             </div>
           ) : studies.length === 0 ? (
             <div className="col-span-full flex items-center justify-center py-8">
-              <div className="text-gray-500">개설된 스터디가 없습니다.</div>
+              <div className="text-gray-500">{t("study.list.empty")}</div>
             </div>
           ) : (
             studies.map((study: StudyListItem) => (

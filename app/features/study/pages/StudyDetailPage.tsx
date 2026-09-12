@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { useStudyDetailQuery } from "@study/api/studyDetailApi";
 import ApplicationSection from "@study/components/study-detail/ApplicationSection";
 import StudyContent from "@study/components/study-detail/StudyContent";
@@ -25,6 +26,7 @@ const StudyDetailPage = ({
   onViewMembers,
   onManageAttendance,
 }: StudyDetailProps) => {
+  const { t } = useI18n();
   const {
     isInstructor,
     isParticipant,
@@ -64,8 +66,8 @@ const StudyDetailPage = ({
       <div className="flex min-h-screen items-center justify-center bg-gray-50">
         <div className="text-gray-500">
           {isRoleLoading
-            ? "권한 정보를 불러오는 중..."
-            : "스터디 정보를 불러오는 중..."}
+            ? t("study.loading.role")
+            : t("study.loading.study")}
         </div>
       </div>
     );
@@ -79,7 +81,7 @@ const StudyDetailPage = ({
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-50">
         <div className="text-red-500">
-          {error?.message ?? "오류가 발생했습니다."}
+          {error?.message ?? t("study.detail.genericError")}
         </div>
       </div>
     );
@@ -88,17 +90,7 @@ const StudyDetailPage = ({
   if (!study) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-50">
-        <div className="text-gray-500">스터디를 찾을 수 없습니다.</div>
-      </div>
-    );
-  }
-
-  if (!study) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-black">
-        <div className="text-[rgba(255,255,255,0.7)]">
-          스터디를 찾을 수 없습니다.
-        </div>
+        <div className="text-gray-500">{t("study.detail.notFound")}</div>
       </div>
     );
   }

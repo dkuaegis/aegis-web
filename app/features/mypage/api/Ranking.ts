@@ -1,3 +1,4 @@
+import { t } from "@app/i18n/store";
 import { PROFILE_ICONS } from "../constants/ProfileIcons";
 import type {
   MyRankCardProps,
@@ -30,7 +31,7 @@ export async function getRankingData(): Promise<{
   try {
     json = await api.get<typeof json>("/points/ranking");
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "랭킹 조회 실패"));
+    throw new Error(getApiErrorMessage(error, t("mypage.errors.rankingFetch")));
   }
 
   const sortedTop10 = [...json.top10].sort((a, b) => a.rank - b.rank);

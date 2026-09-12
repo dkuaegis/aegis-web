@@ -1,47 +1,19 @@
 import { useExternalBrowser } from "@app/hooks/useExternalBrowser";
+import { useI18n } from "@app/i18n";
 import { useEffect, useState } from "react";
 
-const IN_APP_INSTRUCTIONS: Record<
-  string,
-  { steps: string[]; safariHint?: string }
-> = {
-  카카오톡: {
-    steps: [
-      '채팅방 상단의 "⋮" (더보기) 버튼을 터치하세요',
-      '"다른 브라우저로 열기"를 선택하세요',
-    ],
-    safariHint: "또는 링크를 길게 눌러 복사한 후 Safari에서 붙여넣기하세요",
-  },
-  인스타그램: {
-    steps: [
-      '게시물 상단의 "⋯" 버튼을 터치하세요',
-      '"링크 복사"를 선택하세요',
-      "Safari를 열고 주소창에 붙여넣기하세요",
-    ],
-  },
-  네이버: {
-    steps: [
-      '상단의 "⋮" 또는 "⋯" 버튼을 터치하세요',
-      '"다른 브라우저로 열기"를 선택하세요',
-    ],
-  },
-  페이스북: {
-    steps: [
-      '게시물 상단의 "⋯" 버튼을 터치하세요',
-      '"링크 복사"를 선택하세요',
-      "Safari를 열고 주소창에 붙여넣기하세요",
-    ],
-  },
-  라인: {
-    steps: [
-      '채팅방 상단의 "⋮" (더보기) 버튼을 터치하세요',
-      '"다른 브라우저로 열기"를 선택하세요',
-    ],
-  },
-};
+/** In-app browsers we can give exact, app-specific instructions for. */
+const GUIDED_BROWSERS = [
+  "kakaotalk",
+  "instagram",
+  "naver",
+  "facebook",
+  "line",
+] as const;
 
 const BrowserRedirectPage = () => {
-  const { browserName, openInDefaultBrowser } = useExternalBrowser();
+  const { browserKey, openInDefaultBrowser } = useExternalBrowser();
+  const { t, tList } = useI18n();
   const [isIOS, setIsIOS] = useState(false);
 
   useEffect(() => {
@@ -52,21 +24,27 @@ const BrowserRedirectPage = () => {
     openInDefaultBrowser();
   }, [openInDefaultBrowser]);
 
-  const instructions = IN_APP_INSTRUCTIONS[browserName];
-  const steps = instructions?.steps ?? [
-    "브라우저의 ⋯ 또는 ⋮ 버튼을 터치하세요",
-    '메뉴에서 "다른 브라우저로 열기"를 선택하세요',
-  ];
+  const guided = GUIDED_BROWSERS.find((key) => key === browserKey);
+  const steps = tList(
+    `pages.browserRedirect.steps.${guided ?? "fallback"}`
+  );
+  const safariHint =
+    guided === "kakaotalk"
+      ? t("pages.browserRedirect.safariHint.kakaotalk")
+      : null;
+  const browserName = t(
+    `pages.browserRedirect.names.${browserKey ?? "inApp"}`
+  );
 
   return (
     <div className="wrap-break-word mx-10 flex h-screen flex-col items-center justify-center space-y-4">
       <h1 className="font-medium text-3xl">
-        {browserName} 브라우저에서 접속 중
+        {t("pages.browserRedirect.title", { browser: browserName })}
       </h1>
       <p className="text-muted-foreground text-xl">
         {isIOS
-          ? "Safari에서 열어주세요"
-          : "원활한 이용을 위해 외부 브라우저를 사용해주세요"}
+          ? t("pages.browserRedirect.iosHint")
+          : t("pages.browserRedirect.genericHint")}
       </p>
 
       <div className="w-full max-w-sm space-y-4">
@@ -86,15 +64,13 @@ const BrowserRedirectPage = () => {
           </div>
         ))}
 
-        {instructions?.safariHint && (
-          <p className="text-center text-gray-500 text-xs">
-            {instructions.safariHint}
-          </p>
+        {safariHint && (
+          <p className="text-center text-gray-500 text-xs">{safariHint}</p>
         )}
       </div>
 
       <p className="text-center text-gray-500 text-sm">
-        문제가 지속되면 동아리 운영진에게 문의해 주세요
+        {t("pages.browserRedirect.support")}
       </p>
     </div>
   );

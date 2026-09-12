@@ -1,16 +1,25 @@
+import { useI18n } from "@app/i18n";
 import bagIcon from "../assets/pointBag.webp";
 import type { PointSummaryProps } from "../model/PointSummary";
 import "../style/PointSummary.css";
 
 const PointSummary: React.FC<PointSummaryProps> = ({ point }) => {
+  const { t } = useI18n();
+
   return (
     <div className="point-summary">
-      <img src={bagIcon} alt="포인트 아이콘" className="bag-icon" />
+      <img
+        src={bagIcon}
+        alt={t("mypage.points.iconAlt")}
+        className="bag-icon"
+      />
       <div className="point-text">
         <p>
-          현재 사용가능한 포인트
+          {t("mypage.points.summaryLine1")}
           <br />
-          {point.toLocaleString()}점 있어요!
+          {t("mypage.points.summaryLine2", {
+            point: point.toLocaleString(),
+          })}
         </p>
       </div>
     </div>

@@ -1,3 +1,4 @@
+import { useI18n, getLanguage } from "@app/i18n";
 import { useEffect, useState } from "react";
 import { getMyDrawHistory } from "../api/PointDrawMe";
 import Card from "../components/Card";
@@ -8,6 +9,7 @@ import type { HistoryCardProps } from "../model/Card";
 import type { DrawHistoryItem } from "../model/DrawMe";
 
 export default function History() {
+  const { t } = useI18n();
   const [isLoading, setIsLoading] = useState(true);
   const [historyData, setHistoryData] = useState<HistoryCardProps[]>([]);
 
@@ -20,7 +22,9 @@ export default function History() {
           (item: DrawHistoryItem) => ({
             type: "history",
             title: item.item,
-            date: new Date(item.createdAt).toLocaleDateString("ko-KR", {
+            // Formatting follows the selected language rather than being
+            // pinned to Korean.
+            date: new Date(item.createdAt).toLocaleDateString(getLanguage(), {
               year: "numeric",
               month: "long",
               day: "numeric",
@@ -41,7 +45,10 @@ export default function History() {
   if (isLoading) {
     return (
       <div>
-        <Header leftChild={"<"} title={"선물함"} />
+        <Header
+          leftChild={t("mypage.nav.back")}
+          title={t("mypage.history.title")}
+        />
         <TabNavigation defaultTab="history" />
       </div>
     );
@@ -49,7 +56,10 @@ export default function History() {
 
   return (
     <div>
-      <Header leftChild={"<"} title={"선물함"} />
+      <Header
+        leftChild={t("mypage.nav.back")}
+        title={t("mypage.history.title")}
+      />
       <TabNavigation defaultTab="history" />
       {historyData.length === 0 ? (
         <EmptyState type="history" />

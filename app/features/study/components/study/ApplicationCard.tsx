@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { fetchApplicationText } from "@study/api/applicationOwnerApi";
 import { Avatar, AvatarFallback } from "@study/components/ui/avatar";
 import { Badge } from "@study/components/ui/badge";
@@ -33,6 +34,7 @@ const ApplicationCard = ({
   recruitmentMethod,
   studyId,
 }: ApplicationCardProps) => {
+  const { t } = useI18n();
   const [applicationReason, setApplicationReason] = useState<string>("");
   const [isLoadingText, setIsLoadingText] = useState(false);
   const [textError, setTextError] = useState<string | null>(null);
@@ -51,7 +53,7 @@ const ApplicationCard = ({
       const message =
         err instanceof Error
           ? err.message
-          : "지원서를 불러오는 데 실패했습니다.";
+          : t("study.applications.card.loadFailed");
       setTextError(message);
       toast({ description: message });
     } finally {
@@ -61,13 +63,29 @@ const ApplicationCard = ({
   const getStatusBadge = (status: string) => {
     switch (status) {
       case ApplicationStatus.PENDING:
-        return <Badge className="status-badge-pending">검토 중</Badge>;
+        return (
+          <Badge className="status-badge-pending">
+            {t("study.applications.card.statusPending")}
+          </Badge>
+        );
       case ApplicationStatus.APPROVED:
-        return <Badge className="status-badge-approved">승인</Badge>;
+        return (
+          <Badge className="status-badge-approved">
+            {t("study.applications.card.statusApproved")}
+          </Badge>
+        );
       case ApplicationStatus.REJECTED:
-        return <Badge className="status-badge-rejected">거절</Badge>;
+        return (
+          <Badge className="status-badge-rejected">
+            {t("study.applications.card.statusRejected")}
+          </Badge>
+        );
       default:
-        return <Badge variant="secondary">알 수 없음</Badge>;
+        return (
+          <Badge variant="secondary">
+            {t("study.applications.card.statusUnknown")}
+          </Badge>
+        );
     }
   };
 
@@ -93,7 +111,8 @@ const ApplicationCard = ({
               </div>
               <div className="application-contact-info">
                 <span className="application-contact-icon">🎓</span>
-                학번: {application.studentNumber}
+                {t("study.applications.card.studentIdLabel")}:{" "}
+                {application.studentNumber}
               </div>
             </div>
           </div>
@@ -114,21 +133,29 @@ const ApplicationCard = ({
                     onClick={handleLoadApplicationText}
                   >
                     <Eye className="icon-size-sm" />
-                    지원서 보기
+                    {t("study.applications.card.viewApplication")}
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="dialog-max-width">
                   <DialogHeader>
                     <DialogTitle className="dialog-header-title">
                       <FileText className="dialog-icon" />
-                      {application.name}님의 지원서
+                      {t("study.applications.card.dialogTitle", {
+                        name: application.name,
+                      })}
                     </DialogTitle>
                   </DialogHeader>
                   <div className="dialog-content">
                     <div className="dialog-info-box">
                       <div className="dialog-info-row">
-                        <span>지원자: {application.name}</span>
-                        <span>학번: {application.studentNumber}</span>
+                        <span>
+                          {t("study.applications.card.applicantLabel")}:{" "}
+                          {application.name}
+                        </span>
+                        <span>
+                          {t("study.applications.card.studentIdLabel")}:{" "}
+                          {application.studentNumber}
+                        </span>
                       </div>
                     </div>
                     {isLoadingText ? (
@@ -136,7 +163,7 @@ const ApplicationCard = ({
                         <div className="dialog-loading-content">
                           <div className="dialog-loading-spinner"></div>
                           <p className="dialog-loading-text">
-                            지원서를 불러오는 중...
+                            {t("study.loading.application")}
                           </p>
                         </div>
                       </div>
@@ -150,7 +177,7 @@ const ApplicationCard = ({
                             onClick={handleLoadApplicationText}
                             className="dialog-retry-button"
                           >
-                            다시 시도
+                            {t("common.retry")}
                           </Button>
                         </div>
                       </div>
@@ -159,7 +186,7 @@ const ApplicationCard = ({
                         value={applicationReason}
                         readOnly
                         className="dialog-textarea"
-                        placeholder="지원서 내용을 불러오는 중..."
+                        placeholder={t("study.applications.card.loadingPlaceholder")}
                       />
                     )}
                   </div>
@@ -178,7 +205,7 @@ const ApplicationCard = ({
                 className="btn-approve"
               >
                 <CheckCircle className="icon-size-xs" />
-                승인
+                {t("study.applications.card.approve")}
               </Button>
               <Button
                 size="sm"
@@ -189,7 +216,7 @@ const ApplicationCard = ({
                 className="btn-reject"
               >
                 <XCircle className="icon-size-xs" />
-                거절
+                {t("study.applications.card.reject")}
               </Button>
             </div>
           )}

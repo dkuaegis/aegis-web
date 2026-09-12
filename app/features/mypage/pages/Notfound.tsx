@@ -1,9 +1,11 @@
+import { useI18n } from "@app/i18n";
 import { useNavigate } from "react-router-dom";
 import notFoundImage from "../assets/notFoundImage.webp";
 import Button from "../components/Button";
 import "../style/Notfound.css";
 
 const Notfound = () => {
+  const { t } = useI18n();
   const navigate = useNavigate();
 
   return (
@@ -12,13 +14,13 @@ const Notfound = () => {
         <img src={notFoundImage} alt="not found" />
       </div>
       <h1 className="notfound-title">
-        이런!
+        {t("mypage.notFound.titleLine1")}
         <br />
-        잘못된 접근이에요
+        {t("mypage.notFound.titleLine2")}
       </h1>
-      <p className="notfound-desc">현재 페이지는 존재하지 않는 페이지에요</p>
+      <p className="notfound-desc">{t("mypage.notFound.description")}</p>
       <Button
-        text={"메인페이지로 돌아가기"}
+        text={t("mypage.notFound.backHome")}
         type={"BACKHOME"}
         onClick={() => navigate("/mypage")}
       />

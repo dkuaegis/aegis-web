@@ -1,14 +1,16 @@
+import { useI18n } from "@app/i18n";
 import { useNavigate, useParams } from "react-router-dom";
 import StudyDetailPage from "../StudyDetailPage";
 
 export default function StudyDetailWrapper() {
+  const { t } = useI18n();
   const { studyId } = useParams();
   const numericStudyId = Number(studyId);
   const navigate = useNavigate();
 
   // studyId가 유효하지 않은 경우 처리
   if (Number.isNaN(numericStudyId)) {
-    return <div>유효하지 않은 스터디 ID입니다.</div>;
+    return <div>{t("study.invalidStudyId")}</div>;
   }
 
   function handleBack() {

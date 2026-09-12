@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import NavigationButtons from "@join/components/ui/custom/navigationButton";
 import useFunnel from "@join/hooks/useFunnel";
 import { Analytics } from "@join/service/analytics";
@@ -13,6 +14,7 @@ interface JoinedState {
 }
 
 const Chat = () => {
+  const { t, tList } = useI18n();
   const { next } = useFunnel();
   const [joined, setJoined] = useState<JoinedState>({
     notice: false,
@@ -31,11 +33,12 @@ const Chat = () => {
   return (
     <div className="join-chat-page">
       <p className="join-chat-description line-breaks">
-        공지 확인과 소통은 팀 채팅방에서 이루어져요.
-        <br />
-        아래 두 채팅방에 모두 참여를 신청해주세요.
-        <br />
-        운영진이 확인한 뒤 수락해드려요.
+        {tList("join.chat.description").map((line, index) => (
+          <span key={line}>
+            {index > 0 && <br />}
+            {line}
+          </span>
+        ))}
       </p>
 
       <div className="join-next-step-grid join-chat-room-grid">
@@ -48,8 +51,8 @@ const Chat = () => {
         >
           <MessageCircle aria-hidden="true" />
           <span>
-            <strong>카카오톡 공지방</strong>
-            <small>주요 공지와 활동 일정을 확인하세요</small>
+            <strong>{t("join.chat.noticeRoomTitle")}</strong>
+            <small>{t("join.chat.noticeRoomDescription")}</small>
           </span>
           {joined.notice ? (
             <Check aria-hidden="true" />
@@ -66,8 +69,8 @@ const Chat = () => {
         >
           <MessageCircle aria-hidden="true" />
           <span>
-            <strong>카카오톡 소통방</strong>
-            <small>회원들과 자유롭게 소통하세요</small>
+            <strong>{t("join.chat.communityRoomTitle")}</strong>
+            <small>{t("join.chat.communityRoomDescription")}</small>
           </span>
           {joined.community ? (
             <Check aria-hidden="true" />
@@ -79,8 +82,8 @@ const Chat = () => {
 
       <p className="join-chat-status">
         {allJoined
-          ? "두 채팅방 참여 신청을 확인했어요"
-          : "두 채팅방에 모두 신청해야 다음으로 넘어갈 수 있어요"}
+          ? t("join.chat.statusAllJoined")
+          : t("join.chat.statusPending")}
       </p>
 
       <NavigationButtons

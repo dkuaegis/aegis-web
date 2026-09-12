@@ -147,3 +147,11 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* The study bar is white, so that is the surface the filled half of the
+   language pill is read against. */
+.study-language {
+  --lang-toggle-surface: #ffffff;
+
+  color: #111827;
+}

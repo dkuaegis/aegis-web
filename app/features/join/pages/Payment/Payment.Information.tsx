@@ -1,29 +1,37 @@
+import { useI18n } from "@app/i18n";
 import { Copy } from "lucide-react";
 import toast from "react-hot-toast";
 
 const Information = () => {
+  const { t } = useI18n();
   const accountNumber = import.meta.env.VITE_ADMIN_ACCOUNT_NUMBER ?? "";
-  const accountHolder = import.meta.env.VITE_ADMIN_ACCOUNT_HOLDER ?? "권대근";
+  // 예금주명은 영어 모드에서 로마자로 보여야 하므로 사전값을 기본값으로 씁니다.
+  const accountHolder =
+    import.meta.env.VITE_ADMIN_ACCOUNT_HOLDER ??
+    t("join.payment.account.defaultHolder");
 
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(accountNumber);
-      toast.success("계좌번호를 복사했습니다.");
+      toast.success(t("join.payment.account.copySuccess"));
     } catch (error) {
-      toast.error("복사에 실패했습니다. 브라우저 권한을 확인해주세요.");
+      toast.error(t("join.payment.account.copyFailure"));
       console.error("copy failed:", error);
     }
   };
 
   return (
-    <section className="join-payment-info" aria-label="입금 계좌 정보">
+    <section
+      className="join-payment-info"
+      aria-label={t("join.payment.account.sectionLabel")}
+    >
       <div>
-        <span>입금 계좌</span>
+        <span>{t("join.payment.account.accountNumber")}</span>
         <strong>{accountNumber}</strong>
         <button
           className="join-payment-copy"
           type="button"
-          aria-label="계좌번호 복사"
+          aria-label={t("join.payment.account.copyAccount")}
           disabled={!accountNumber}
           onClick={handleCopy}
         >
@@ -31,7 +39,7 @@ const Information = () => {
         </button>
       </div>
       <div>
-        <span>예금주명</span>
+        <span>{t("join.payment.account.accountHolder")}</span>
         <strong>{accountHolder}</strong>
       </div>
     </section>

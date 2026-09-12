@@ -27,12 +27,10 @@ export async function getPointSummary(): Promise<PointSummaryView> {
     .map<PointTransactionView>((t) => {
       const isEarn = t.transactionType === "EARN";
       const sign: "+" | "-" = isEarn ? "+" : "-";
-      const label: "적립" | "사용" = isEarn ? "적립" : "사용";
-
       return {
         ...t,
         sign,
-        label,
+        labelKey: t.transactionType,
         signedAmount: isEarn ? t.amount : -t.amount,
       };
     })

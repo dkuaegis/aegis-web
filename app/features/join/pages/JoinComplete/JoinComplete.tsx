@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { api } from "@app/lib/api";
 import { Analytics } from "@join/service/analytics";
 import { usePersonalInfoStore } from "@join/stores/personalInfoStore";
@@ -14,6 +15,7 @@ interface RequiredMemberInfo {
 }
 
 const JoinComplete = () => {
+  const { t } = useI18n();
   const studentId = usePersonalInfoStore((s) => s.personalInfoData?.studentId);
   const identifiedRef = useRef(false);
 
@@ -49,7 +51,7 @@ const JoinComplete = () => {
       <div className="join-complete-mark">
         <CheckCircle2 aria-hidden="true" />
       </div>
-      <h1>가입이 완료되었습니다.</h1>
+      <h1>{t("join.complete.title")}</h1>
       <CompleteNotice />
       <div className="join-next-step-grid">
         <a
@@ -65,8 +67,8 @@ const JoinComplete = () => {
         >
           <MessageCircle aria-hidden="true" />
           <span>
-            <strong>카카오톡 공지방</strong>
-            <small>주요 공지와 활동 일정을 확인하세요</small>
+            <strong>{t("join.chat.noticeRoomTitle")}</strong>
+            <small>{t("join.chat.noticeRoomDescription")}</small>
           </span>
           <ExternalLink aria-hidden="true" />
         </a>
@@ -83,8 +85,8 @@ const JoinComplete = () => {
         >
           <MessageCircle aria-hidden="true" />
           <span>
-            <strong>카카오톡 소통방</strong>
-            <small>회원들과 자유롭게 소통하세요</small>
+            <strong>{t("join.chat.communityRoomTitle")}</strong>
+            <small>{t("join.chat.communityRoomDescription")}</small>
           </span>
           <ExternalLink aria-hidden="true" />
         </a>

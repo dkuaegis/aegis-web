@@ -299,6 +299,19 @@
   background: #2563eb;
 }
 
+/* The marketing nav sits on pure black, which is the surface the filled half
+   of the language pill is read against. */
+.nav-language {
+  --lang-toggle-surface: #000000;
+
+  color: #ffffff;
+}
+
+.nav-language.is-mobile {
+  align-self: center;
+  margin: 12px 0 18px;
+}
+
 .logo {
   font-family: "Stack Sans Notch", "Space Grotesk", sans-serif;
   font-size: 28px;

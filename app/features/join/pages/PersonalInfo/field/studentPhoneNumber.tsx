@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { ErrorMessage } from "@join/components/ui/custom/error-message";
 import { Input } from "@join/components/ui/input";
 import { Label } from "@join/components/ui/label";
@@ -14,6 +15,7 @@ export const StudentPhoneNumber = forwardRef<
   HTMLInputElement,
   StudentPhoneNumberProps
 >(({ name, ...props }, ref) => {
+  const { t } = useI18n();
   const { field, error, isValid } = useControllerField({ name });
 
   const handleInputChange = useCallback(
@@ -28,11 +30,11 @@ export const StudentPhoneNumber = forwardRef<
 
   return (
     <div className="space-y-2">
-      <Label htmlFor="phoneNumber">전화번호</Label>
+      <Label htmlFor="phoneNumber">{t("join.personalInfo.phoneLabel")}</Label>
       <Input
         type="tel"
         id="phoneNumber"
-        placeholder="010-1234-5678"
+        placeholder={t("join.personalInfo.phonePlaceholder")}
         ref={ref}
         aria-invalid={!isValid}
         value={field.value || ""}
@@ -42,7 +44,7 @@ export const StudentPhoneNumber = forwardRef<
       />
       <ErrorMessage
         isShown={!!error && !isValid}
-        message="유효하지 않은 전화번호입니다"
+        message={t("join.personalInfo.phoneError")}
       />
     </div>
   );

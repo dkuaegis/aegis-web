@@ -1,9 +1,10 @@
+import { useI18n } from "@app/i18n";
 import { useCreateStudyMutation } from "@study/api/createStudyApi";
 import {
   StudyCategory,
-  StudyCategoryLabels,
+  studyCategoryLabelKey,
   StudyLevel,
-  StudyLevelLabels,
+  studyLevelLabelKey,
   StudyRecruitmentMethod,
 } from "@study/types/study";
 import type React from "react";
@@ -67,6 +68,7 @@ export const useStudyForm = (
   }) => void,
   isEditMode?: boolean
 ) => {
+  const { t } = useI18n();
   const form = useForm<FormValues>({
     defaultValues: {
       title: "",
@@ -85,12 +87,12 @@ export const useStudyForm = (
 
   const categories = Object.values(StudyCategory).map((value) => ({
     value,
-    label: StudyCategoryLabels[value],
+    label: t(studyCategoryLabelKey(value)),
   }));
 
   const difficulties = Object.values(StudyLevel).map((value) => ({
     value,
-    label: StudyLevelLabels[value],
+    label: t(studyLevelLabelKey(value)),
   }));
 
   const curriculumFieldArray = useFieldArray<FormValues, "curriculum">({
@@ -114,7 +116,7 @@ export const useStudyForm = (
     (_err: unknown) => {
       form.setError("title", {
         type: "manual",
-        message: "스터디 개설 중 오류가 발생했습니다.",
+        message: t("study.form.createError"),
       });
     }
   );
@@ -131,14 +133,14 @@ export const useStudyForm = (
     if (filteredCurriculum.length === 0) {
       form.setError("curriculum", {
         type: "manual",
-        message: "커리큘럼을 1개 이상 입력하세요.",
+        message: t("study.form.curriculumAtLeastOne"),
       });
       hasError = true;
     }
     if (filteredRequirements.length === 0) {
       form.setError("requirements", {
         type: "manual",
-        message: "지원 자격을 1개 이상 입력하세요.",
+        message: t("study.form.requirementsAtLeastOne"),
       });
       hasError = true;
     }
@@ -148,7 +150,7 @@ export const useStudyForm = (
       if (!onComplete) {
         form.setError("root", {
           type: "manual",
-          message: "수정 모드에서는 onComplete 콜백이 필요합니다.",
+          message: t("study.form.editModeCallbackMissing"),
         });
         return;
       }

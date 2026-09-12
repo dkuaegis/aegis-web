@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,6 +18,7 @@ interface FirstComeFormProps {
 }
 
 const FirstComeForm = ({ recruiting }: FirstComeFormProps) => {
+  const { t } = useI18n();
   const { isApplying, handleApply } = useApplicationState();
   return (
     <>
@@ -37,15 +39,19 @@ const FirstComeForm = ({ recruiting }: FirstComeFormProps) => {
                 />
               </span>
               <span className="relative z-10">
-                {isApplying ? "처리 중..." : "지원하기"}
+                {isApplying
+                  ? t("study.application.form.processing")
+                  : t("study.application.fcfs.applyButton")}
               </span>
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent className="max-w-[calc(100vw-12rem)] sm:max-w-lg">
             <AlertDialogHeader>
-              <AlertDialogTitle>스터디 신청 확인</AlertDialogTitle>
+              <AlertDialogTitle>
+                {t("study.application.fcfs.confirmTitle")}
+              </AlertDialogTitle>
               <AlertDialogDescription>
-                정말로 신청하시겠습니까?
+                {t("study.application.fcfs.confirmDescription")}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -59,7 +65,7 @@ const FirstComeForm = ({ recruiting }: FirstComeFormProps) => {
                     className="h-56 w-56 scale-0 transform rounded-full bg-white opacity-0 transition-opacity transition-transform duration-500 ease-out group-hover:scale-100 group-hover:opacity-20 motion-reduce:transform-none motion-reduce:transition-none"
                   />
                 </span>
-                <span className="relative z-10">취소</span>
+                <span className="relative z-10">{t("common.cancel")}</span>
               </AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleApply}
@@ -76,7 +82,9 @@ const FirstComeForm = ({ recruiting }: FirstComeFormProps) => {
                   />
                 </span>
                 <span className="relative z-10">
-                  {isApplying ? "처리 중..." : "신청"}
+                  {isApplying
+                    ? t("study.application.form.processing")
+                    : t("study.application.fcfs.confirmSubmit")}
                 </span>
               </AlertDialogAction>
             </AlertDialogFooter>
@@ -85,8 +93,8 @@ const FirstComeForm = ({ recruiting }: FirstComeFormProps) => {
       </div>
       <p className="text-center text-gray-500 text-xs">
         {recruiting
-          ? "선착순으로 모집되며, 정원이 마감되면 자동으로 마감됩니다."
-          : "모집이 마감되었습니다."}
+          ? t("study.application.fcfs.recruitingHint")
+          : t("study.application.fcfs.closedHint")}
       </p>
     </>
   );

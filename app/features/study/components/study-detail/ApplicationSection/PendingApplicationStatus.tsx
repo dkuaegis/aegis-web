@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,6 +21,7 @@ interface PendingApplicationStatusProps {
 }
 
 const PendingApplicationStatus = ({ study }: PendingApplicationStatusProps) => {
+  const { t } = useI18n();
   const {
     isApplying,
     isApplicationModalOpen,
@@ -32,7 +34,9 @@ const PendingApplicationStatus = ({ study }: PendingApplicationStatusProps) => {
   } = useApplicationState();
   return (
     <div className="space-y-4 text-center">
-      <p className="text-gray-600">스터디 신청이 검토 중입니다.</p>
+      <p className="text-gray-600">
+        {t("study.application.statusMessage.pending")}
+      </p>
 
       {study.recruitmentMethod === StudyRecruitmentMethod.APPLICATION &&
         handleEditApplication && (
@@ -43,7 +47,9 @@ const PendingApplicationStatus = ({ study }: PendingApplicationStatusProps) => {
             disabled={isLoadingApplicationDetail}
           >
             <Edit className="mr-1 h-4 w-4" />
-            {isLoadingApplicationDetail ? "불러오는 중..." : "지원서 수정하기"}
+            {isLoadingApplicationDetail
+              ? t("study.loading.applicationShort")
+              : t("study.application.form.editButton")}
           </Button>
         )}
 
@@ -56,15 +62,16 @@ const PendingApplicationStatus = ({ study }: PendingApplicationStatusProps) => {
           >
             <AlertDialogContent className="max-h-[80vh] max-w-[calc(100vw-12rem)] sm:max-w-4xl">
               <AlertDialogHeader>
-                <AlertDialogTitle>지원서 수정</AlertDialogTitle>
+                <AlertDialogTitle>
+                  {t("study.application.form.editDialogTitle")}
+                </AlertDialogTitle>
                 <AlertDialogDescription>
-                  기존 지원서 내용이 불러와졌습니다. 지원 동기 및 각오를
-                  수정해주세요.
+                  {t("study.application.form.editDialogDescription")}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <Textarea
                 id="application-edit"
-                placeholder="스터디에 지원하는 이유와 목표, 각오 등을 자유롭게 작성해주세요."
+                placeholder={t("study.application.form.placeholder")}
                 value={editingApplicationText}
                 onChange={(e) => setEditingApplicationText(e.target.value)}
                 className="mt-2 max-h-[min(300px,60vh)] min-h-[120px] resize-y overflow-y-auto border-gray-300 focus:border-blue-500 focus:ring-blue-500 sm:min-h-[200px]"
@@ -73,7 +80,7 @@ const PendingApplicationStatus = ({ study }: PendingApplicationStatusProps) => {
                 <AlertDialogCancel
                   onClick={() => setIsApplicationModalOpen(false)}
                 >
-                  닫기
+                  {t("common.close")}
                 </AlertDialogCancel>
                 <AlertDialogAction
                   onClick={() => {
@@ -82,7 +89,9 @@ const PendingApplicationStatus = ({ study }: PendingApplicationStatusProps) => {
                   disabled={!editingApplicationText.trim() || isApplying}
                   className="bg-blue-600 hover:bg-blue-700"
                 >
-                  {isApplying ? "수정 중..." : "수정 완료"}
+                  {isApplying
+                    ? t("study.application.form.editSubmitting")
+                    : t("study.application.form.editSubmit")}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

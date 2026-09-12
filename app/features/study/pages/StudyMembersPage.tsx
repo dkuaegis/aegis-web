@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { fetchStudyMembers } from "@study/api/studyMembersApi";
 import {
   Card,
@@ -27,6 +28,7 @@ export default function StudyMembersPage({
   studyId,
   onBack,
 }: StudyMembersProps) {
+  const { t } = useI18n();
   const {
     isInstructor,
     isLoading: isRoleLoading,
@@ -66,7 +68,7 @@ export default function StudyMembersPage({
         const msg =
           err instanceof Error
             ? err.message
-            : "스터디원 정보를 불러오지 못했습니다.";
+            : t("study.members.loadError");
         toast({ description: msg });
         setError(msg);
       })
@@ -85,8 +87,8 @@ export default function StudyMembersPage({
         <div className="flex min-h-screen items-center justify-center">
           <div className="text-gray-500">
             {isRoleLoading
-              ? "권한 정보를 불러오는 중..."
-              : "스터디원 정보를 불러오는 중..."}
+              ? t("study.loading.role")
+              : t("study.loading.members")}
           </div>
         </div>
       </div>
@@ -100,7 +102,7 @@ export default function StudyMembersPage({
   if (!isOwner) {
     return (
       <ForbiddenPage
-        message="이 스터디의 스터디원을 관리할 수 있는 권한이 없습니다."
+        message={t("study.forbidden.members")}
         onBack={onBack}
       />
     );
@@ -124,13 +126,13 @@ export default function StudyMembersPage({
         <Card className="border-gray-200">
           <CardHeader>
             <CardTitle className="font-semibold text-gray-900 text-lg">
-              스터디원 목록
+              {t("study.members.title")}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {members.length === 0 ? (
-                <div className="text-gray-500">스터디원이 없습니다.</div>
+                <div className="text-gray-500">{t("study.members.empty")}</div>
               ) : (
                 members.map((member) => (
                   <MemberCard key={member.studentNumber} member={member} />
@@ -145,6 +147,7 @@ export default function StudyMembersPage({
 }
 
 function MemberCard({ member }: { member: StudyMember }) {
+  const { t } = useI18n();
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -169,7 +172,7 @@ function MemberCard({ member }: { member: StudyMember }) {
               <span>{member.phone}</span>
               <button
                 type="button"
-                aria-label="전화번호 복사"
+                aria-label={t("study.members.copyPhone")}
                 className="ml-2 rounded p-1 transition hover:bg-gray-200"
                 onClick={handleCopy}
               >
@@ -180,13 +183,13 @@ function MemberCard({ member }: { member: StudyMember }) {
               </button>
               {copied && (
                 <span className="ml-2 text-green-600 text-xs">
-                  전화번호가 복사되었습니다!
+                  {t("study.members.phoneCopied")}
                 </span>
               )}
             </div>
             <div className="mt-1 flex items-center text-gray-500 text-sm">
               <span className="mr-2 font-medium">🎓</span>
-              학번: {member.studentNumber}
+              {t("study.members.studentIdLabel")}: {member.studentNumber}
             </div>
           </div>
         </div>

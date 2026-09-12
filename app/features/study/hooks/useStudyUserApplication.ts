@@ -1,3 +1,4 @@
+import { t } from "@app/i18n/store";
 import {
   useEnrollInStudyMutation,
   useStudyStatusQuery,
@@ -99,12 +100,12 @@ export const useStudyApplication = ({
       // 성공 콜백 - 상태는 쿼리에서 자동으로 업데이트됨
       if (data.status === "APPROVED") {
         toast({
-          description: "지원이 완료되었습니다! 스터디에 참여하게 되었습니다.",
+          description: t("study.application.toast.appliedFcfs"),
         });
       } else {
         toast({
           description:
-            "지원서가 제출되었습니다! 검토 후 결과를 알려드리겠습니다.",
+            t("study.application.toast.appliedForm"),
         });
       }
       setApplicationText("");
@@ -116,7 +117,7 @@ export const useStudyApplication = ({
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "지원 중 오류가 발생했습니다. 다시 시도해주세요.";
+          : t("study.application.toast.applyFailed");
       toast({
         description: errorMessage,
       });
@@ -129,7 +130,7 @@ export const useStudyApplication = ({
     studyId,
     () => {
       toast({
-        description: "지원서가 성공적으로 수정되었습니다.",
+        description: t("study.application.toast.updated"),
       });
       setIsApplying(false);
       setShouldLoadApplicationDetail(false);
@@ -140,7 +141,7 @@ export const useStudyApplication = ({
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "지원서 수정 중 오류가 발생했습니다. 다시 시도해주세요.";
+          : t("study.application.toast.updateFailed");
       toast({
         description: errorMessage,
       });
@@ -154,7 +155,7 @@ export const useStudyApplication = ({
       const trimmedText = applicationText.trim();
       if (!trimmedText) {
         toast({
-          description: "지원 사유를 입력해주세요.",
+          description: t("study.application.toast.reasonRequired"),
         });
         return;
       }
@@ -179,7 +180,7 @@ export const useStudyApplication = ({
     } catch (error) {
       console.error("Failed to fetch application detail:", error);
       toast({
-        description: "지원서 정보를 불러오는데 실패했습니다.",
+        description: t("study.application.toast.detailLoadFailed"),
       });
     }
   };
@@ -190,7 +191,7 @@ export const useStudyApplication = ({
     const trimmedText = editingApplicationText.trim();
     if (!trimmedText) {
       toast({
-        description: "지원 사유를 입력해주세요.",
+        description: t("study.application.toast.reasonRequired"),
       });
       return;
     }

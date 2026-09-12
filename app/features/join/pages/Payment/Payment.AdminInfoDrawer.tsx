@@ -1,7 +1,9 @@
+import { useI18n } from "@app/i18n";
 import { ChevronRight } from "lucide-react";
 import { useId, useState } from "react";
 
 const AdminInfoDrawer = () => {
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const detailsId = useId();
 
@@ -13,7 +15,7 @@ const AdminInfoDrawer = () => {
         aria-controls={detailsId}
         onClick={() => setOpen((current) => !current)}
       >
-        입금 관련 문의
+        {t("join.payment.inquiry.title")}
         <ChevronRight aria-hidden="true" />
       </button>
       <div
@@ -23,9 +25,12 @@ const AdminInfoDrawer = () => {
       >
         <strong>{import.meta.env.VITE_ADMIN_PHONE}</strong>
         {import.meta.env.VITE_ADMIN_KAKAO && (
-          <span>카카오톡: {import.meta.env.VITE_ADMIN_KAKAO}</span>
+          <span>
+            {t("join.payment.inquiry.kakaoLabel")}:{" "}
+            {import.meta.env.VITE_ADMIN_KAKAO}
+          </span>
         )}
-        <span>문의 시 이름과 학과를 함께 보내 주세요.</span>
+        <span>{t("join.payment.inquiry.hint")}</span>
       </div>
     </div>
   );

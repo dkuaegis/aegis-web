@@ -32,31 +32,35 @@ export interface UpdateApplicationStatusPayload {
 }
 
 // constants
+/**
+ * Translation keys rather than finished strings: `handleHTTPError` resolves
+ * them when a request fails, so the message follows the selected language.
+ */
 const ERROR_MESSAGES = {
   fetchApplications: {
-    403: "스터디장이 아닙니다.",
-    404: "지원서를 찾을 수 없습니다.",
-    default: "지원자 목록을 불러오는 중 오류가 발생했습니다.",
+    403: "study.errors.notInstructor",
+    404: "study.errors.applicationNotFound",
+    default: "study.errors.applicationsFetch",
   },
   fetchApplicationText: {
-    403: "스터디장이 아닙니다.",
-    404: "지원서를 찾을 수 없습니다.",
-    default: "지원서를 불러오는 중 오류가 발생했습니다.",
+    403: "study.errors.notInstructor",
+    404: "study.errors.applicationNotFound",
+    default: "study.errors.applicationFetch",
   },
   updateStatus: {
-    403: "스터디장이 아닙니다.",
-    404: "지원서를 찾을 수 없습니다.",
-    default: "지원서 상태 변경 중 오류가 발생했습니다.",
+    403: "study.errors.notInstructor",
+    404: "study.errors.applicationNotFound",
+    default: "study.errors.applicationStatusUpdate",
   },
   approve: {
-    403: "스터디장이 아닙니다.",
-    404: "지원서를 찾을 수 없습니다.",
-    default: "지원서 승인 중 오류가 발생했습니다.",
+    403: "study.errors.notInstructor",
+    404: "study.errors.applicationNotFound",
+    default: "study.errors.applicationApprove",
   },
   reject: {
-    403: "스터디장이 아닙니다.",
-    404: "지원서를 찾을 수 없습니다.",
-    default: "지원서 거절 중 오류가 발생했습니다.",
+    403: "study.errors.notInstructor",
+    404: "study.errors.applicationNotFound",
+    default: "study.errors.applicationReject",
   },
 } as const;
 
