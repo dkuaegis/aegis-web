@@ -1,9 +1,8 @@
 import { useI18n } from "@app/i18n";
 import { lazy, Suspense } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import useAuth from "./hooks/useAuth";
 import { useGoogleAnalytics } from "./hooks/useGoogleAnalytics";
-import LoginPage from "./pages/LoginPage";
 
 const StudyListPage = lazy(() => import("./pages/StudyListPage"));
 const CreateStudyPage = lazy(() => import("./pages/CreateStudyPage"));
@@ -42,9 +41,12 @@ const App = () => {
     );
   }
 
-  // PENDING 상태이거나 인증되지 않은 경우 로그인 페이지 표시
-  if (isPending || !isAuthenticated) {
-    return <LoginPage />;
+  if (isPending) {
+    return <Navigate to="/join" replace />;
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/auth/continue?intent=study" replace />;
   }
 
   return (

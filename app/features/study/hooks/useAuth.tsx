@@ -3,10 +3,19 @@ import { QUERY_OPTIONS_SLOW } from "@study/api/queryOptions";
 import { API_ENDPOINTS } from "@study/lib/apiEndpoints";
 import { AuthStatus, useAuthStore } from "@study/stores/useAuthStore";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 export const useAuth = () => {
-  const { status, setAuthenticated, setUnauthorized, setPending, setLoading } =
-    useAuthStore();
+  const {
+    status,
+    setAuthenticated,
+    setUnauthorized,
+    setPending,
+    setLoading,
+    reset,
+  } = useAuthStore();
+
+  useEffect(() => reset, [reset]);
 
   const { refetch } = useQuery({
     queryKey: ["auth"],
@@ -36,6 +45,7 @@ export const useAuth = () => {
       }
     },
     ...QUERY_OPTIONS_SLOW,
+    refetchOnMount: "always",
     retry: (failureCount, error) => {
       // 401(AuthError)은 재시도하지 않음
       if (error instanceof ApiError && [401, 404].includes(error.status)) {
