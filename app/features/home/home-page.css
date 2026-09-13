@@ -1174,11 +1174,11 @@
 
   .home-site-navigation {
     position: absolute;
-    top: 60px;
+    top: 100%;
     right: 0;
     left: 0;
-    grid-column: 1 / -1;
-    grid-row: 2;
+    /* Anchor to the header, not a grid row below it. */
+    grid-area: auto;
     display: none;
     flex-direction: column;
     background: #18181b;
