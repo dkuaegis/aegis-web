@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { Environment, Html, OrbitControls } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useMemo, useRef, useState } from "react";
@@ -32,6 +33,7 @@ function Machine3D({
   onShowResult: (item: GachaItem | null) => void;
   isOverlayOpen: boolean;
 }) {
+  const { t } = useI18n();
   const groupRef = useRef<THREE.Group | null>(null);
   const chosenRef = useRef<THREE.Mesh | null>(null);
 
@@ -65,7 +67,7 @@ function Machine3D({
       const myPageInfo = await getMyPage();
 
       if (myPageInfo.pointBalance < 100) {
-        showError("잔액이 부족합니다.");
+        showError(t("mypage.gacha.insufficientBalance"));
         setSpinning(false);
         return;
       }
@@ -87,37 +89,19 @@ function Machine3D({
           if (groupRef.current) groupRef.current.rotation.y = v;
         },
         onComplete: () => {
-          // API 코드를 상품명으로 변환
-          const ITEM_CODE_MAP: Record<string, string> = {
-            COFFEE_LOW: "컴포즈커피 아메리카노",
-            CLUB_DUES_DISCOUNT_COUPON: "회비 할인 쿠폰",
-            COFFEE_HIGH: "스타벅스 1만원권",
-            ENERGY_DRINK: "핫식스",
-            CHICKEN: "치킨 한 마리",
-          };
-
-          const itemName = ITEM_CODE_MAP[result.item] || result.item;
-          console.log("API result:", result.item, "-> mapped to:", itemName);
-
-          // 결과에서 아이템 찾기
-          const idx = items.findIndex((item) => item.label === itemName);
-          const targetIdx = idx >= 0 ? idx : null; // 못 찾으면 null
-
-          console.log(
-            "Found item at index:",
-            targetIdx,
-            "item:",
-            targetIdx !== null ? items[targetIdx] : "not found"
-          );
+          // `label` carries the API prize code, so the result matches directly
+          // and no language-specific name table is involved.
+          const idx = items.findIndex((item) => item.label === result.item);
+          const targetIdx = idx >= 0 ? idx : null;
 
           setResultIdx(targetIdx);
           setSpinning(false);
 
           if (targetIdx !== null) {
-            startDrop(targetIdx, itemName);
+            startDrop(targetIdx, result.item);
           } else {
-            // 매칭되는 아이템이 없으면 바로 결과 표시
-            const resultItem = { id: "api-result", label: itemName };
+            // Nothing on the wheel matches, so show the result straight away.
+            const resultItem = { id: "api-result", label: result.item };
             onShowResult(resultItem);
             onResult?.(resultItem);
           }
@@ -130,7 +114,7 @@ function Machine3D({
     }
   };
 
-  const startDrop = (idx: number, apiItemName: string) => {
+  const startDrop = (idx: number, apiItemCode: string) => {
     setDropping(true);
 
     // 선택된 아이템의 색상 적용
@@ -164,8 +148,9 @@ function Machine3D({
       },
       onComplete: () => {
         setDropping(false);
-        // API에서 받은 아이템명을 사용
-        const resultItem = { id: "api-result", label: apiItemName };
+        // The prize code from the API is carried through; the card resolves
+        // the display name.
+        const resultItem = { id: "api-result", label: apiItemCode };
         onShowResult(resultItem);
         onResult?.(resultItem);
       },
@@ -262,7 +247,9 @@ function Machine3D({
               cursor: spinning || dropping ? "not-allowed" : "pointer",
             }}
           >
-            {spinning || dropping ? "추첨 중..." : "뽑기 시작!"}
+            {spinning || dropping
+              ? t("mypage.gacha.spinning")
+              : t("mypage.gacha.spin")}
           </button>
         </Html>
       )}
@@ -286,16 +273,17 @@ export default function GachaMachine3D({
     items.length > 0
       ? items
       : [
-          { id: "1", label: "핫식스", weight: 61, color: "#74B8FF" },
+          // Fallback wheel. `label` is the API prize code, as above.
+          { id: "1", label: "ENERGY_DRINK", weight: 61, color: "#74B8FF" },
+          { id: "2", label: "COFFEE_LOW", weight: 32, color: "#FF5975" },
           {
-            id: "2",
-            label: "컴포즈커피 아메리카노",
-            weight: 32,
-            color: "#FF5975",
+            id: "3",
+            label: "CLUB_DUES_DISCOUNT_COUPON",
+            weight: 5.5,
+            color: "#C2B5FB",
           },
-          { id: "3", label: "회비 할인 쿠폰", weight: 5.5, color: "#C2B5FB" },
-          { id: "4", label: "스타벅스 1만원권", weight: 1.0, color: "#CEF286" },
-          { id: "5", label: "치킨 한 마리", weight: 0.5, color: "#FDF385" },
+          { id: "4", label: "COFFEE_HIGH", weight: 1.0, color: "#CEF286" },
+          { id: "5", label: "CHICKEN", weight: 0.5, color: "#FDF385" },
         ];
 
   const [resultItem, setResultItem] = useState<GachaItem | null>(null);

@@ -1,7 +1,10 @@
+import { useI18n } from "@app/i18n";
 import type { RankingListProps } from "../model/Ranking";
 import "../style/RankingList.css";
 
 const RankingList: React.FC<RankingListProps> = ({ items }) => {
+  const { t } = useI18n();
+
   const getRankIndicator = (rank: number) => {
     // 1, 2, 3위는 메달 이모지로 구분
     if (rank === 1) return <div className="rank-medal">🥇</div>;
@@ -20,7 +23,10 @@ const RankingList: React.FC<RankingListProps> = ({ items }) => {
           )}
           <div className="ranking-user-info">
             <p className="ranking-name">{item.name}</p>
-            <p className="ranking-score">{item.score.toLocaleString()}점</p>
+            <p className="ranking-score">
+              {item.score.toLocaleString()}
+              {t("mypage.ranking.scoreUnit")}
+            </p>
           </div>
         </div>
       ))}

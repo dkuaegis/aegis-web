@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { useEffect, useState } from "react";
 import "../style/Profile.css";
 import editIcon from "../assets/edit.svg";
@@ -10,6 +11,7 @@ interface ProfileProps {
 }
 
 const Profile: React.FC<ProfileProps> = ({ mypage }) => {
+  const { t } = useI18n();
   const [showProfileEditModal, setShowProfileEditModal] = useState(false);
   const [selectedKey, setSelectedKey] = useState<IconKey>(
     mypage?.profileIcon || "NONE"
@@ -30,7 +32,7 @@ const Profile: React.FC<ProfileProps> = ({ mypage }) => {
           type="button"
           className="profile_edit"
           onClick={() => setShowProfileEditModal(true)}
-          aria-label="프로필 이미지 변경"
+          aria-label={t("mypage.profile.editImage")}
         >
           <img src={editIcon} alt="" aria-hidden="true" />
         </button>
@@ -38,9 +40,9 @@ const Profile: React.FC<ProfileProps> = ({ mypage }) => {
       <div className="profile_info">
         <div className="profile_name">{mypage?.name}</div>
         <div className="profile_greeting">
-          환영합니다!
+          {t("mypage.profile.greetingLine1")}
           <br />
-          Aegis와 함께해요❤
+          {t("mypage.profile.greetingLine2")}
         </div>
       </div>
 

@@ -1,75 +1,30 @@
-import AlertBox from "@join/components/ui/custom/alertbox";
-import NavigationButtons from "@join/components/ui/custom/navigationButton";
-import { Label } from "@join/components/ui/label";
+import { useI18n } from "@app/i18n";
 import { Analytics } from "@join/service/analytics";
-import { AnimatePresence, motion } from "framer-motion";
-import { CircleAlert } from "lucide-react";
-import { useEffect, useState } from "react";
-import { fetchCoupon, submitCoupon } from "./Coupon.Api";
+import { type FormEvent, useState } from "react";
+import toast from "react-hot-toast";
+import { submitAndFetchCouponCode, submitCoupon } from "./Coupon.Api";
 import { CouponList } from "./Coupon.CouponList";
-import InputCouponCode from "./Coupon.InputCouponCode";
-import { TotalAmount } from "./Coupon.TotalAmount";
 import type { Coupon as CouponType } from "./Coupon.Types";
 
 interface CouponProps {
   onClose: () => void;
+  coupons: CouponType[];
+  onCouponsChange: (coupons: CouponType[]) => void;
 }
 
-const buttonWrapperVariants = {
-  // 초기 상태: 화면 아래에 숨겨져 있음
-  initial: {
-    opacity: 0,
-  },
-  // 보이는 상태: 제자리로 올라옴
-  animate: {
-    opacity: 1,
-    transition: {
-      duration: 0.2,
-      ease: "easeInOut",
-      // 부모 애니메이션이 끝날 즈음 시작되도록 약간의 딜레이를 줍니다.
-      delay: 0.3,
-    },
-  },
-  // 사라지는 상태: 다시 화면 아래로 내려감
-  exit: {
-    opacity: 0,
-    transition: {
-      duration: 0.2,
-      ease: "easeInOut",
-    },
-  },
-} as const;
-
-const Coupon = ({ onClose }: CouponProps) => {
-  const [coupons, setCoupons] = useState<CouponType[]>([]);
+const Coupon = ({ onClose, coupons, onCouponsChange }: CouponProps) => {
+  const { t } = useI18n();
   const [selectedCoupons, setSelectedCoupons] = useState<number[]>([]);
-  const [isExiting, setIsExiting] = useState<boolean>(false);
+  const [couponCode, setCouponCode] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        Analytics.safeTrack("Coupon_Fetch_Start", { category: "Payment" });
-        const data = await fetchCoupon();
-        setCoupons(data);
-        Analytics.safeTrack("Coupon_Fetch_Success", {
-          category: "Payment",
-          coupon_count: data.length,
-        });
-      } catch (error) {
-        console.error("쿠폰 불러오는데 오류 발생:", error);
-        Analytics.safeTrack("Coupon_Fetch_Failed", {
-          category: "Payment",
-          error_message:
-            error instanceof Error ? error.message : String(error ?? ""),
-        });
-      }
-    };
+  const handleApply = async () => {
+    if (selectedCoupons.length === 0) {
+      toast.error(t("join.coupon.selectRequired"));
+      return;
+    }
 
-    fetchData();
-  }, []);
-
-  const handleSubmit = async () => {
-    setIsExiting(true);
+    setIsSubmitting(true);
     try {
       Analytics.safeTrack("Coupon_Apply_Start", {
         category: "Payment",
@@ -80,8 +35,14 @@ const Coupon = ({ onClose }: CouponProps) => {
         category: "Payment",
         selected_count: selectedCoupons.length,
       });
+      onClose();
     } catch (error: unknown) {
       console.error("제출 중 오류 발생:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : t("join.coupon.applyFailure")
+      );
       Analytics.safeTrack("Coupon_Apply_Failed", {
         category: "Payment",
         selected_count: selectedCoupons.length,
@@ -89,27 +50,54 @@ const Coupon = ({ onClose }: CouponProps) => {
           error instanceof Error ? error.message : String(error ?? ""),
       });
     } finally {
-      onClose();
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleCodeSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+    const code = couponCode.trim();
+    if (!code) {
+      toast.error(t("join.coupon.codeRequired"));
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      onCouponsChange(await submitAndFetchCouponCode(code));
+      setCouponCode("");
+      toast.success(t("join.coupon.registerSuccess"));
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : t("join.coupon.registerFailure")
+      );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="space-y-8 pb-20">
-      <div className="space-y-5 rounded-2xl bg-slate-50 p-6">
-        <div>
-          <Label className="text-xl">할인 금액</Label>
-          <TotalAmount coupons={coupons} selectedCoupons={selectedCoupons} />
-        </div>
-        <InputCouponCode setCoupons={setCoupons} />
-      </div>
-
-      <div className="border-t py-4">
+    <div>
+      <form className="join-coupon-code-form" onSubmit={handleCodeSubmit}>
+        <input
+          aria-label={t("join.coupon.codeInputLabel")}
+          placeholder={t("join.coupon.codeInputPlaceholder")}
+          value={couponCode}
+          onChange={(event) => setCouponCode(event.target.value)}
+        />
+        <button
+          className="join-payment-button is-dark"
+          type="submit"
+          disabled={isSubmitting}
+        >
+          {t("join.coupon.register")}
+        </button>
+      </form>
+      <fieldset className="join-coupon-list" disabled={isSubmitting}>
+        <legend className="sr-only">{t("join.coupon.listLegend")}</legend>
         {coupons.length === 0 ? (
-          <AlertBox
-            icon={<CircleAlert className="h-4 w-4" />}
-            title="쿠폰이 없습니다"
-            description={["쿠폰을 등록하거나, 결제 페이지로 이동해주세요"]}
-          />
+          <p className="join-coupon-empty">{t("join.coupon.empty")}</p>
         ) : (
           <CouponList
             coupons={coupons}
@@ -117,23 +105,17 @@ const Coupon = ({ onClose }: CouponProps) => {
             setSelectedCoupons={setSelectedCoupons}
           />
         )}
-      </div>
-      <AnimatePresence onExitComplete={onClose}>
-        {!isExiting && (
-          <motion.div
-            variants={buttonWrapperVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-          >
-            <NavigationButtons
-              disabled={false}
-              text="쿠폰 적용하기"
-              onClick={handleSubmit}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      </fieldset>
+      <button
+        className="join-payment-button is-full"
+        type="button"
+        disabled={isSubmitting}
+        onClick={handleApply}
+      >
+        {isSubmitting
+          ? t("join.coupon.applying")
+          : t("join.coupon.applySelected")}
+      </button>
     </div>
   );
 };

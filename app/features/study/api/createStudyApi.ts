@@ -1,4 +1,4 @@
-import { apiClient } from "@study/lib/apiClient";
+import { api } from "@app/lib/api";
 import { API_ENDPOINTS } from "@study/lib/apiEndpoints";
 import type {
   StudyCategory,
@@ -22,11 +22,7 @@ export interface CreateStudyPayload {
 export async function createStudy(
   payload: CreateStudyPayload
 ): Promise<unknown> {
-  return apiClient
-    .post(API_ENDPOINTS.STUDIES, {
-      json: payload,
-    })
-    .json();
+  return api.post(API_ENDPOINTS.STUDIES, payload);
 }
 
 export const useCreateStudyMutation = (

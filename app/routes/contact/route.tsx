@@ -1,15 +1,23 @@
+import { useI18n } from "@app/i18n";
+import { t as translate } from "@app/i18n/store";
 import { useMemo, useState } from "react";
 import Footer from "../../components/Footer";
 import Navigation from "../../components/Navigation";
 
 export function meta() {
   return [
-    { title: "Contact - Aegis" },
-    { name: "description", content: "Aegis 문의하기" },
+    { title: translate("pages.contact.meta.title") },
+    {
+      name: "description",
+      content: translate("pages.contact.meta.description"),
+    },
   ];
 }
 
+const PRESIDENT_PHONE = "010-6323-2003";
+
 function Contact() {
+  const { t } = useI18n();
   const [copied, setCopied] = useState(false);
 
   const copyToClipboard = (text: string) => {
@@ -67,10 +75,8 @@ function Contact() {
         <section className="contact">
           <div className="contact-inner">
             <div className="contact-header">
-              <h2 className="contact-title">문의</h2>
-              <p className="contact-subtitle">
-                더 궁금한 질문이 있거나 후원을 원하신다면 언제든 연락해 주세요!
-              </p>
+              <h2 className="contact-title">{t("pages.contact.title")}</h2>
+              <p className="contact-subtitle">{t("pages.contact.subtitle")}</p>
             </div>
 
             <a href="mailto:dankook.aegis@gmail.com" className="contact-card">
@@ -120,15 +126,15 @@ function Contact() {
                   <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
                 </svg>
               </div>
-              회장 권대근 010-6323-2003
+              {t("pages.contact.presidentLabel")} {PRESIDENT_PHONE}
               <button
                 type="button"
                 onClick={(e) => {
                   e.preventDefault();
-                  copyToClipboard("010-6323-2003");
+                  copyToClipboard(PRESIDENT_PHONE);
                 }}
                 className="copy-button"
-                title="전화번호 복사"
+                title={t("pages.contact.copyPhone")}
               >
                 {copied ? (
                   <svg

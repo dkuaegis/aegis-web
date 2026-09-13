@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { ErrorMessage } from "@join/components/ui/custom/error-message";
 import { Input } from "@join/components/ui/input";
 import { Label } from "@join/components/ui/label";
@@ -9,6 +10,7 @@ interface StudentIdProps {
 }
 export const StudentId = forwardRef<HTMLInputElement, StudentIdProps>(
   ({ name, ...props }, ref) => {
+    const { t } = useI18n();
     const { field, error, isValid } = useControllerField({ name });
 
     const handleInputChange = useCallback(
@@ -28,11 +30,11 @@ export const StudentId = forwardRef<HTMLInputElement, StudentIdProps>(
 
     return (
       <div className="space-y-2">
-        <Label htmlFor="studentId">학번</Label>
+        <Label htmlFor="studentId">{t("join.personalInfo.studentIdLabel")}</Label>
         <Input
           type="text"
           id="studentId"
-          placeholder="32000000"
+          placeholder={t("join.personalInfo.studentIdPlaceholder")}
           maxLength={8}
           ref={ref}
           aria-invalid={!isValid}
@@ -42,9 +44,11 @@ export const StudentId = forwardRef<HTMLInputElement, StudentIdProps>(
         />
         <ErrorMessage
           isShown={!!error && !isValid}
-          message="학번은 32로 시작하는 8자리 숫자여야 합니다"
+          message={t("join.personalInfo.studentIdError")}
         />
       </div>
     );
   }
 );
+
+StudentId.displayName = "StudentId";

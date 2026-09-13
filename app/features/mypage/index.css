@@ -91,6 +91,20 @@
   text-decoration: none;
 }
 
+.mypage-site-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* The mypage bar is white, so that is the surface the filled half of the
+   language pill is read against. */
+.mypage-site-language {
+  --lang-toggle-surface: #ffffff;
+
+  color: var(--mypage-foreground);
+}
+
 .mypage-site-nav {
   display: flex;
   align-items: center;

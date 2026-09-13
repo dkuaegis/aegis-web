@@ -1,4 +1,5 @@
-import { apiClient, HTTPError } from "@study/lib/apiClient";
+import { t } from "@app/i18n/store";
+import { ApiError, api } from "@app/lib/api";
 
 export interface AttendanceCodeResponse {
   code: string;
@@ -13,26 +14,26 @@ export interface AttendanceSubmissionResponse {
 export function getAttendanceErrorMessage(statusCode: number): string {
   switch (statusCode) {
     case 400:
-      return "잘못된 출석 코드입니다.";
+      return t("study.errors.invalidAttendanceCode");
     case 403:
-      return "스터디원이 아닙니다.";
+      return t("study.errors.notMember");
     case 404:
-      return "오늘 진행되는 세션이 없습니다.";
+      return t("study.errors.noSessionToday");
     case 409:
-      return "이미 출석이 완료되었습니다.";
+      return t("study.errors.alreadyAttended");
     default:
-      return "출석 처리 중 오류가 발생했습니다.";
+      return t("study.errors.attendanceSubmit");
   }
 }
 
 export function getAttendanceCodeErrorMessage(statusCode: number): string {
   switch (statusCode) {
     case 403:
-      return "스터디장이 아닙니다.";
+      return t("study.errors.notInstructor");
     case 404:
-      return "스터디를 찾을 수 없습니다.";
+      return t("study.errors.studyNotFound");
     default:
-      return "출석 코드 발급 중 오류가 발생했습니다.";
+      return t("study.errors.attendanceCodeIssue");
   }
 }
 
@@ -41,11 +42,11 @@ export function getAttendanceInstructorErrorMessage(
 ): string {
   switch (statusCode) {
     case 403:
-      return "스터디장이 아닙니다.";
+      return t("study.errors.notInstructor");
     case 404:
-      return "스터디를 찾을 수 없습니다.";
+      return t("study.errors.studyNotFound");
     default:
-      return "출석 정보를 불러오는 중 오류가 발생했습니다.";
+      return t("study.errors.attendanceFetch");
   }
 }
 
@@ -53,16 +54,16 @@ export async function fetchAttendanceCode(
   studyId: number
 ): Promise<AttendanceCodeResponse> {
   try {
-    const res = await apiClient
-      .post(`studies/${studyId}/attendance-code`)
-      .json<AttendanceCodeResponse>();
+    const res = await api.post<AttendanceCodeResponse>(
+      `studies/${studyId}/attendance-code`
+    );
     return res;
   } catch (err: unknown) {
-    if (err instanceof HTTPError) {
-      const message = getAttendanceCodeErrorMessage(err.response.status);
+    if (err instanceof ApiError) {
+      const message = getAttendanceCodeErrorMessage(err.status);
       throw new Error(message);
     }
-    throw new Error("출석 코드 발급 중 오류가 발생했습니다.");
+    throw new Error(t("study.errors.attendanceCodeIssue"));
   }
 }
 
@@ -71,18 +72,17 @@ export async function submitAttendanceCode(
   code: string
 ): Promise<AttendanceSubmissionResponse> {
   try {
-    const res = await apiClient
-      .post(`studies/${studyId}/attendance`, {
-        json: { code },
-      })
-      .json<AttendanceSubmissionResponse>();
+    const res = await api.post<AttendanceSubmissionResponse>(
+      `studies/${studyId}/attendance`,
+      { code }
+    );
     return res;
   } catch (err: unknown) {
-    if (err instanceof HTTPError) {
-      const message = getAttendanceErrorMessage(err.response.status);
+    if (err instanceof ApiError) {
+      const message = getAttendanceErrorMessage(err.status);
       throw new Error(message);
     }
-    throw new Error("출석 처리 중 오류가 발생했습니다.");
+    throw new Error(t("study.errors.attendanceSubmit"));
   }
 }
 
@@ -108,15 +108,16 @@ export async function fetchAttendanceInstructor(
   signal?: AbortSignal
 ): Promise<AttendanceInstructorResponse> {
   try {
-    const res = await apiClient
-      .get(`studies/${studyId}/attendance-instructor`, { signal })
-      .json<AttendanceInstructorResponse>();
+    const res = await api.get<AttendanceInstructorResponse>(
+      `studies/${studyId}/attendance-instructor`,
+      signal
+    );
     return res;
   } catch (err: unknown) {
-    if (err instanceof HTTPError) {
-      const message = getAttendanceInstructorErrorMessage(err.response.status);
+    if (err instanceof ApiError) {
+      const message = getAttendanceInstructorErrorMessage(err.status);
       throw new Error(message);
     }
-    throw new Error("출석 정보를 불러오는 중 오류가 발생했습니다.");
+    throw new Error(t("study.errors.attendanceFetch"));
   }
 }

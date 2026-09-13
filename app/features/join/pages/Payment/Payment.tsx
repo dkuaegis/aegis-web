@@ -1,14 +1,16 @@
-import { Button } from "@join/components/ui/button";
+import { useI18n } from "@app/i18n";
+import "./Payment.css";
 import NavigationButtons from "@join/components/ui/custom/navigationButton";
-import { cn } from "@join/lib/utils";
 import { Analytics } from "@join/service/analytics";
 import { useAuthStore } from "@join/stores/authStore";
-import { Label } from "@radix-ui/react-label";
-import { AnimatePresence, motion } from "framer-motion";
+import { ChevronRight } from "lucide-react";
 import React, { Suspense, useEffect, useState } from "react";
 import Coupon from "../Coupon/Coupon";
+import { fetchCoupon } from "../Coupon/Coupon.Api";
+import type { Coupon as CouponType } from "../Coupon/Coupon.Types";
 import AdminInfoDrawer from "./Payment.AdminInfoDrawer";
 import PaymentAmount from "./Payment.Amount";
+import PaymentDialog from "./Payment.Dialog";
 import Information from "./Payment.Information";
 import { usePaymentPolling } from "./usePaymentPolling";
 
@@ -16,44 +18,73 @@ const Complete = React.lazy(
   () => import("@join/components/ui/custom/complete")
 );
 
-const modalVariants = {
-  // 초기 상태 (화면 아래, 숨김)
-  hidden: {
-    y: "60%",
-    opacity: 0,
-  },
-  // 보이는 상태
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: {
-      duration: 0.3,
-      ease: "easeInOut",
-      // 자식 요소들의 애니메이션을 부모보다 0.2초 늦게 시작
-      staggerChildren: 0,
-      when: "beforeChildren", // 이 속성은 자식보다 부모 애니메이션을 먼저 시작하도록 보장
-    },
-  },
-  // 사라지는 상태
-  exit: {
-    y: "60%",
-    opacity: 0,
-    transition: {
-      duration: 0.3,
-      ease: "easeInOut",
-    },
-  },
-} as const;
-
 const Payment = () => {
+  const { t } = useI18n();
   const { isValid, finalPrice, status, refreshFinalPrice } =
     usePaymentPolling();
   const [currentView, setCurrentView] = useState<"coupon" | "payment">(
     "payment"
   );
+  const [coupons, setCoupons] = useState<CouponType[]>([]);
+  const [couponStatus, setCouponStatus] = useState<
+    "loading" | "success" | "error"
+  >("loading");
+  const [couponFetchAttempt, setCouponFetchAttempt] = useState(0);
   const completeRegistration = useAuthStore(
     (state) => state.completeRegistration
   );
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: 재시도 또는 쿠폰 적용 후 조회 횟수가 바뀌면 쿠폰을 다시 조회합니다.
+  useEffect(() => {
+    let active = true;
+    const loadCoupons = async () => {
+      setCouponStatus("loading");
+      try {
+        Analytics.safeTrack("Coupon_Fetch_Start", { category: "Payment" });
+        const data = await fetchCoupon();
+        if (active) {
+          setCoupons(data);
+          setCouponStatus("success");
+        }
+        Analytics.safeTrack("Coupon_Fetch_Success", {
+          category: "Payment",
+          coupon_count: data.length,
+        });
+      } catch (error) {
+        if (active) setCouponStatus("error");
+        console.error("쿠폰 불러오는데 오류 발생:", error);
+        Analytics.safeTrack("Coupon_Fetch_Failed", {
+          category: "Payment",
+          error_message: error instanceof Error ? error.message : String(error),
+        });
+      }
+    };
+    void loadCoupons();
+    return () => {
+      active = false;
+    };
+  }, [couponFetchAttempt]);
+
+  const couponFeedback =
+    couponStatus === "error" ? (
+      <div role="alert" className="space-y-2 text-sm">
+        <p className="text-red-600">{t("join.payment.couponLoadError")}</p>
+        <button
+          type="button"
+          className="underline underline-offset-4"
+          onClick={() => {
+            setCouponStatus("loading");
+            setCouponFetchAttempt((attempt) => attempt + 1);
+          }}
+        >
+          {t("common.retry")}
+        </button>
+      </div>
+    ) : (
+      <p role="status" className="text-sm">
+        {t("join.payment.couponLoading")}
+      </p>
+    );
 
   useEffect(() => {
     if (status === "error") {
@@ -68,9 +99,7 @@ const Payment = () => {
   if (status === "error") {
     return (
       <div className="text-center text-red-500">
-        <p className="my-7">
-          결제 상태를 불러오는 데 실패했습니다. 나중에 다시 시도해주세요.
-        </p>
+        <p className="my-7">{t("join.payment.loadError")}</p>
         <AdminInfoDrawer />
       </div>
     );
@@ -78,30 +107,40 @@ const Payment = () => {
 
   return (
     <div className="relative">
-      <div className={cn("line-breaks space-y-8")}>
+      <div className="line-breaks space-y-8">
         {!isValid ? (
-          <>
-            <Label className="text-xl">납부 금액</Label>
+          <div className="join-payment-layout">
             <PaymentAmount amount={finalPrice} />
             <Information />
-            <Button
-              size="lg"
-              className="w-full items-center"
-              variant="default"
-              onClick={() => {
-                Analytics.safeTrack("Payment_Open_Coupon_Click", {
-                  category: "Payment",
-                });
-                setCurrentView("coupon");
-              }}
-            >
-              쿠폰 적용하기
-            </Button>
-            <AdminInfoDrawer />
-          </>
+            <div className="join-payment-extras">
+              <button
+                className="join-payment-coupon-action"
+                type="button"
+                disabled={couponStatus !== "success"}
+                onClick={() => {
+                  Analytics.safeTrack("Payment_Open_Coupon_Click", {
+                    category: "Payment",
+                  });
+                  setCurrentView("coupon");
+                }}
+              >
+                <span>{t("join.payment.couponDialogTitle")}</span>
+                <strong>
+                  {couponStatus === "success"
+                    ? t("join.payment.couponCount", { count: coupons.length })
+                    : couponStatus === "error"
+                      ? t("join.payment.couponFetchFailed")
+                      : t("join.payment.couponFetching")}
+                </strong>
+                <ChevronRight aria-hidden="true" />
+              </button>
+              {couponStatus === "error" && couponFeedback}
+              <AdminInfoDrawer />
+            </div>
+          </div>
         ) : (
           <Suspense>
-            <Complete message="납부가 완료됐어요" />
+            <Complete message={t("join.payment.completeMessage")} />
             <NavigationButtons
               disabled={!isValid}
               onClick={() => {
@@ -114,27 +153,31 @@ const Payment = () => {
           </Suspense>
         )}
       </div>
-      <AnimatePresence>
-        {!isValid && currentView === "coupon" && (
-          <motion.div
-            className="absolute top-0 left-0 z-10 h-full w-full bg-white"
-            variants={modalVariants} // variants 속성 사용
-            initial="hidden" // "hidden"이라는 이름의 variant를 초기 상태로
-            animate="visible" // "visible"이라는 이름의 variant를 애니메이션 상태로
-            exit="exit" // "exit"라는 이름의 variant를 종료 상태로
-          >
-            <Coupon
-              onClose={() => {
-                Analytics.safeTrack("Coupon_Apply_And_Fetch_And_Close", {
-                  category: "Coupon",
-                });
-                refreshFinalPrice();
-                setCurrentView("payment");
-              }}
-            />
-          </motion.div>
+      <PaymentDialog
+        open={!isValid && currentView === "coupon"}
+        onOpenChange={(open) => {
+          if (!open) setCurrentView("payment");
+        }}
+        title={t("join.payment.couponDialogTitle")}
+      >
+        {couponStatus === "success" ? (
+          <Coupon
+            coupons={coupons}
+            onCouponsChange={setCoupons}
+            onClose={() => {
+              Analytics.safeTrack("Coupon_Apply_And_Fetch_And_Close", {
+                category: "Coupon",
+              });
+              void refreshFinalPrice();
+              setCouponStatus("loading");
+              setCouponFetchAttempt((attempt) => attempt + 1);
+              setCurrentView("payment");
+            }}
+          />
+        ) : (
+          couponFeedback
         )}
-      </AnimatePresence>
+      </PaymentDialog>
     </div>
   );
 };

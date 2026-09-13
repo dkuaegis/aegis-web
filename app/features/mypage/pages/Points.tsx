@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { useEffect, useState } from "react";
 import { getPointSummary } from "../api/Points";
 import Card from "../components/Card";
@@ -7,15 +8,8 @@ import PointSummary from "../components/PointSummary";
 import TabSelector from "../components/TabSelector";
 import type { PointSummaryView } from "../model/Points";
 
-const formatDate = (dateStr: string): string => {
-  const d = new Date(dateStr);
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${year}년 ${month}월 ${day}일`;
-};
-
 const Points: React.FC = () => {
+  const { t } = useI18n();
   const [selectedTab, setSelectedTab] = useState(0);
   const [summary, setSummary] = useState<PointSummaryView | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -39,10 +33,21 @@ const Points: React.FC = () => {
   if (isLoading) {
     return (
       <div>
-        <Header leftChild="<" title="포인트" />
+        <Header leftChild={t("mypage.nav.back")} title={t("mypage.points.title")} />
       </div>
     );
   }
+
+  // The date pattern itself is translated, so the order of the parts can
+  // differ per language.
+  const formatDate = (dateStr: string): string => {
+    const d = new Date(dateStr);
+    return t("mypage.points.dateFormat", {
+      year: d.getFullYear(),
+      month: String(d.getMonth() + 1).padStart(2, "0"),
+      day: String(d.getDate()).padStart(2, "0"),
+    });
+  };
 
   const balance = summary?.balance ?? 0;
   const transactions = summary?.history ?? [];
@@ -56,14 +61,18 @@ const Points: React.FC = () => {
 
   return (
     <div>
-      <Header leftChild="<" title="포인트" />
+      <Header leftChild={t("mypage.nav.back")} title={t("mypage.points.title")} />
       {transactions.length === 0 && balance === 0 ? (
         <EmptyState type="point" />
       ) : (
         <>
           <PointSummary point={balance} />
           <TabSelector
-            tabs={["전체", "적립", "사용"]}
+            tabs={[
+              t("mypage.points.tabs.all"),
+              t("mypage.points.tabs.earned"),
+              t("mypage.points.tabs.spent"),
+            ]}
             selected={selectedTab}
             onSelect={setSelectedTab}
           />

@@ -1,5 +1,6 @@
+import { t } from "@app/i18n/store";
+import { ApiError, api } from "@app/lib/api";
 import { STUDY_DETAIL_QUERY_KEY } from "@study/api/studyDetailApi";
-import { apiClient, HTTPError } from "@study/lib/apiClient";
 import { API_ENDPOINTS } from "@study/lib/apiEndpoints";
 import type { StudyRecruitmentMethod } from "@study/types/study";
 import {
@@ -43,13 +44,13 @@ export interface StudyFormData {
 export function getEditStudyErrorMessage(statusCode: number): string {
   switch (statusCode) {
     case 400:
-      return "잘못된 요청 데이터입니다.";
+      return t("study.errors.badRequestData");
     case 403:
-      return "스터디장이 아닙니다.";
+      return t("study.errors.notInstructor");
     case 404:
-      return "스터디를 찾을 수 없습니다.";
+      return t("study.errors.studyNotFound");
     default:
-      return "스터디 수정 중 오류가 발생했습니다.";
+      return t("study.errors.studyUpdate");
   }
 }
 
@@ -75,10 +76,7 @@ export async function updateStudy(
   };
 
   try {
-    await apiClient.put(`${API_ENDPOINTS.STUDIES}/${studyId}`, {
-      json: requestData,
-      signal,
-    });
+    await api.put(`${API_ENDPOINTS.STUDIES}/${studyId}`, requestData, signal);
   } catch (err: unknown) {
     const name =
       typeof err === "object" && err !== null && "name" in err
@@ -91,11 +89,11 @@ export async function updateStudy(
     ) {
       throw err as Error;
     }
-    if (err instanceof HTTPError) {
-      const message = getEditStudyErrorMessage(err.response.status);
+    if (err instanceof ApiError) {
+      const message = getEditStudyErrorMessage(err.status);
       throw new Error(message);
     }
-    throw new Error("스터디 수정 중 오류가 발생했습니다.");
+    throw new Error(t("study.errors.studyUpdate"));
   }
 }
 

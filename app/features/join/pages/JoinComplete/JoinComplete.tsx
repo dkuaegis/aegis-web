@@ -1,9 +1,8 @@
-import { httpClient } from "@join/api/api";
-import Rocket from "@join/assets/lottie/Rocket.json";
-import KakaoLinkButton from "@join/components/ui/custom/kakao-link-button";
+import { useI18n } from "@app/i18n";
+import { api } from "@app/lib/api";
 import { Analytics } from "@join/service/analytics";
 import { usePersonalInfoStore } from "@join/stores/personalInfoStore";
-import lottie from "lottie-web";
+import { CheckCircle2, ExternalLink, MessageCircle } from "lucide-react";
 import { useEffect, useRef } from "react";
 import CompleteNotice from "./JoinComplete.Notice";
 
@@ -16,9 +15,9 @@ interface RequiredMemberInfo {
 }
 
 const JoinComplete = () => {
+  const { t } = useI18n();
   const studentId = usePersonalInfoStore((s) => s.personalInfoData?.studentId);
   const identifiedRef = useRef(false);
-  const lottieContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     Analytics.safeTrack("Complete_View", { category: "Complete" });
@@ -32,7 +31,7 @@ const JoinComplete = () => {
           identifiedRef.current = true;
           return;
         }
-        const profile = await httpClient.get<RequiredMemberInfo>("/members");
+        const profile = await api.get<RequiredMemberInfo>("/members");
         if (profile.studentId) {
           Analytics.identifyStudent(String(profile.studentId), profile.name);
           identifiedRef.current = true;
@@ -47,47 +46,50 @@ const JoinComplete = () => {
     void identify();
   }, [studentId]);
 
-  useEffect(() => {
-    if (!lottieContainerRef.current) return;
-    const animation = lottie.loadAnimation({
-      container: lottieContainerRef.current,
-      renderer: "svg",
-      loop: true,
-      autoplay: true,
-      animationData: Rocket,
-    });
-    return () => {
-      animation.destroy();
-    };
-  }, []);
-
   return (
     <Wrapper>
-      <div
-        ref={lottieContainerRef}
-        style={{ width: 240, height: 240, margin: "0 auto" }}
-      />
-      <p className="mt-4 font-bold text-3xl">등록이 완료됐어요</p>
+      <div className="join-complete-mark">
+        <CheckCircle2 aria-hidden="true" />
+      </div>
+      <h1>{t("join.complete.title")}</h1>
       <CompleteNotice />
-      <div className="flex flex-col gap-3">
-        <KakaoLinkButton
-          text="공지방 가입하기"
-          url={NOTICE_ROOM_URL}
+      <div className="join-next-step-grid">
+        <a
+          href={NOTICE_ROOM_URL}
+          target="_blank"
+          rel="noopener noreferrer"
           onClick={() => {
             Analytics.safeTrack("Complete_Notice_Room_Click", {
               category: "Complete",
             });
           }}
-        />
-        <KakaoLinkButton
-          text="소통방 가입하기"
-          url={COMMUNITY_ROOM_URL}
+          className="join-next-step-card"
+        >
+          <MessageCircle aria-hidden="true" />
+          <span>
+            <strong>{t("join.chat.noticeRoomTitle")}</strong>
+            <small>{t("join.chat.noticeRoomDescription")}</small>
+          </span>
+          <ExternalLink aria-hidden="true" />
+        </a>
+        <a
+          href={COMMUNITY_ROOM_URL}
+          target="_blank"
+          rel="noopener noreferrer"
           onClick={() => {
             Analytics.safeTrack("Complete_Community_Room_Click", {
               category: "Complete",
             });
           }}
-        />
+          className="join-next-step-card"
+        >
+          <MessageCircle aria-hidden="true" />
+          <span>
+            <strong>{t("join.chat.communityRoomTitle")}</strong>
+            <small>{t("join.chat.communityRoomDescription")}</small>
+          </span>
+          <ExternalLink aria-hidden="true" />
+        </a>
       </div>
     </Wrapper>
   );
@@ -95,8 +97,8 @@ const JoinComplete = () => {
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="mx-auto mt-16 mb-8 w-full max-w-md space-y-4 px-4 py-8 pb-28 text-center">
-      {children}
+    <div className="join-complete-page">
+      <main className="join-complete-card">{children}</main>
     </div>
   );
 };

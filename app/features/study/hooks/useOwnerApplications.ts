@@ -1,3 +1,4 @@
+import { t } from "@app/i18n/store";
 import {
   type ApplicationApiResponse,
   useApproveApplicationMutation,
@@ -70,7 +71,7 @@ export function useApplications(studyId: number) {
       const message =
         error instanceof Error
           ? error.message
-          : "지원서 승인 중 오류가 발생했습니다.";
+          : t("study.applications.card.approveError");
       toast({ description: message });
     }
   );
@@ -93,7 +94,7 @@ export function useApplications(studyId: number) {
       const message =
         error instanceof Error
           ? error.message
-          : "지원서 거절 중 오류가 발생했습니다.";
+          : t("study.applications.card.rejectError");
       toast({ description: message });
     }
   );
@@ -116,7 +117,7 @@ export function useApplications(studyId: number) {
       const message =
         error instanceof Error
           ? error.message
-          : "지원서 상태 변경 중 오류가 발생했습니다.";
+          : t("study.applications.card.statusChangeError");
       toast({ description: message });
     }
   );
@@ -147,7 +148,7 @@ export function useApplications(studyId: number) {
         const message =
           applicationsError instanceof Error
             ? applicationsError.message
-            : "지원자 목록을 불러오는 중 오류가 발생했습니다.";
+            : t("study.applications.card.listError");
         toast({ description: message });
       }
     }
@@ -166,7 +167,7 @@ export function useApplications(studyId: number) {
         const message =
           studyError instanceof Error
             ? studyError.message
-            : "스터디 정보를 불러오는 중 오류가 발생했습니다.";
+            : t("study.applications.card.studyLoadError");
         toast({ description: message });
       }
     }

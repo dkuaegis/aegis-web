@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { useEffect, useState } from "react";
 import "../style/TabNavigation.css";
 import type { TabNavigationProps } from "../model/TabNavigation";
@@ -7,10 +8,12 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
   onTabChange,
   defaultTab,
 }) => {
+  const { t } = useI18n();
+
   // 기본 탭 설정 (선물함용)
   const defaultTabs = [
-    { id: "history", label: "뽑기내역" },
-    { id: "coupons", label: "쿠폰" },
+    { id: "history", label: t("mypage.history.tabs.history") },
+    { id: "coupons", label: t("mypage.history.tabs.coupons") },
   ];
 
   const tabs = customTabs || defaultTabs;

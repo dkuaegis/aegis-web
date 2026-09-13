@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import {
   Card,
   CardContent,
@@ -11,21 +12,25 @@ import { Calendar } from "lucide-react";
 const SCHEDULE_MAX_LENGTH = 100;
 
 const ScheduleFields = () => {
+  const { t } = useI18n();
+
   return (
     <Card className="border-gray-200">
       <CardHeader>
         <CardTitle className="font-semibold text-gray-900 text-lg">
-          일정 정보
+          {t("study.form.scheduleSection")}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <FormField
           name="schedule"
-          label="스터디 일정"
+          label={t("study.form.scheduleLabel")}
           rules={{
             maxLength: {
               value: SCHEDULE_MAX_LENGTH,
-              message: `스터디 일정은 ${SCHEDULE_MAX_LENGTH}자 이내로 입력해주세요`,
+              message: t("study.form.scheduleMaxLength", {
+                max: SCHEDULE_MAX_LENGTH,
+              }),
             },
           }}
         >
@@ -35,7 +40,7 @@ const ScheduleFields = () => {
               <Input
                 {...field}
                 maxLength={SCHEDULE_MAX_LENGTH}
-                placeholder="예: 모집후 결정, 매주 화 19시"
+                placeholder={t("study.form.schedulePlaceholder")}
                 className={
                   hasError && isDirty
                     ? "border-red-500 focus:border-red-500 focus:ring-red-500"

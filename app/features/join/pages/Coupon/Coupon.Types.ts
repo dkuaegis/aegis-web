@@ -6,8 +6,7 @@ export interface Coupon {
   couponName: string;
 }
 
-export interface CouponItemProps
-  extends React.HTMLAttributes<HTMLButtonElement> {
+export interface CouponItemProps {
   coupon: Coupon;
   isSelected: boolean;
   setSelect: (id: number) => void;

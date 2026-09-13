@@ -1,4 +1,4 @@
-import apiClient from "./client";
+import { api } from "../lib/api";
 
 export type AuthStatus = "PENDING" | "COMPLETED";
 
@@ -13,10 +13,10 @@ export interface AuthUser {
 
 export async function checkAuth(): Promise<AuthUser> {
   try {
-    const response = await apiClient.get<AuthCheckResponse>("/auth/check");
+    const response = await api.get<AuthCheckResponse>("/auth/check");
     return {
       isAuthenticated: true,
-      status: response.data.status,
+      status: response.status,
     };
   } catch {
     return {

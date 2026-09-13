@@ -10,17 +10,12 @@ export enum StudyCategory {
   ETC = "ETC", // 기타
 }
 
-export const StudyCategoryLabels: Record<StudyCategory, string> = {
-  [StudyCategory.LANGUAGE]: "언어",
-  [StudyCategory.WEB]: "웹 개발",
-  [StudyCategory.APPLICATION]: "앱 개발",
-  [StudyCategory.GAME]: "게임",
-  [StudyCategory.SECURITY]: "보안",
-  [StudyCategory.COMPUTER_SCIENCE]: "CS",
-  [StudyCategory.ARTIFICIAL_INTELLIGENCE]: "AI",
-  [StudyCategory.DATA_SCIENCE]: "데이터",
-  [StudyCategory.ETC]: "기타",
-};
+/**
+ * 표시 이름은 언어별 사전에서 가져옵니다. 아래 헬퍼들은 enum 값에서
+ * 사전 키를 만들어 주므로, 키 문자열이 코드 곳곳에 흩어지지 않습니다.
+ */
+export const studyCategoryLabelKey = (category: StudyCategory) =>
+  `study.labels.categories.${category}`;
 
 export enum StudyLevel {
   BASIC = "BASIC", // 입문
@@ -29,25 +24,22 @@ export enum StudyLevel {
   ADVANCED = "ADVANCED", // 고급
 }
 
-export const StudyLevelLabels: Record<StudyLevel, string> = {
-  [StudyLevel.BASIC]: "입문",
-  [StudyLevel.EASY]: "초급",
-  [StudyLevel.INTERMEDIATE]: "중급",
-  [StudyLevel.ADVANCED]: "고급",
-};
+export const studyLevelLabelKey = (level: StudyLevel) =>
+  `study.labels.levels.${level}`;
 
 export enum StudyRecruitmentMethod {
   FCFS = "FCFS", // 선착순
   APPLICATION = "APPLICATION", // 지원서
 }
 
-export const StudyRecruitmentMethodLabels: Record<
-  StudyRecruitmentMethod,
-  string
-> = {
-  [StudyRecruitmentMethod.FCFS]: "선착순",
-  [StudyRecruitmentMethod.APPLICATION]: "지원서",
-};
+export const studyRecruitmentMethodLabelKey = (
+  method: StudyRecruitmentMethod
+) => `study.labels.recruitmentMethods.${method}`;
+
+/** 상세 화면에서 쓰는 더 긴 표현("선착순 모집" 등). */
+export const studyRecruitmentMethodLongLabelKey = (
+  method: StudyRecruitmentMethod
+) => `study.labels.recruitmentMethodsLong.${method}`;
 
 export enum ApplicationStatus {
   PENDING = "PENDING",
@@ -55,11 +47,8 @@ export enum ApplicationStatus {
   REJECTED = "REJECTED",
 }
 
-export const ApplicationStatusLabels: Record<ApplicationStatus, string> = {
-  [ApplicationStatus.PENDING]: "심사중",
-  [ApplicationStatus.APPROVED]: "승인됨",
-  [ApplicationStatus.REJECTED]: "거절됨",
-};
+export const applicationStatusLabelKey = (status: ApplicationStatus) =>
+  `study.labels.applicationStatus.${status}`;
 
 // 편의를 위한 타입 유니온들
 export type ApplicationStatusType = ApplicationStatus;

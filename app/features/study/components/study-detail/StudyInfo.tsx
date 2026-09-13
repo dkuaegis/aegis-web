@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import {
   Card,
   CardContent,
@@ -14,23 +15,29 @@ interface StudyInfoProps {
 }
 
 export const StudyInfo = ({ study }: StudyInfoProps) => {
+  const { t } = useI18n();
+
   return (
     <Card className="border-gray-200">
       <CardHeader>
         <CardTitle className="font-semibold text-gray-900 text-lg">
-          스터디 정보
+          {t("study.detail.info")}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <Label className="font-medium text-gray-900 text-sm">스터디장</Label>
+          <Label className="font-medium text-gray-900 text-sm">
+            {t("study.detail.instructor")}
+          </Label>
           <p className="mt-1 text-gray-700">{study.instructor}</p>
         </div>
 
         <Separator className="bg-gray-200" />
 
         <div>
-          <Label className="font-medium text-gray-900 text-sm">모집 방법</Label>
+          <Label className="font-medium text-gray-900 text-sm">
+            {t("study.detail.recruitmentMethod")}
+          </Label>
           <p className="mt-1 text-gray-700">
             {getRecruitmentMethodText(study.recruitmentMethod)}
           </p>
@@ -39,18 +46,25 @@ export const StudyInfo = ({ study }: StudyInfoProps) => {
         <Separator className="bg-gray-200" />
 
         <div>
-          <Label className="font-medium text-gray-900 text-sm">제한 인원</Label>
+          <Label className="font-medium text-gray-900 text-sm">
+            {t("study.detail.participantLimit")}
+          </Label>
           <p className="mt-1 text-gray-700">
             {study.maxParticipants === 0
-              ? "제한 없음"
-              : `${study.participantCount}/${study.maxParticipants}명`}
+              ? t("study.list.noLimit")
+              : t("study.list.participants", {
+                  current: study.participantCount,
+                  max: study.maxParticipants,
+                })}
           </p>
         </div>
 
         <Separator className="bg-gray-200" />
 
         <div>
-          <Label className="font-medium text-gray-900 text-sm">일정</Label>
+          <Label className="font-medium text-gray-900 text-sm">
+            {t("study.detail.schedule")}
+          </Label>
           <p className="mt-1 text-gray-700">{study.schedule}</p>
         </div>
 

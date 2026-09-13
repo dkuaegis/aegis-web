@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { Button } from "@join/components/ui/button";
 import {
   Command,
@@ -14,7 +15,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@join/components/ui/popover";
-import { departments } from "@join/constants/departments";
+import {
+  DEPARTMENT_VALUES,
+  departmentLabelKey,
+} from "@join/constants/departments";
 import { cn } from "@join/lib/utils";
 import type { Department } from "@join/types/api/member";
 import { Check, ChevronsUpDown } from "lucide-react";
@@ -22,30 +26,31 @@ import { forwardRef, useState } from "react";
 import { useControllerField } from "../PersonalInfo.ControlledField";
 
 interface StudentDepartmentProps {
-  name: string; // name prop 추가
+  name: string;
 }
 
 export const StudentDepartment = forwardRef<
   HTMLDivElement,
   StudentDepartmentProps
 >(({ name, ...props }, ref) => {
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const { field, error, isValid } = useControllerField({ name });
 
-  const defaultDepartmentLabel =
-    departments.find((dept) => dept.value === field.value)?.label ||
-    "학과 선택";
+  const selectedLabel = field.value
+    ? t(departmentLabelKey(field.value))
+    : t("join.personalInfo.departmentPlaceholder");
 
-  // CommandItem 스타일(검색창)
+  // 학과명이 길어 한 줄을 넘기므로 말줄임표로 처리합니다.
   const commandItemStyle = {
-    whiteSpace: "nowrap", // 텍스트 줄바꿈 방지
-    overflow: "hidden", // 넘치는 텍스트 숨김
-    textOverflow: "ellipsis", // 말줄임표 표시
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
   };
 
   return (
     <div className="space-y-2" {...props} ref={ref}>
-      <Label htmlFor="department">소속</Label>
+      <Label htmlFor="department">{t("join.personalInfo.departmentLabel")}</Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <div className="relative">
@@ -55,38 +60,52 @@ export const StudentDepartment = forwardRef<
               aria-invalid={!isValid}
               className={cn(
                 "w-full text-lg",
-                !field.value && "text-muted-foreground" // 선택된 값이 없을 때만 적용될 스타일
+                !field.value && "text-muted-foreground"
               )}
             >
-              {defaultDepartmentLabel}
+              {selectedLabel}
               <ChevronsUpDown className="size-4 opacity-50" />
             </Button>
           </div>
         </PopoverTrigger>
         <PopoverContent className="w-[400px] p-0">
           <Command>
-            <CommandInput placeholder="학과를 검색해주세요." />
+            <CommandInput
+              placeholder={t("join.personalInfo.departmentSearchPlaceholder")}
+            />
             <CommandList>
-              <CommandEmpty>존재하지 않는 학과입니다.</CommandEmpty>
+              <CommandEmpty>
+                {t("join.personalInfo.departmentEmpty")}
+              </CommandEmpty>
               <CommandGroup>
-                {departments.map((departmentItem) => (
-                  <CommandItem
-                    key={departmentItem.value}
-                    value={departmentItem.value}
-                    onSelect={(currentValue) => {
-                      field.onChange(currentValue as Department);
-                      setOpen(false);
-                    }}
-                    style={commandItemStyle}
-                  >
-                    {field.value === departmentItem.value ? (
-                      <Check className="mr-2 h-4 w-4" />
-                    ) : (
-                      <div className="mr-2 h-4 w-4" />
-                    )}
-                    {departmentItem.label}
-                  </CommandItem>
-                ))}
+                {DEPARTMENT_VALUES.map((departmentValue) => {
+                  const label = t(departmentLabelKey(departmentValue));
+
+                  return (
+                    <CommandItem
+                      key={departmentValue}
+                      // Filtering happens on `value`, so it holds the label the
+                      // visitor can actually read. `keywords` keeps the Korean
+                      // name searchable in either language, and selection uses
+                      // the captured API value rather than whatever cmdk echoes
+                      // back.
+                      value={label}
+                      keywords={[departmentValue]}
+                      onSelect={() => {
+                        field.onChange(departmentValue as Department);
+                        setOpen(false);
+                      }}
+                      style={commandItemStyle}
+                    >
+                      {field.value === departmentValue ? (
+                        <Check className="mr-2 h-4 w-4" />
+                      ) : (
+                        <div className="mr-2 h-4 w-4" />
+                      )}
+                      {label}
+                    </CommandItem>
+                  );
+                })}
               </CommandGroup>
             </CommandList>
           </Command>
@@ -95,7 +114,7 @@ export const StudentDepartment = forwardRef<
 
       <ErrorMessage
         isShown={!!error && !isValid}
-        message="학과를 선택해주세요"
+        message={t("join.personalInfo.departmentError")}
       />
     </div>
   );

@@ -18,34 +18,19 @@ function Authentication({ children }: AuthenticationProps) {
   const location = useLocation();
 
   if (isAuthenticated === AuthStatus.LOADING) {
-    if (
-      location.pathname === JOIN_BASE_PATH ||
-      location.pathname === `${JOIN_BASE_PATH}/login`
-    ) {
-      return children;
-    }
     return null;
   }
 
   if (isAuthenticated === AuthStatus.UNAUTHORIZED) {
-    if (
-      location.pathname === JOIN_BASE_PATH ||
-      location.pathname === `${JOIN_BASE_PATH}/login`
-    ) {
-      return children;
+    if (location.pathname === JOIN_BASE_PATH) {
+      return <Navigate to="/auth/continue?intent=join" replace />;
     } else {
       // 로그인 페이지로 강제 이동될 때 이벤트 기록
       Analytics.safeTrack("Redirect_To_Login", {
         category: "Auth",
         from_path: location.pathname, // 어느 페이지에 접근하려 했는지 기록
       });
-      return (
-        <Navigate
-          to={`${JOIN_BASE_PATH}/login`}
-          state={{ from: location }}
-          replace
-        />
-      );
+      return <Navigate to="/auth/continue?intent=join" replace />;
     }
   }
 

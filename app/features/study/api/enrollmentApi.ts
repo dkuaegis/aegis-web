@@ -1,4 +1,5 @@
-import { apiClient, HTTPError } from "@study/lib/apiClient";
+import { t } from "@app/i18n/store";
+import { ApiError, api } from "@app/lib/api";
 import { API_ENDPOINTS } from "@study/lib/apiEndpoints";
 import { handleHTTPError } from "@study/lib/apiUtils";
 import { isValidId } from "@study/lib/utils";
@@ -41,25 +42,25 @@ export interface UpdateApplicationPayload {
 
 const ERROR_MESSAGES = {
   enrollment: {
-    400: "잘못된 요청 데이터입니다.",
-    403: "지원 기간이 아닙니다.",
-    404: "스터디를 찾을 수 없습니다.",
-    409: "이미 신청된 상태입니다.",
-    default: "스터디 신청 중 오류가 발생했습니다.",
+    400: "study.errors.badRequestData",
+    403: "study.errors.notRecruitmentPeriod",
+    404: "study.errors.studyNotFound",
+    409: "study.errors.alreadyApplied",
+    default: "study.errors.enrollmentApply",
   },
   cancel: {
-    400: "잘못된 요청입니다.",
-    404: "스터디를 찾을 수 없습니다.",
-    default: "신청 취소 중 오류가 발생했습니다.",
+    400: "study.errors.badRequest",
+    404: "study.errors.studyNotFound",
+    default: "study.errors.enrollmentCancel",
   },
   userApplication: {
-    404: "지원서를 찾을 수 없습니다.",
-    default: "지원서 조회 중 오류가 발생했습니다.",
+    404: "study.errors.applicationNotFound",
+    default: "study.errors.applicationLookup",
   },
   updateApplication: {
-    400: "잘못된 요청 데이터입니다.",
-    404: "지원서를 찾을 수 없습니다.",
-    default: "지원서 수정 중 오류가 발생했습니다.",
+    400: "study.errors.badRequestData",
+    404: "study.errors.applicationNotFound",
+    default: "study.errors.applicationUpdate",
   },
 } as const;
 
@@ -90,27 +91,17 @@ export async function enrollInStudy(
   signal?: AbortSignal
 ): Promise<EnrollmentResponse> {
   try {
-    const response = await apiClient.post(
+    const response = await api.post<EnrollmentResponse | null>(
       API_ENDPOINTS.STUDY_ENROLLMENT(studyId),
-      {
-        json: payload,
-        signal,
-      }
+      payload,
+      signal
     );
 
     const fallback: EnrollmentResponse = {
-      message: "지원이 완료되었습니다.",
+      message: t("study.errors.applySuccess"),
       status: "PENDING",
     };
-    if (response.status === 204) return fallback;
-    const contentType =
-      response.headers.get("content-type")?.toLowerCase() ?? "";
-    if (!contentType.startsWith("application/json")) return fallback;
-    try {
-      return (await response.json()) as EnrollmentResponse;
-    } catch {
-      return fallback;
-    }
+    return response ?? fallback;
   } catch (error: unknown) {
     handleHTTPError(error, ERROR_MESSAGES.enrollment);
   }
@@ -121,17 +112,18 @@ export async function getStudyStatus(
   signal?: AbortSignal
 ): Promise<StudyStatusResponse | null> {
   try {
-    return await apiClient
-      .get(API_ENDPOINTS.STUDY_STATUS(studyId), { signal })
-      .json<StudyStatusResponse>();
+    return await api.get<StudyStatusResponse>(
+      API_ENDPOINTS.STUDY_STATUS(studyId),
+      signal
+    );
   } catch (error: unknown) {
-    if (error instanceof HTTPError && error.response?.status === 404) {
+    if (error instanceof ApiError && error.status === 404) {
       return null;
     }
     if (error instanceof Error) {
       throw error;
     }
-    throw new Error(`스터디 상태 조회 중 오류: ${String(error)}`);
+    throw new Error(`${t("study.errors.statusLookup")}: ${String(error)}`);
   }
 }
 
@@ -140,9 +132,7 @@ export async function cancelEnrollment(
   signal?: AbortSignal
 ): Promise<void> {
   try {
-    await apiClient.delete(API_ENDPOINTS.STUDY_ENROLLMENT(studyId), {
-      signal,
-    });
+    await api.delete(API_ENDPOINTS.STUDY_ENROLLMENT(studyId), signal);
   } catch (error: unknown) {
     handleHTTPError(error, ERROR_MESSAGES.cancel);
   }
@@ -153,9 +143,10 @@ export async function getUserApplicationDetail(
   signal?: AbortSignal
 ): Promise<UserApplicationDetail> {
   try {
-    return await apiClient
-      .get(API_ENDPOINTS.USER_APPLICATION(studyId), { signal })
-      .json<UserApplicationDetail>();
+    return await api.get<UserApplicationDetail>(
+      API_ENDPOINTS.USER_APPLICATION(studyId),
+      signal
+    );
   } catch (error: unknown) {
     handleHTTPError(error, ERROR_MESSAGES.userApplication);
   }
@@ -167,10 +158,7 @@ export async function updateUserApplication(
   signal?: AbortSignal
 ): Promise<void> {
   try {
-    await apiClient.put(API_ENDPOINTS.USER_APPLICATION(studyId), {
-      json: payload,
-      signal,
-    });
+    await api.put(API_ENDPOINTS.USER_APPLICATION(studyId), payload, signal);
   } catch (error: unknown) {
     handleHTTPError(error, ERROR_MESSAGES.updateApplication);
   }

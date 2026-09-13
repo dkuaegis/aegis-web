@@ -1,5 +1,4 @@
-import { httpClient } from "@join/api/api";
-import { ServerError } from "@join/api/types";
+import { ApiError, api } from "@app/lib/api";
 import { useCallback, useEffect, useState } from "react";
 
 export enum AuthStatus {
@@ -17,10 +16,10 @@ const useAuth = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        await httpClient.get("/auth/check");
+        await api.get("/auth/check");
         setAuthenticated(AuthStatus.NOT_COMPLETED);
       } catch (error: unknown) {
-        if (error instanceof ServerError) {
+        if (error instanceof ApiError) {
           if (error.status === 401) {
             setAuthenticated(AuthStatus.UNAUTHORIZED);
           }

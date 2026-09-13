@@ -1,4 +1,5 @@
-import { createApiUrl } from "@app/lib/apiBaseUrl";
+import { useI18n } from "@app/i18n";
+import { googleLoginUrl } from "@app/lib/api";
 import { Button } from "@study/components/ui/button";
 import { Card, CardContent } from "@study/components/ui/card";
 import { gsap } from "gsap";
@@ -34,6 +35,7 @@ const INITIAL_STATE = {
 } as const;
 
 const LoginPage = () => {
+  const { t, tList } = useI18n();
   const iconsRef = useRef<(HTMLDivElement | null)[]>([]);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
@@ -126,15 +128,18 @@ const LoginPage = () => {
                 ref={titleRef}
                 className="font-bold text-3xl text-gray-900 opacity-0"
               >
-                환영합니다
+                {t("study.login.title")}
               </h2>
               <p
                 ref={subtitleRef}
                 className="text-gray-600 leading-relaxed opacity-0"
               >
-                Aegis는 단국대학교 학생들을 위해
-                <br />
-                개발에 쉽게 입문할 수 있는 기회를 제공해요.
+                {tList("study.login.subtitle").map((line, index) => (
+                  <span key={line}>
+                    {index > 0 && <br />}
+                    {line}
+                  </span>
+                ))}
               </p>
             </div>
             <div className="flex justify-center gap-4">
@@ -156,9 +161,7 @@ const LoginPage = () => {
               className="h-12 w-full py-0 text-xl opacity-0"
               asChild
             >
-              <a href={createApiUrl("oauth2/authorization/google")}>
-                단국대 Gmail로 로그인
-              </a>
+              <a href={googleLoginUrl}>{t("study.login.button")}</a>
             </Button>
           </div>
         </CardContent>

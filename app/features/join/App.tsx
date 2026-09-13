@@ -1,4 +1,5 @@
-import { Progress } from "@join/components/ui/progress";
+import { useI18n } from "@app/i18n";
+import { JOIN_STEPS, joinStepLabelKey } from "@join/constants/joinSteps";
 import Chat from "@join/pages/Chat/Chat";
 import Payment from "@join/pages/Payment/Payment";
 import PersonalInfo from "@join/pages/PersonalInfo/PersonalInfo";
@@ -11,7 +12,6 @@ import Title from "./components/ui/custom/title";
 import useFunnel from "./hooks/useFunnel";
 import Agreement from "./pages/Agreement/Agreement";
 import JoinComplete from "./pages/JoinComplete/JoinComplete";
-import LoginPage from "./pages/LoginPage";
 import { Analytics } from "./service/analytics";
 
 const useAnalyticsSetup = () => {
@@ -36,14 +36,42 @@ const AnalyticsTracker = () => {
 };
 
 const FunnelLayout = () => {
-  const { currentStep, progress } = useFunnel();
+  const { t } = useI18n();
+  const { currentStep } = useFunnel();
+  const currentIndex = JOIN_STEPS.indexOf(currentStep);
 
   return (
-    <div className="mx-auto mb-8 w-full max-w-md px-4 py-8 pb-28">
-      <Title currentStep={currentStep} />
-      <Progress value={progress} className="mt-4 mb-8 h-0.5 w-full" />
-
-      <Outlet />
+    <div className="join-funnel">
+      <main className="join-main">
+        <div className="join-workspace">
+          <Title currentStep={currentStep} />
+          <nav
+            className="join-progress"
+            aria-label={t("join.steps.progressLabel")}
+          >
+            <ol className="join-stepper">
+              {JOIN_STEPS.map((step, index) => (
+                <li
+                  key={step}
+                  className={
+                    index === currentIndex
+                      ? "is-current"
+                      : index < currentIndex
+                        ? "is-complete"
+                        : undefined
+                  }
+                >
+                  <span>{index < currentIndex ? "✓" : index + 1}</span>
+                  <strong>{t(joinStepLabelKey(step))}</strong>
+                </li>
+              ))}
+            </ol>
+          </nav>
+          <div className="join-content">
+            <Outlet />
+          </div>
+        </div>
+      </main>
     </div>
   );
 };
@@ -56,8 +84,6 @@ const App = () => {
         <Toaster position="bottom-center" />
 
         <Routes>
-          <Route index element={<LoginPage />} />
-          <Route path="login" element={<LoginPage />} />
           <Route path="complete" element={<JoinComplete />} />
 
           <Route element={<FunnelLayout />}>

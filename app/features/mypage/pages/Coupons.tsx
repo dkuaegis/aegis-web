@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { getCoupons } from "../api/Coupons";
@@ -8,9 +9,8 @@ import TabNavigation from "../components/TabNavigation";
 import TabSelector from "../components/TabSelector";
 import type { CouponCardProps } from "../model/Card";
 
-const formatPrice = (amount: number): string => `${amount.toLocaleString()}원`;
-
 const Coupons: React.FC = () => {
+  const { t } = useI18n();
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedTab, setSelectedTab] = useState(0);
   const [couponItems, setCouponItems] = useState<
@@ -42,11 +42,11 @@ const Coupons: React.FC = () => {
         const data = await getCoupons(); // [{ issuedCouponId, couponName, discountAmount, isValid }, ...]
         const mapped = (data ?? []).map((c) => ({
           id: c.issuedCouponId,
-          price: formatPrice(c.discountAmount),
+          price: t("mypage.coupons.priceFormat", {
+            amount: c.discountAmount.toLocaleString(),
+          }),
           desc: c.couponName,
-          status: (c.isValid
-            ? "사용전"
-            : "사용완료") as CouponCardProps["status"],
+          status: (c.isValid ? "UNUSED" : "USED") as CouponCardProps["status"],
         }));
         setCouponItems(mapped);
       } catch (e) {
@@ -62,7 +62,7 @@ const Coupons: React.FC = () => {
   if (isLoading) {
     return (
       <div>
-        <Header leftChild={"<"} title={"선물함"} />
+        <Header leftChild={t("mypage.nav.back")} title={t("mypage.coupons.title")} />
         <TabNavigation />
       </div>
     );
@@ -70,21 +70,25 @@ const Coupons: React.FC = () => {
 
   // 탭 필터: 0 전체, 1 사용전, 2 사용후
   const filteredData = couponItems.filter((item) => {
-    if (selectedTab === 1) return item.status === "사용전";
-    if (selectedTab === 2) return item.status === "사용완료";
+    if (selectedTab === 1) return item.status === "UNUSED";
+    if (selectedTab === 2) return item.status === "USED";
     return true; // 전체
   });
 
   return (
     <div>
-      <Header leftChild={"<"} title={"선물함"} />
+      <Header leftChild={t("mypage.nav.back")} title={t("mypage.coupons.title")} />
       <TabNavigation />
       {couponItems.length === 0 ? (
         <EmptyState type="coupon" />
       ) : (
         <>
           <TabSelector
-            tabs={["전체", "사용전", "사용완료"]}
+            tabs={[
+              t("mypage.coupons.tabs.all"),
+              t("mypage.coupons.tabs.unused"),
+              t("mypage.coupons.tabs.used"),
+            ]}
             selected={selectedTab}
             onSelect={(tabIndex) => {
               setSelectedTab(tabIndex);

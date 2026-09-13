@@ -1,4 +1,4 @@
-import { apiClient } from "@study/lib/apiClient";
+import { api } from "@app/lib/api";
 import { API_ENDPOINTS } from "@study/lib/apiEndpoints";
 import { handleHTTPError } from "@study/lib/apiUtils";
 import { isValidId } from "@study/lib/utils";
@@ -32,31 +32,35 @@ export interface UpdateApplicationStatusPayload {
 }
 
 // constants
+/**
+ * Translation keys rather than finished strings: `handleHTTPError` resolves
+ * them when a request fails, so the message follows the selected language.
+ */
 const ERROR_MESSAGES = {
   fetchApplications: {
-    403: "스터디장이 아닙니다.",
-    404: "지원서를 찾을 수 없습니다.",
-    default: "지원자 목록을 불러오는 중 오류가 발생했습니다.",
+    403: "study.errors.notInstructor",
+    404: "study.errors.applicationNotFound",
+    default: "study.errors.applicationsFetch",
   },
   fetchApplicationText: {
-    403: "스터디장이 아닙니다.",
-    404: "지원서를 찾을 수 없습니다.",
-    default: "지원서를 불러오는 중 오류가 발생했습니다.",
+    403: "study.errors.notInstructor",
+    404: "study.errors.applicationNotFound",
+    default: "study.errors.applicationFetch",
   },
   updateStatus: {
-    403: "스터디장이 아닙니다.",
-    404: "지원서를 찾을 수 없습니다.",
-    default: "지원서 상태 변경 중 오류가 발생했습니다.",
+    403: "study.errors.notInstructor",
+    404: "study.errors.applicationNotFound",
+    default: "study.errors.applicationStatusUpdate",
   },
   approve: {
-    403: "스터디장이 아닙니다.",
-    404: "지원서를 찾을 수 없습니다.",
-    default: "지원서 승인 중 오류가 발생했습니다.",
+    403: "study.errors.notInstructor",
+    404: "study.errors.applicationNotFound",
+    default: "study.errors.applicationApprove",
   },
   reject: {
-    403: "스터디장이 아닙니다.",
-    404: "지원서를 찾을 수 없습니다.",
-    default: "지원서 거절 중 오류가 발생했습니다.",
+    403: "study.errors.notInstructor",
+    404: "study.errors.applicationNotFound",
+    default: "study.errors.applicationReject",
   },
 } as const;
 
@@ -74,9 +78,10 @@ export async function fetchStudyApplications(
   signal?: AbortSignal
 ): Promise<ApplicationApiResponse[]> {
   try {
-    return await apiClient
-      .get(API_ENDPOINTS.STUDY_APPLICATIONS(studyId), { signal })
-      .json<ApplicationApiResponse[]>();
+    return await api.get<ApplicationApiResponse[]>(
+      API_ENDPOINTS.STUDY_APPLICATIONS(studyId),
+      signal
+    );
   } catch (error: unknown) {
     handleHTTPError(error, ERROR_MESSAGES.fetchApplications);
   }
@@ -88,11 +93,10 @@ export async function fetchApplicationText(
   signal?: AbortSignal
 ): Promise<ApplicationTextResponse> {
   try {
-    return await apiClient
-      .get(API_ENDPOINTS.APPLICATION_DETAIL(studyId, applicationId), {
-        signal,
-      })
-      .json<ApplicationTextResponse>();
+    return await api.get<ApplicationTextResponse>(
+      API_ENDPOINTS.APPLICATION_DETAIL(studyId, applicationId),
+      signal
+    );
   } catch (error: unknown) {
     handleHTTPError(error, ERROR_MESSAGES.fetchApplicationText);
   }
@@ -105,12 +109,10 @@ export async function updateApplicationStatus(
   signal?: AbortSignal
 ): Promise<void> {
   try {
-    await apiClient.patch(
+    await api.patch(
       API_ENDPOINTS.UPDATE_APPLICATION_STATUS(studyId, applicationId),
-      {
-        json: payload,
-        signal,
-      }
+      payload,
+      signal
     );
   } catch (error: unknown) {
     handleHTTPError(error, ERROR_MESSAGES.updateStatus);
@@ -123,11 +125,10 @@ export async function approveApplication(
   signal?: AbortSignal
 ): Promise<void> {
   try {
-    await apiClient.put(
+    await api.put(
       API_ENDPOINTS.APPROVE_APPLICATION(studyId, applicationId),
-      {
-        signal,
-      }
+      undefined,
+      signal
     );
   } catch (error: unknown) {
     handleHTTPError(error, ERROR_MESSAGES.approve);
@@ -140,11 +141,10 @@ export async function rejectApplication(
   signal?: AbortSignal
 ): Promise<void> {
   try {
-    await apiClient.put(
+    await api.put(
       API_ENDPOINTS.REJECT_APPLICATION(studyId, applicationId),
-      {
-        signal,
-      }
+      undefined,
+      signal
     );
   } catch (error: unknown) {
     handleHTTPError(error, ERROR_MESSAGES.reject);

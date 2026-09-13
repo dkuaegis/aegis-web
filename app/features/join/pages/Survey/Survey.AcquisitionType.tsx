@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import ClubFairIcon from "@join/assets/club-fair.svg";
 import EtcIcon from "@join/assets/etc.svg";
 import EverytimeIcon from "@join/assets/everytime.svg";
@@ -11,28 +12,18 @@ import { useFormContext } from "react-hook-form";
 import { AcquisitionCard } from "./AcquisitionCard";
 import type { SurveyFormValues } from "./Survey.schema";
 
+/** 값은 API 계약이고, 표시 이름은 언어별 사전에서 가져옵니다. */
 const acquisitionTypes = [
-  {
-    value: AcquisitionTypeEnum.INSTAGRAM,
-    label: "인스타그램",
-    icon: InstagramIcon,
-  },
-  {
-    value: AcquisitionTypeEnum.EVERYTIME,
-    label: "에브리타임",
-    icon: EverytimeIcon,
-  },
-  { value: AcquisitionTypeEnum.FRIEND, label: "지인 추천", icon: FriendIcon },
-  { value: AcquisitionTypeEnum.CLUB_FAIR, label: "알림제", icon: ClubFairIcon },
-  {
-    value: AcquisitionTypeEnum.OFFLINE_EVENT,
-    label: "오프라인 행사",
-    icon: OfflineEventIcon,
-  },
-  { value: AcquisitionTypeEnum.ETC, label: "기타", icon: EtcIcon },
+  { value: AcquisitionTypeEnum.INSTAGRAM, icon: InstagramIcon },
+  { value: AcquisitionTypeEnum.EVERYTIME, icon: EverytimeIcon },
+  { value: AcquisitionTypeEnum.FRIEND, icon: FriendIcon },
+  { value: AcquisitionTypeEnum.CLUB_FAIR, icon: ClubFairIcon },
+  { value: AcquisitionTypeEnum.OFFLINE_EVENT, icon: OfflineEventIcon },
+  { value: AcquisitionTypeEnum.ETC, icon: EtcIcon },
 ];
 
 export const AcquisitionType = () => {
+  const { t } = useI18n();
   const {
     watch,
     setValue,
@@ -44,13 +35,13 @@ export const AcquisitionType = () => {
   return (
     <div className="space-y-2">
       <Label htmlFor="acquisitionType" className="text-lg">
-        유입 경로
+        {t("join.survey.acquisitionLabel")}
       </Label>
       <div className="grid auto-rows-fr grid-cols-3 gap-4">
-        {acquisitionTypes.map(({ value, label, icon }) => (
+        {acquisitionTypes.map(({ value, icon }) => (
           <AcquisitionCard
             key={value}
-            label={label}
+            label={t(`join.survey.acquisitionTypes.${value}`)}
             icon={icon}
             isSelected={selectedValue === value}
             onClick={() =>

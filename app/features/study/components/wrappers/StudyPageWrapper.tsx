@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { useNavigate, useParams } from "react-router-dom";
 
 type StudyPageWrapperProps = {
@@ -5,11 +6,12 @@ type StudyPageWrapperProps = {
 };
 
 function StudyPageWrapper({ PageComponent }: StudyPageWrapperProps) {
+  const { t } = useI18n();
   const { studyId } = useParams<{ studyId: string }>();
   const navigate = useNavigate();
   const numericStudyId = Number(studyId);
   if (Number.isNaN(numericStudyId)) {
-    return <div>유효하지 않은 스터디 ID입니다.</div>;
+    return <div>{t("study.invalidStudyId")}</div>;
   }
   return (
     <PageComponent

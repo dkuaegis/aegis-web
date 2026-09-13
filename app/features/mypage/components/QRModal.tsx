@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { useState } from "react";
 import { issueQRCode } from "../api/QRCode";
 import type { QRModalProps } from "../model/QRModal";
@@ -7,6 +8,7 @@ import refreshImg from "../assets/refresh.svg";
 import Button from "../components/Button";
 
 const QRModal: React.FC<QRModalProps> = ({ onClose, qrImageUrl }) => {
+  const { t } = useI18n();
   const [qrUrl, setQrUrl] = useState<string>(qrImageUrl || "");
 
   // QRCode 생성 API 호출
@@ -22,8 +24,8 @@ const QRModal: React.FC<QRModalProps> = ({ onClose, qrImageUrl }) => {
   return (
     <div className="qr-modal-overlay">
       <div className="qr-modal">
-        <h2 className="qr-title">입장을 위한 QR코드</h2>
-        <p className="qr-desc">이용하려는 행사에 QR코드로 체크인하세요.</p>
+        <h2 className="qr-title">{t("mypage.qr.title")}</h2>
+        <p className="qr-desc">{t("mypage.qr.description")}</p>
         <div className="qr-image-wrapper">
           <img src={qrUrl} alt="QR Code" className="qr-image" />
         </div>
@@ -32,8 +34,12 @@ const QRModal: React.FC<QRModalProps> = ({ onClose, qrImageUrl }) => {
           onClick={onClickQR}
           text={
             <>
-              <img src={refreshImg} alt="새로고침" className="qr-btn-icon" />
-              새로 고침
+              <img
+                src={refreshImg}
+                alt={t("mypage.qr.refreshIconAlt")}
+                className="qr-btn-icon"
+              />
+              {t("mypage.qr.refresh")}
             </>
           }
         />
@@ -43,8 +49,12 @@ const QRModal: React.FC<QRModalProps> = ({ onClose, qrImageUrl }) => {
         onClick={onClose}
         text={
           <>
-            <img src={closeImg} alt="닫기" className="qr-btn-icon" />
-            이전 화면으로 돌아가기
+            <img
+              src={closeImg}
+              alt={t("mypage.qr.closeIconAlt")}
+              className="qr-btn-icon"
+            />
+            {t("mypage.qr.back")}
           </>
         }
       />

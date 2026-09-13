@@ -1,5 +1,5 @@
+import { ApiError, api } from "@app/lib/api";
 import { QUERY_OPTIONS_SLOW } from "@study/api/queryOptions";
-import { apiClient } from "@study/lib/apiClient";
 import { API_ENDPOINTS } from "@study/lib/apiEndpoints";
 import { AuthStatus, useAuthStore } from "@study/stores/useAuthStore";
 import { useQuery } from "@tanstack/react-query";
@@ -13,40 +13,32 @@ export const useAuth = () => {
     queryFn: async () => {
       setLoading();
       try {
-        const response = await apiClient.get(API_ENDPOINTS.CHECK_AUTH, {
-          throwHttpErrors: false,
-        });
+        const data = await api.get<{ status: string }>(
+          API_ENDPOINTS.CHECK_AUTH
+        );
 
-        if (response.ok) {
-          const data = await response.json<{ status: string }>();
-
-          if (data.status === "COMPLETED") {
-            setAuthenticated();
-          } else if (data.status === "PENDING") {
-            setPending();
-          } else {
-            setUnauthorized();
-          }
-          return data;
+        if (data.status === "COMPLETED") {
+          setAuthenticated();
+        } else if (data.status === "PENDING") {
+          setPending();
         } else {
-          if (response.status === 401 || response.status === 404) {
-            setUnauthorized();
-            return { status: "UNAUTHORIZED" };
-          }
-          throw new Error("Authentication check failed");
-        }
-      } catch (error) {
-        console.error("Auth check failed:", error);
-        if (!(error instanceof Error && error.name === "AuthError")) {
           setUnauthorized();
         }
+        return data;
+      } catch (error) {
+        if (error instanceof ApiError && [401, 404].includes(error.status)) {
+          setUnauthorized();
+          return { status: "UNAUTHORIZED" };
+        }
+        console.error("Auth check failed:", error);
+        setUnauthorized();
         throw error;
       }
     },
     ...QUERY_OPTIONS_SLOW,
     retry: (failureCount, error) => {
       // 401(AuthError)은 재시도하지 않음
-      if (error instanceof Error && error.name === "AuthError") {
+      if (error instanceof ApiError && [401, 404].includes(error.status)) {
         return false;
       }
       // 다른 오류는 2번까지 재시도

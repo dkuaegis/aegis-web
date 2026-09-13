@@ -1,11 +1,11 @@
-import { httpClient } from "@join/api/api";
+import { api } from "@app/lib/api";
 import type { PersonalInfoApiValues } from "./PersonalInfo.schema";
 
 export const fetchPersonalInfoData =
   async (): Promise<PersonalInfoApiValues> => {
-    return httpClient.get<PersonalInfoApiValues>("/members");
+    return api.get<PersonalInfoApiValues>("/members");
   };
 
 export const submitPersonalInfoData = async (data: PersonalInfoApiValues) => {
-  return httpClient.post("/members", data);
+  return api.post("/members", data);
 };

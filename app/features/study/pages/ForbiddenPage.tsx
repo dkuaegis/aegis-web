@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import meditateData from "@study/assets/Meditate girl.json";
 import Header from "@study/components/ui/Header";
 import lottie from "lottie-web";
@@ -8,10 +9,8 @@ interface ForbiddenPageProps {
   onBack?: (() => void) | undefined;
 }
 
-const ForbiddenPage = ({
-  message = "권한이 없습니다.",
-  onBack,
-}: ForbiddenPageProps) => {
+const ForbiddenPage = ({ message, onBack }: ForbiddenPageProps) => {
+  const { t } = useI18n();
   const containerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!containerRef.current) return;
@@ -35,7 +34,9 @@ const ForbiddenPage = ({
           <div className="mb-8">
             <div ref={containerRef} style={{ width: 300, height: 300 }} />
           </div>
-          <p className="font-medium text-gray-600 text-xl">{message}</p>
+          <p className="font-medium text-gray-600 text-xl">
+            {message ?? t("study.forbidden.default")}
+          </p>
         </div>
       </div>
     </div>

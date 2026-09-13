@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import {
   Card,
   CardContent,
@@ -17,6 +18,7 @@ const MAX_PARTICIPANTS = 50;
 const MIN_PARTICIPANTS = 1;
 
 const RecruitmentFields = () => {
+  const { t } = useI18n();
   const {
     form: {
       control,
@@ -46,14 +48,14 @@ const RecruitmentFields = () => {
     <Card className="border-gray-200">
       <CardHeader>
         <CardTitle className="font-semibold text-gray-900 text-lg">
-          모집 설정
+          {t("study.form.recruitmentSettings")}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {!isEditMode && (
           <div>
             <Label className="mb-3 block font-medium text-gray-900 text-sm">
-              모집 방법
+              {t("study.form.recruitmentMethodLabel")}
             </Label>
             <Controller
               name="recruitmentMethod"
@@ -74,7 +76,7 @@ const RecruitmentFields = () => {
                       htmlFor="first-come"
                       className="cursor-pointer text-gray-700 text-sm"
                     >
-                      선착순 모집
+                      {t("study.labels.recruitmentMethodsLong.FCFS")}
                     </Label>
                   </div>
                   <div className="flex items-center space-x-2">
@@ -86,7 +88,7 @@ const RecruitmentFields = () => {
                       htmlFor="application"
                       className="cursor-pointer text-gray-700 text-sm"
                     >
-                      지원서 심사
+                      {t("study.labels.recruitmentMethodsLong.APPLICATION")}
                     </Label>
                   </div>
                 </RadioGroup>
@@ -95,7 +97,9 @@ const RecruitmentFields = () => {
           </div>
         )}
         <div>
-          <Label className="font-medium text-gray-900 text-sm">모집 인원</Label>
+          <Label className="font-medium text-gray-900 text-sm">
+            {t("study.form.participantsLabel")}
+          </Label>
           <Controller
             name="maxParticipantsLimitType"
             control={control}
@@ -113,7 +117,7 @@ const RecruitmentFields = () => {
                     htmlFor="unlimited"
                     className="cursor-pointer text-gray-700 text-sm"
                   >
-                    제한 없음
+                    {t("study.form.unlimited")}
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -122,7 +126,7 @@ const RecruitmentFields = () => {
                     htmlFor="limited"
                     className="cursor-pointer text-gray-700 text-sm"
                   >
-                    제한 있음
+                    {t("study.form.limited")}
                   </Label>
                 </div>
               </RadioGroup>
@@ -142,7 +146,7 @@ const RecruitmentFields = () => {
                   numValue < MIN_PARTICIPANTS ||
                   numValue > MAX_PARTICIPANTS
                 ) {
-                  return "1~50명 사이로 입력하세요.";
+                  return t("study.form.participantsRange");
                 }
                 return true;
               },
@@ -156,7 +160,7 @@ const RecruitmentFields = () => {
                       {...field}
                       id="maxParticipants"
                       type="number"
-                      placeholder="최대 인원수"
+                      placeholder={t("study.form.maxParticipantsPlaceholder")}
                       className={
                         fieldState.invalid && isDirty
                           ? "w-20 border-red-500 focus:border-red-500 focus:ring-red-500"
@@ -169,7 +173,9 @@ const RecruitmentFields = () => {
                         fieldState.invalid ? "maxParticipants-error" : undefined
                       }
                     />
-                    <span className="ml-2 text-gray-500 text-sm">명</span>
+                    <span className="ml-2 text-gray-500 text-sm">
+                      {t("study.form.peopleUnit")}
+                    </span>
                   </div>
                 )}
                 {fieldState.invalid && (

@@ -1,8 +1,10 @@
 import type { LinksFunction } from "react-router";
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 import { checkAuth } from "./api/auth";
+import { AuthIntentRedirect } from "./components/AuthIntentRedirect";
 import BrowserRedirectPage from "./components/BrowserRedirectPage";
 import { useExternalBrowser } from "./hooks/useExternalBrowser";
+import { I18nProvider } from "./i18n";
 import "./index.css";
 
 export const links: LinksFunction = () => [
@@ -16,6 +18,8 @@ export async function loader() {
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
+    // The provider rewrites this to the selected language on the client; "ko"
+    // is the correct value for the prerendered markup.
     <html lang="ko">
       <head>
         <meta charSet="utf-8" />
@@ -35,11 +39,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   const { isInAppBrowser } = useExternalBrowser();
 
-  if (isInAppBrowser) {
-    return <BrowserRedirectPage />;
-  }
-
-  return <Outlet />;
+  return (
+    <I18nProvider>
+      {isInAppBrowser ? (
+        <BrowserRedirectPage />
+      ) : (
+        <>
+          <AuthIntentRedirect />
+          <Outlet />
+        </>
+      )}
+    </I18nProvider>
+  );
 }
 
 export function HydrateFallback() {

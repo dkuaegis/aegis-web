@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { Button } from "@join/components/ui/button";
 import {
   Dialog,
@@ -29,6 +30,7 @@ interface InputCouponCodeProps {
 }
 
 const InputCouponCode = ({ setCoupons }: InputCouponCodeProps) => {
+  const { t } = useI18n();
   const [isMobile, setIsMobile] = useState(false);
   const [open, setOpen] = useState(false);
   const [couponCode, setCouponCode] = useState("");
@@ -49,7 +51,7 @@ const InputCouponCode = ({ setCoupons }: InputCouponCodeProps) => {
     try {
       const trimmedCouponCode = couponCode.trim();
       if (!trimmedCouponCode) {
-        toast.error("쿠폰 코드를 입력해주세요");
+        toast.error(t("join.coupon.codeRequired"));
         return;
       }
       const data = await submitAndFetchCouponCode(trimmedCouponCode);
@@ -67,14 +69,14 @@ const InputCouponCode = ({ setCoupons }: InputCouponCodeProps) => {
         <Drawer open={open} onOpenChange={setOpen}>
           <DrawerTrigger asChild>
             <Button size="lg" className="w-full items-center" variant="default">
-              쿠폰 등록하기
+              {t("join.coupon.openRegister")}
             </Button>
           </DrawerTrigger>
           <DrawerContent>
             <DrawerHeader>
-              <DrawerTitle>쿠폰 등록</DrawerTitle>
+              <DrawerTitle>{t("join.coupon.registerTitle")}</DrawerTitle>
               <DrawerDescription>
-                보유하신 쿠폰 코드를 입력해주세요.
+                {t("join.coupon.registerDescription")}
               </DrawerDescription>
             </DrawerHeader>
             <div className="p-4">
@@ -86,7 +88,7 @@ const InputCouponCode = ({ setCoupons }: InputCouponCodeProps) => {
             </div>
             <DrawerFooter>
               <DrawerClose asChild>
-                <Button variant="outline">취소</Button>
+                <Button variant="outline">{t("common.cancel")}</Button>
               </DrawerClose>
             </DrawerFooter>
           </DrawerContent>
@@ -100,14 +102,14 @@ const InputCouponCode = ({ setCoupons }: InputCouponCodeProps) => {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button size="lg" className="w-full items-center" variant="default">
-            코드로 쿠폰 등록하기
+            {t("join.coupon.openRegisterWithCode")}
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>쿠폰 등록</DialogTitle>
+            <DialogTitle>{t("join.coupon.registerTitle")}</DialogTitle>
             <DialogDescription>
-              보유하신 쿠폰 코드를 입력해주세요.
+              {t("join.coupon.registerDescription")}
             </DialogDescription>
           </DialogHeader>
           <CouponForm

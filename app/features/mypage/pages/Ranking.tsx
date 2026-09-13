@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { useEffect, useState } from "react";
 import { getRankingData } from "../api/Ranking";
 import Header from "../components/Header";
@@ -11,6 +12,7 @@ import type {
 } from "../model/Ranking";
 
 const Ranking: React.FC = () => {
+  const { t } = useI18n();
   const [info, setInfo] = useState<RankingInfoProps>({ totalParticipants: 0 });
   const [top10, setTop10] = useState<RankingListItemData[]>([]);
   const [me, setMe] = useState<MyRankCardProps | null>(null);
@@ -32,7 +34,7 @@ const Ranking: React.FC = () => {
 
   return (
     <div>
-      <Header leftChild="<" title="랭킹" />
+      <Header leftChild={t("mypage.nav.back")} title={t("mypage.ranking.title")} />
       <RankingInfo totalParticipants={info.totalParticipants} />
       <RankingList items={top10} />
       {me && (

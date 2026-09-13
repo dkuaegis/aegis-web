@@ -1,9 +1,14 @@
+import { useI18n } from "@app/i18n";
+
 const CompleteNotice = () => {
+  const { t } = useI18n();
+
   return (
-    <div className="break-words pt-8">
-      <p className="line-breaks mb-1 text-center text-muted-foreground">
-        주요 활동과 소통은 <strong>카카오톡 팀채팅방</strong>에서 이루어져요.
-        Aegis와 함께 성장해 나가요!
+    <div className="join-complete-notice break-words">
+      <p className="line-breaks">
+        {t("join.complete.noticeLead")}
+        <strong>{t("join.complete.noticeStrong")}</strong>
+        {t("join.complete.noticeTail")}
       </p>
     </div>
   );

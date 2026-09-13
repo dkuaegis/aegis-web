@@ -1,4 +1,4 @@
-import { ServerError } from "@join/api/types";
+import { ApiError } from "@app/lib/api";
 import {
   makePayment,
   pollPaymentStatus,
@@ -108,7 +108,7 @@ export const usePaymentPolling = () => {
         startPolling();
       } catch (error) {
         // 409 에러는 상태 조회 이후 동시 요청으로 이미 결제가 생성된 경우이므로 정상적으로 폴링을 시작합니다.
-        if (error instanceof ServerError && error.status === 409) {
+        if (error instanceof ApiError && error.status === 409) {
           startPolling();
         } else {
           console.error("결제 생성에 실패했습니다:", error);

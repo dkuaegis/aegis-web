@@ -1,3 +1,5 @@
+import { useI18n } from "@app/i18n";
+import { t as translate } from "@app/i18n/store";
 import { useMemo } from "react";
 import creditCardIcon from "../../assets/icon/ic_creditCard.svg";
 import emailIcon from "../../assets/icon/ic_email.svg";
@@ -8,12 +10,17 @@ import Navigation from "../../components/Navigation";
 
 export function meta() {
   return [
-    { title: "모집 안내 - Aegis" },
-    { name: "description", content: "Aegis 신입 모집 안내" },
+    { title: translate("pages.recruit.meta.title") },
+    {
+      name: "description",
+      content: translate("pages.recruit.meta.description"),
+    },
   ];
 }
 
 function Recruit() {
+  const { t } = useI18n();
+
   // 별들을 생성하는 함수
   const stars = useMemo(() => {
     const generateStars = (count: number, className: string) => {
@@ -62,17 +69,15 @@ function Recruit() {
         <section className="recruit">
           <div className="recruit-inner">
             <div className="recruit-header">
-              <h2 className="recruit-title">모집 안내</h2>
-              <p className="recruit-subtitle">
-                Aegis에 함께할 멤버를 모집합니다.
-              </p>
+              <h2 className="recruit-title">{t("pages.recruit.title")}</h2>
+              <p className="recruit-subtitle">{t("pages.recruit.subtitle")}</p>
               <a
-                href="/join/login"
+                href="/auth/continue?intent=join"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="recruit-cta-btn"
               >
-                가입하기
+                {t("pages.recruit.cta")}
               </a>
             </div>
 
@@ -82,45 +87,53 @@ function Recruit() {
                   <div className="notice-icon">
                     <img
                       src={profileIcon}
-                      alt="프로필"
+                      alt={t("pages.recruit.notice.targetIconAlt")}
                       width="32"
                       height="32"
                     />
                   </div>
                   <div>
                     <p>
-                      <strong>모집 대상:</strong> 단국대학교 신입생, 재학생,
-                      휴학생
+                      <strong>{t("pages.recruit.notice.targetLabel")}</strong>
+                      {t("pages.recruit.notice.targetValue")}
                     </p>
                     <p className="notice-sub">
-                      학년과 전공에 관계없이 보안과 개발에 관심이 있다면 누구나
-                      환영합니다!
+                      {t("pages.recruit.notice.targetSub")}
                     </p>
                   </div>
                 </div>
 
                 <div className="notice-item">
                   <div className="notice-icon">
-                    <img src={emailIcon} alt="이메일" width="32" height="32" />
+                    <img
+                      src={emailIcon}
+                      alt={t("pages.recruit.notice.emailIconAlt")}
+                      width="32"
+                      height="32"
+                    />
                   </div>
-                  <p>
-                    회원가입 과정에서 문제가 발생하면 언제든 문의란의 연락처로
-                    문의주세요.
-                  </p>
+                  <p>{t("pages.recruit.notice.emailBody")}</p>
                 </div>
 
                 <div className="notice-item">
                   <div className="notice-icon">
-                    <img src={lockIcon} alt="보안" width="32" height="32" />
+                    <img
+                      src={lockIcon}
+                      alt={t("pages.recruit.notice.securityIconAlt")}
+                      width="32"
+                      height="32"
+                    />
                   </div>
                   <div>
                     <p>
-                      구글 로그인 과정에서 <strong>403 에러</strong>가
-                      발생하시는 분은 링크를 복사하고 크롬이나 사파리에서
-                      접속해주세요.
+                      {t("pages.recruit.notice.securityLead")}
+                      <strong>
+                        {t("pages.recruit.notice.securityStrong")}
+                      </strong>
+                      {t("pages.recruit.notice.securityTail")}
                     </p>
                     <p className="notice-sub">
-                      구글 보안 정책상 인앱 브라우저에서 로그인이 불가능 합니다.
+                      {t("pages.recruit.notice.securitySub")}
                     </p>
                   </div>
                 </div>
@@ -129,18 +142,19 @@ function Recruit() {
                   <div className="notice-icon">
                     <img
                       src={creditCardIcon}
-                      alt="결제"
+                      alt={t("pages.recruit.notice.feeIconAlt")}
                       width="32"
                       height="32"
                     />
                   </div>
                   <div>
                     <p>
-                      회비는 <strong>15,000원</strong>입니다.
+                      {t("pages.recruit.notice.feeLead")}
+                      <strong>{t("pages.recruit.notice.feeStrong")}</strong>
+                      {t("pages.recruit.notice.feeTail")}
                     </p>
                     <p className="notice-sub">
-                      이전 운영진은 회비가 면제되니 문의란의 연락처로
-                      문의주세요.
+                      {t("pages.recruit.notice.feeSub")}
                     </p>
                   </div>
                 </div>

@@ -16,7 +16,7 @@ export function CouponList({
   };
 
   return (
-    <div className="space-y-3">
+    <div className="join-coupon-tickets">
       {coupons.map((coupon) => (
         <CouponItem
           key={coupon.issuedCouponId}

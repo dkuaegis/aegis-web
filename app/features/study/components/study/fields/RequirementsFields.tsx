@@ -1,3 +1,4 @@
+import { useI18n } from "@app/i18n";
 import { Button } from "@study/components/ui/button";
 import {
   Card,
@@ -12,6 +13,7 @@ import type { FieldError } from "react-hook-form";
 import { Controller } from "react-hook-form";
 
 const RequirementsFields = () => {
+  const { t } = useI18n();
   const {
     form: {
       control,
@@ -31,7 +33,7 @@ const RequirementsFields = () => {
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="font-semibold text-gray-900 text-lg">
-            지원 자격
+            {t("study.form.requirementsSection")}
           </CardTitle>
           <Button
             type="button"
@@ -41,7 +43,7 @@ const RequirementsFields = () => {
             className="border-blue-600 bg-transparent text-blue-600 hover:bg-blue-50"
           >
             <Plus className="mr-1 h-4 w-4" />
-            추가
+            {t("study.form.addItem")}
           </Button>
         </div>
       </CardHeader>
@@ -53,9 +55,9 @@ const RequirementsFields = () => {
                 name={`requirements.${index}.value`}
                 control={control}
                 rules={{
-                  required: "지원 자격 조건을 입력하세요.",
+                  required: t("study.form.requirementsRequired"),
                   validate: (value: string) =>
-                    value.trim() !== "" || "지원 자격 조건을 입력하세요.",
+                    value.trim() !== "" || t("study.form.requirementsRequired"),
                 }}
                 render={({ field, fieldState }) => (
                   <Textarea
@@ -64,7 +66,7 @@ const RequirementsFields = () => {
                     name={field.name}
                     onBlur={field.onBlur}
                     ref={field.ref}
-                    placeholder="지원 자격 조건을 입력하세요"
+                    placeholder={t("study.form.requirementsPlaceholder")}
                     className={
                       fieldState.invalid && fieldState.isDirty
                         ? "min-h-[40px] flex-1 resize-y border-red-500 focus:border-red-500 focus:ring-red-500"
