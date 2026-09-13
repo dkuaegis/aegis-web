@@ -6,7 +6,6 @@
  * has to declare `--lang-toggle-surface` to look correct.
  */
 .language-toggle {
-  --lang-toggle-surface: #18181b;
   --lang-toggle-radius: 999px;
 
   position: relative;
@@ -61,7 +60,8 @@
 }
 
 .language-toggle button.language-toggle-option.is-active {
-  color: var(--lang-toggle-surface);
+  /* Keep the default here so CSS chunk order cannot override header themes. */
+  color: var(--lang-toggle-surface, #18181b);
   cursor: default;
 }
 
