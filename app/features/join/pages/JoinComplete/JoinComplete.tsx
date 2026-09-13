@@ -97,7 +97,7 @@ const JoinComplete = () => {
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="join-page-shell join-complete-page">
+    <div className="join-complete-page">
       <main className="join-complete-card">{children}</main>
     </div>
   );

@@ -41,11 +41,14 @@ const FunnelLayout = () => {
   const currentIndex = JOIN_STEPS.indexOf(currentStep);
 
   return (
-    <div className="join-page-shell">
+    <div className="join-funnel">
       <main className="join-main">
         <div className="join-workspace">
           <Title currentStep={currentStep} />
-          <nav className="join-progress" aria-label={t("join.steps.progressLabel")}>
+          <nav
+            className="join-progress"
+            aria-label={t("join.steps.progressLabel")}
+          >
             <ol className="join-stepper">
               {JOIN_STEPS.map((step, index) => (
                 <li
