@@ -1,4 +1,17 @@
-export type LoginIntent = "home" | "join";
+import type { AuthStatus } from "../api/auth";
+
+export type LoginIntent = "home" | "join" | "study";
+
+export function parseLoginIntent(value: string | null): LoginIntent | null {
+  return value === "home" || value === "join" || value === "study"
+    ? value
+    : null;
+}
+
+export function getLoginDestination(intent: LoginIntent, status: AuthStatus) {
+  if (intent === "study") return status === "COMPLETED" ? "/study" : "/join";
+  return intent === "join" && status === "PENDING" ? "/join" : "/";
+}
 
 const LOGIN_INTENT_STORAGE_KEY = "aegis.login-intent";
 
@@ -13,7 +26,7 @@ export function storeLoginIntent(intent: LoginIntent) {
 export function readLoginIntent(): LoginIntent | null {
   try {
     const intent = window.sessionStorage.getItem(LOGIN_INTENT_STORAGE_KEY);
-    return intent === "home" || intent === "join" ? intent : null;
+    return parseLoginIntent(intent);
   } catch {
     return null;
   }

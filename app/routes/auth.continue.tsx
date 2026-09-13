@@ -3,12 +3,16 @@ import { ApiError, api, googleLoginUrl } from "@app/lib/api";
 import { useEffect, useState } from "react";
 import { Navigate, useSearchParams } from "react-router-dom";
 import type { AuthCheckResponse } from "../api/auth";
-import { storeLoginIntent } from "../lib/authIntent";
+import {
+  getLoginDestination,
+  parseLoginIntent,
+  storeLoginIntent,
+} from "../lib/authIntent";
 
 export default function AuthContinuePage() {
   const { t } = useI18n();
   const [searchParams] = useSearchParams();
-  const intent = searchParams.get("intent") === "join" ? "join" : "home";
+  const intent = parseLoginIntent(searchParams.get("intent")) ?? "home";
   const [destination, setDestination] = useState<string | null>(null);
   const [error, setError] = useState(false);
   const [retryKey, setRetryKey] = useState(0);
@@ -24,11 +28,7 @@ export default function AuthContinuePage() {
       .get<AuthCheckResponse>("/auth/check", controller.signal)
       .then((user) => {
         if (!active) return;
-        if (user.status === "COMPLETED") {
-          setDestination("/");
-          return;
-        }
-        setDestination(request.intent === "join" ? "/join" : "/");
+        setDestination(getLoginDestination(request.intent, user.status));
       })
       .catch((caught) => {
         if (!active) return;
