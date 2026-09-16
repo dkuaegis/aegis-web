@@ -45,7 +45,7 @@ const FirstComeForm = ({ recruiting }: FirstComeFormProps) => {
               </span>
             </Button>
           </AlertDialogTrigger>
-          <AlertDialogContent className="max-w-[calc(100vw-12rem)] sm:max-w-lg">
+          <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>
                 {t("study.application.fcfs.confirmTitle")}

@@ -60,7 +60,7 @@ const PendingApplicationStatus = ({ study }: PendingApplicationStatusProps) => {
             open={isApplicationModalOpen}
             onOpenChange={setIsApplicationModalOpen}
           >
-            <AlertDialogContent className="max-h-[80vh] max-w-[calc(100vw-12rem)] sm:max-w-4xl">
+            <AlertDialogContent className="sm:max-w-4xl">
               <AlertDialogHeader>
                 <AlertDialogTitle>
                   {t("study.application.form.editDialogTitle")}
@@ -74,7 +74,7 @@ const PendingApplicationStatus = ({ study }: PendingApplicationStatusProps) => {
                 placeholder={t("study.application.form.placeholder")}
                 value={editingApplicationText}
                 onChange={(e) => setEditingApplicationText(e.target.value)}
-                className="mt-2 max-h-[min(300px,60vh)] min-h-[120px] resize-y overflow-y-auto border-gray-300 focus:border-blue-500 focus:ring-blue-500 sm:min-h-[200px]"
+                className="mt-2 max-h-[min(300px,60vh)] min-h-[120px] resize-y overflow-y-auto border-gray-300 bg-gray-50 focus:border-blue-500 focus:ring-blue-500 sm:min-h-[200px]"
               />
               <AlertDialogFooter>
                 <AlertDialogCancel

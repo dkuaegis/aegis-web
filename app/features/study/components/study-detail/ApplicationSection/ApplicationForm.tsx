@@ -54,7 +54,7 @@ const ApplicationForm = ({ recruiting }: Iprops) => {
         open={isApplicationModalOpen && recruiting}
         onOpenChange={setIsApplicationModalOpen}
       >
-        <AlertDialogContent className="max-h-[80vh] max-w-[calc(100vw-12rem)] sm:max-w-4xl">
+        <AlertDialogContent className="sm:max-w-4xl">
           <AlertDialogHeader>
             <AlertDialogTitle>
               {t("study.application.form.dialogTitle")}
@@ -68,7 +68,7 @@ const ApplicationForm = ({ recruiting }: Iprops) => {
             placeholder={t("study.application.form.placeholder")}
             value={applicationText}
             onChange={(e) => setApplicationText(e.target.value)}
-            className="mt-2 max-h-[min(300px,60vh)] min-h-[120px] resize-y overflow-y-auto border-gray-300 focus:border-blue-500 focus:ring-blue-500 sm:min-h-[200px]"
+            className="mt-2 max-h-[min(300px,60vh)] min-h-[120px] resize-y overflow-y-auto border-gray-300 bg-gray-50 focus:border-blue-500 focus:ring-blue-500 sm:min-h-[200px]"
           />
           <AlertDialogFooter>
             <AlertDialogCancel onClick={() => setIsApplicationModalOpen(false)}>
