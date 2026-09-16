@@ -103,7 +103,7 @@
 /* Utilities that need to override component defaults */
 @layer utilities {
   .dialog-max-width {
-    @apply max-w-2xl sm:max-w-2xl;
+    @apply max-w-[calc(100%-2rem)] sm:max-w-2xl;
   }
 
   .dialog-header-title {
