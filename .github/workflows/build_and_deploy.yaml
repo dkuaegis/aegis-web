@@ -119,6 +119,7 @@ jobs:
           COOLIFY_APP_UUID: ${{ secrets.COOLIFY_APP_UUID }}
           COOLIFY_WRITE_TOKEN: ${{ secrets.COOLIFY_WRITE_TOKEN }}
           COOLIFY_DEPLOY_TOKEN: ${{ secrets.COOLIFY_DEPLOY_TOKEN }}
+          WAF_DEPLOY_TOKEN: ${{ secrets.WAF_DEPLOY_TOKEN }}
           IMAGE_REPOSITORY: ${{ needs.build.outputs.image_repository }}
           IMAGE_TAG: ${{ needs.build.outputs.image_tag }}
         shell: bash
@@ -127,6 +128,7 @@ jobs:
           : "${COOLIFY_APP_UUID:?GitHub Environment secret COOLIFY_APP_UUID를 설정해 주세요}"
           : "${COOLIFY_WRITE_TOKEN:?GitHub Environment secret COOLIFY_WRITE_TOKEN을 설정해 주세요}"
           : "${COOLIFY_DEPLOY_TOKEN:?GitHub Environment secret COOLIFY_DEPLOY_TOKEN을 설정해 주세요}"
+          : "${WAF_DEPLOY_TOKEN:?GitHub Environment secret WAF_DEPLOY_TOKEN을 설정해 주세요}"
 
           api_url="${COOLIFY_URL%/}/api/v1"
           image_update="$(jq -n \
@@ -137,9 +139,11 @@ jobs:
           curl --fail --silent --show-error --output /dev/null \
             --request PATCH "$api_url/applications/$COOLIFY_APP_UUID" \
             --header "Authorization: Bearer $COOLIFY_WRITE_TOKEN" \
+            --header "X-Aegis-Deploy-Token: $WAF_DEPLOY_TOKEN" \
             --header 'Content-Type: application/json' \
             --data "$image_update"
 
           curl --fail --silent --show-error --output /dev/null \
             --request POST "$api_url/deploy?uuid=$COOLIFY_APP_UUID" \
-            --header "Authorization: Bearer $COOLIFY_DEPLOY_TOKEN"
+            --header "Authorization: Bearer $COOLIFY_DEPLOY_TOKEN" \
+            --header "X-Aegis-Deploy-Token: $WAF_DEPLOY_TOKEN"
