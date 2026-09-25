@@ -74,7 +74,7 @@ export const pages = {
     title: "문의",
     subtitle:
       "더 궁금한 질문이 있거나 후원을 원하신다면 언제든 연락해 주세요!",
-    presidentLabel: "회장 권대근",
+    presidentLabel: "회장",
     copyPhone: "전화번호 복사",
   },
 

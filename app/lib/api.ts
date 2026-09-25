@@ -19,6 +19,13 @@ function getSafeApiUrl(value: string | undefined): string | undefined {
 }
 
 const configuredApiUrl = getSafeApiUrl(import.meta.env.VITE_API_URL);
+if (
+  !configuredApiUrl &&
+  import.meta.env.PROD &&
+  typeof window !== "undefined"
+) {
+  throw new Error("VITE_API_URL must be a valid API URL in production");
+}
 const API_BASE_URL = configuredApiUrl ?? DEFAULT_API_URL;
 
 export class ApiError extends Error {

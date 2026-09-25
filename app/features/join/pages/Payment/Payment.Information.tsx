@@ -3,12 +3,12 @@ import { Copy } from "lucide-react";
 import toast from "react-hot-toast";
 
 const Information = () => {
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const accountNumber = import.meta.env.VITE_ADMIN_ACCOUNT_NUMBER ?? "";
-  // 예금주명은 영어 모드에서 로마자로 보여야 하므로 사전값을 기본값으로 씁니다.
   const accountHolder =
-    import.meta.env.VITE_ADMIN_ACCOUNT_HOLDER ??
-    t("join.payment.account.defaultHolder");
+    language === "ko"
+      ? import.meta.env.VITE_ADMIN_ACCOUNT_HOLDER_KO
+      : import.meta.env.VITE_ADMIN_ACCOUNT_HOLDER_EN;
 
   const handleCopy = async () => {
     try {
