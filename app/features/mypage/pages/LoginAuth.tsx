@@ -1,5 +1,6 @@
 import { useI18n } from "@app/i18n";
 import { googleLoginUrl } from "@app/lib/api";
+import { readLoginIntent } from "@app/lib/authIntent";
 import { useEffect } from "react";
 import loginImage from "../assets/loginImage.webp";
 import Button from "../components/Button";
@@ -12,7 +13,7 @@ const LoginAuth = () => {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get("login") === "success") {
+    if (urlParams.get("login") === "success" && readLoginIntent() !== "qr") {
       const verifyAuth = async () => {
         await checkAuthStatus(true); // 네비게이션 활성화
       };

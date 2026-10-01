@@ -8,6 +8,7 @@ import LoginAuth from "./pages/LoginAuth";
 import Notfound from "./pages/Notfound";
 import PointShop from "./pages/PointShop";
 import Points from "./pages/Points";
+import QRPage from "./pages/QRPage";
 import Ranking from "./pages/Ranking";
 import UnAuthorized from "./pages/UnAuthorized";
 
@@ -16,6 +17,7 @@ const App: React.FC = () => {
     <AuthProvider>
       <Routes>
         <Route index element={<Home />} />
+        <Route path="qr" element={<QRPage />} />
         <Route path="category/points" element={<Points />} />
         <Route path="category/giftbox/coupons" element={<Coupons />} />
         <Route path="category/giftbox/history" element={<History />} />

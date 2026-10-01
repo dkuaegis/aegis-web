@@ -103,6 +103,8 @@ export const mypage = {
   qr: {
     title: "입장을 위한 QR코드",
     description: "이용하려는 행사에 QR코드로 체크인하세요.",
+    loading: "QR코드를 생성하고 있어요.",
+    retry: "다시 시도",
     refresh: "새로 고침",
     refreshIconAlt: "새로고침",
     closeIconAlt: "닫기",

@@ -1,9 +1,12 @@
 import type { AuthStatus } from "../api/auth";
 
-export type LoginIntent = "home" | "join" | "study";
+export type LoginIntent = "home" | "join" | "study" | "qr";
 
 export function parseLoginIntent(value: string | null): LoginIntent | null {
-  return value === "home" || value === "join" || value === "study"
+  return value === "home" ||
+    value === "join" ||
+    value === "study" ||
+    value === "qr"
     ? value
     : null;
 }
@@ -33,6 +36,7 @@ export function getLoginDestination(
       ? (parseStudyReturnTo(returnTo ?? null) ?? "/study")
       : "/join";
   }
+  if (intent === "qr") return status === "COMPLETED" ? "/mypage/qr" : "/join";
   return intent === "join" && status === "PENDING" ? "/join" : "/";
 }
 

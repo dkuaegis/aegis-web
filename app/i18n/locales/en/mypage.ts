@@ -50,7 +50,8 @@ export const mypage = {
     tooltip: {
       energyDrink:
         "Pick this up in the club room — Room 530, Hyedang Hall (the Woori Bank building)!",
-      discountCoupon: "You can use this coupon when you register next semester!",
+      discountCoupon:
+        "You can use this coupon when you register next semester!",
       default: "These are sent out as gift vouchers once a week!",
     },
   },
@@ -104,6 +105,8 @@ export const mypage = {
   qr: {
     title: "Your entry QR code",
     description: "Check in to an event by scanning this code.",
+    loading: "Generating your QR code...",
+    retry: "Try again",
     refresh: "Refresh",
     refreshIconAlt: "Refresh",
     closeIconAlt: "Close",
