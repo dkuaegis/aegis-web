@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { checkAuth } from "../api/auth";
 import {
   consumeLoginIntent,
+  consumeLoginReturnTo,
   getLoginDestination,
   readLoginIntent,
 } from "../lib/authIntent";
@@ -21,11 +22,14 @@ export function AuthIntentRedirect() {
       if (!active || !user.isAuthenticated || !user.status) return;
 
       const intent = consumeLoginIntent();
+      const returnTo = consumeLoginReturnTo();
       if (
         intent === "study" ||
         (intent === "join" && user.status === "PENDING")
       ) {
-        navigate(getLoginDestination(intent, user.status), { replace: true });
+        navigate(getLoginDestination(intent, user.status, returnTo), {
+          replace: true,
+        });
       }
     });
 

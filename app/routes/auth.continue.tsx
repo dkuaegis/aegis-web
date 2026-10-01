@@ -13,13 +13,14 @@ export default function AuthContinuePage() {
   const { t } = useI18n();
   const [searchParams] = useSearchParams();
   const intent = parseLoginIntent(searchParams.get("intent")) ?? "home";
+  const returnTo = searchParams.get("returnTo");
   const [destination, setDestination] = useState<string | null>(null);
   const [error, setError] = useState(false);
   const [retryKey, setRetryKey] = useState(0);
 
   useEffect(() => {
     const controller = new AbortController();
-    const request = { intent, retryKey } as const;
+    const request = { intent, returnTo, retryKey } as const;
     let active = true;
 
     setError(false);
@@ -28,12 +29,14 @@ export default function AuthContinuePage() {
       .get<AuthCheckResponse>("/auth/check", controller.signal)
       .then((user) => {
         if (!active) return;
-        setDestination(getLoginDestination(request.intent, user.status));
+        setDestination(
+          getLoginDestination(request.intent, user.status, request.returnTo)
+        );
       })
       .catch((caught) => {
         if (!active) return;
         if (caught instanceof ApiError && caught.status === 401) {
-          storeLoginIntent(request.intent);
+          storeLoginIntent(request.intent, request.returnTo);
           window.location.replace(googleLoginUrl);
           return;
         }
@@ -44,7 +47,7 @@ export default function AuthContinuePage() {
       active = false;
       controller.abort(`Authentication request ${request.retryKey} superseded`);
     };
-  }, [intent, retryKey]);
+  }, [intent, returnTo, retryKey]);
 
   if (destination) return <Navigate to={destination} replace />;
 
