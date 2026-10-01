@@ -15,7 +15,12 @@ export function AuthIntentRedirect() {
   useEffect(() => {
     if (location.pathname === "/auth/continue") return;
     const pendingIntent = readLoginIntent();
-    if (pendingIntent !== "join" && pendingIntent !== "study") return;
+    if (
+      pendingIntent !== "join" &&
+      pendingIntent !== "study" &&
+      pendingIntent !== "qr"
+    )
+      return;
 
     let active = true;
     checkAuth().then((user) => {
@@ -25,6 +30,7 @@ export function AuthIntentRedirect() {
       const returnTo = consumeLoginReturnTo();
       if (
         intent === "study" ||
+        intent === "qr" ||
         (intent === "join" && user.status === "PENDING")
       ) {
         navigate(getLoginDestination(intent, user.status, returnTo), {
