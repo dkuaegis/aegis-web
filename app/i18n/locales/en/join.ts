@@ -246,7 +246,6 @@ export const join = {
       sectionLabel: "Bank transfer details",
       accountNumber: "Account",
       accountHolder: "Account holder",
-      defaultHolder: "Daegeun Kwon",
       copyAccount: "Copy account number",
       copySuccess: "Account number copied.",
       copyFailure: "Could not copy. Please check your browser permissions.",

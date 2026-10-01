@@ -80,7 +80,7 @@ export const pages = {
     title: "Contact",
     subtitle:
       "Have another question, or want to sponsor us? Get in touch any time.",
-    presidentLabel: "President Daegeun Kwon",
+    presidentLabel: "President",
     copyPhone: "Copy phone number",
   },
 

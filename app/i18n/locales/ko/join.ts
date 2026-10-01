@@ -241,7 +241,6 @@ export const join = {
       sectionLabel: "입금 계좌 정보",
       accountNumber: "입금 계좌",
       accountHolder: "예금주명",
-      defaultHolder: "권대근",
       copyAccount: "계좌번호 복사",
       copySuccess: "계좌번호를 복사했습니다.",
       copyFailure: "복사에 실패했습니다. 브라우저 권한을 확인해주세요.",

@@ -1,6 +1,12 @@
 import { useI18n } from "@app/i18n";
 import { lazy, Suspense } from "react";
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import useAuth from "./hooks/useAuth";
 import { useGoogleAnalytics } from "./hooks/useGoogleAnalytics";
 
@@ -27,6 +33,7 @@ const STUDY_BASE_PATH = "/study";
 const App = () => {
   const { t } = useI18n();
   const { isAuthenticated, isLoading, isPending } = useAuth();
+  const location = useLocation();
   const navigate = useNavigate();
   const shouldTrackPageView = !isLoading;
   const authState = !isPending && isAuthenticated ? "LOGGED_IN" : "LOGGED_OUT";
@@ -46,7 +53,11 @@ const App = () => {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/auth/continue?intent=study" replace />;
+    const returnTo = `${location.pathname}${location.search}${location.hash}`;
+    const searchParams = new URLSearchParams({ intent: "study", returnTo });
+    return (
+      <Navigate to={`/auth/continue?${searchParams.toString()}`} replace />
+    );
   }
 
   return (
