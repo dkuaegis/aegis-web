@@ -1,16 +1,8 @@
 import { useI18n } from "@app/i18n";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@study/components/ui/card";
+import { useStudyUiText } from "@study/components/ui/StudyLayout";
 import type { ApplicationState } from "@study/types/application";
 import { type StudyDetail, StudyRecruitmentMethod } from "@study/types/study";
-import {
-  getApplicationSectionTitle,
-  isStudyRecruiting,
-} from "@study/utils/studyStatusHelpers";
+import { isStudyRecruiting } from "@study/utils/studyStatusHelpers";
 import ApplicationForm from "./ApplicationForm";
 import ApplicationStateContext from "./ApplicationStateContext";
 import FirstComeForm from "./FirstComeForm";
@@ -30,15 +22,19 @@ export const ApplicationSection = ({
   applicationState,
 }: ApplicationSectionProps) => {
   const { userApplicationStatus } = applicationState;
+  const ui = useStudyUiText();
 
   if (isOwner) {
     return null;
   }
 
-  const cardTitle = getApplicationSectionTitle(
-    userApplicationStatus,
-    study.recruitmentMethod
-  );
+  const recruiting = isStudyRecruiting(study);
+  const cardTitle =
+    userApplicationStatus === "PENDING" || userApplicationStatus === "REJECTED"
+      ? ui("지원 현황", "Application status")
+      : recruiting
+        ? ui("이 스터디와 함께할까요?", "Join this study?")
+        : ui("모집이 마감되었습니다.", "Recruitment has closed.");
 
   const renderApplicationForm = () => {
     const recruiting = isStudyRecruiting(study);
@@ -65,14 +61,19 @@ export const ApplicationSection = ({
 
   return (
     <ApplicationStateContext.Provider value={applicationState}>
-      <Card className="border-gray-200">
-        <CardHeader>
-          <CardTitle className="font-semibold text-gray-900 text-lg">
-            {cardTitle}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">{renderContent()}</CardContent>
-      </Card>
+      {userApplicationStatus && (
+        <span
+          className={`status-chip status-${userApplicationStatus.toLowerCase()}`}
+        >
+          {userApplicationStatus === "PENDING"
+            ? ui("검토 중", "Pending")
+            : userApplicationStatus === "REJECTED"
+              ? ui("거절", "Rejected")
+              : ui("승인", "Approved")}
+        </span>
+      )}
+      <h2>{cardTitle}</h2>
+      {renderContent()}
     </ApplicationStateContext.Provider>
   );
 };

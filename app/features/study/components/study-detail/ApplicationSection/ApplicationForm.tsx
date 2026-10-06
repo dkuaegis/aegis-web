@@ -10,6 +10,7 @@ import {
   AlertDialogTitle,
 } from "@study/components/ui/alert-dialog";
 import { Button } from "@study/components/ui/button";
+import { useStudyUiText } from "@study/components/ui/StudyLayout";
 import { Textarea } from "@study/components/ui/textarea";
 import { useApplicationState } from "./ApplicationStateContext";
 
@@ -19,6 +20,7 @@ interface Iprops {
 
 const ApplicationForm = ({ recruiting }: Iprops) => {
   const { t } = useI18n();
+  const ui = useStudyUiText();
   const {
     isApplying,
     isApplicationModalOpen,
@@ -30,8 +32,11 @@ const ApplicationForm = ({ recruiting }: Iprops) => {
 
   return (
     <>
-      <p className="mb-2 text-center text-gray-500 text-xs">
-        {t("study.application.form.hint")}
+      <p className="study-application-hint">
+        {ui(
+          "간단한 지원 이유를 작성해 주세요.",
+          "Write a short reason for applying."
+        )}
       </p>
       <Button
         onClick={() => setIsApplicationModalOpen(true)}
@@ -46,7 +51,9 @@ const ApplicationForm = ({ recruiting }: Iprops) => {
         <span className="relative z-10">
           {isApplying
             ? t("study.application.form.processing")
-            : t("study.application.form.openButton")}
+            : recruiting
+              ? ui("지원하기", "Apply")
+              : ui("정원 마감", "Full")}
         </span>
       </Button>
 

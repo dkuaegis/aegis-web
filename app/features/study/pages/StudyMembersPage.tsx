@@ -1,16 +1,15 @@
 import { useI18n } from "@app/i18n";
 import { fetchStudyMembers } from "@study/api/studyMembersApi";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@study/components/ui/card";
-import Header from "@study/components/ui/Header";
+import StudyLayout, {
+  StudyEmpty,
+  StudyError,
+  StudyLoading,
+  useStudyUiText,
+} from "@study/components/ui/StudyLayout";
 import { useToast } from "@study/components/ui/useToast";
 import { useUserRole } from "@study/hooks/useUserRole";
 import ForbiddenPage from "@study/pages/ForbiddenPage";
-import { Copy, User } from "lucide-react";
+import { Check, Copy } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface StudyMember {
@@ -29,6 +28,7 @@ export default function StudyMembersPage({
   onBack,
 }: StudyMembersProps) {
   const { t } = useI18n();
+  const ui = useStudyUiText();
   const {
     isInstructor,
     isLoading: isRoleLoading,
@@ -43,6 +43,7 @@ export default function StudyMembersPage({
   const isOwner = isInstructor(studyId);
   const isLoading = loading || isRoleLoading;
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Keep the existing fetch lifecycle; t only supplies fallback error copy.
   useEffect(() => {
     const controller = new AbortController();
     const { signal } = controller;
@@ -66,9 +67,7 @@ export default function StudyMembersPage({
       .catch((err: unknown) => {
         if ((err as { name?: string }).name === "AbortError") return;
         const msg =
-          err instanceof Error
-            ? err.message
-            : t("study.members.loadError");
+          err instanceof Error ? err.message : t("study.members.loadError");
         toast({ description: msg });
         setError(msg);
       })
@@ -82,16 +81,13 @@ export default function StudyMembersPage({
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <Header onBack={onBack} />
-        <div className="flex min-h-screen items-center justify-center">
-          <div className="text-gray-500">
-            {isRoleLoading
-              ? t("study.loading.role")
-              : t("study.loading.members")}
-          </div>
-        </div>
-      </div>
+      <StudyLayout onBack={onBack}>
+        <StudyLoading
+          label={
+            isRoleLoading ? t("study.loading.role") : t("study.loading.members")
+          }
+        />
+      </StudyLayout>
     );
   }
 
@@ -101,53 +97,64 @@ export default function StudyMembersPage({
 
   if (!isOwner) {
     return (
-      <ForbiddenPage
-        message={t("study.forbidden.members")}
-        onBack={onBack}
-      />
+      <ForbiddenPage message={t("study.forbidden.members")} onBack={onBack} />
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <Header onBack={onBack} />
-        <div className="flex min-h-screen items-center justify-center">
-          <div className="text-red-500">{error}</div>
-        </div>
-      </div>
+      <StudyLayout onBack={onBack}>
+        <StudyError message={error} />
+      </StudyLayout>
     );
   }
-
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header onBack={onBack} />
-      <div className="mx-auto max-w-4xl p-6">
-        <Card className="border-gray-200">
-          <CardHeader>
-            <CardTitle className="font-semibold text-gray-900 text-lg">
-              {t("study.members.title")}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {members.length === 0 ? (
-                <div className="text-gray-500">{t("study.members.empty")}</div>
-              ) : (
-                members.map((member) => (
-                  <MemberCard key={member.studentNumber} member={member} />
-                ))
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+    <StudyLayout
+      wide
+      onBack={onBack}
+      title={ui("스터디원", "Study members")}
+      actions={
+        <button
+          className="button button-outline"
+          type="button"
+          disabled={!members.length}
+          onClick={async () => {
+            await navigator.clipboard.writeText(
+              members
+                .map((member) => `${member.name} ${member.phone}`)
+                .join("\n")
+            );
+            toast({
+              description: ui(
+                "스터디원 연락처를 복사했습니다.",
+                "Copied members' contact information."
+              ),
+            });
+          }}
+        >
+          <Copy aria-hidden="true" />{" "}
+          {ui("연락처 전체 복사", "Copy all contacts")}
+        </button>
+      }
+    >
+      {members.length === 0 ? (
+        <StudyEmpty
+          title={ui("아직 스터디원이 없습니다.", "There are no members yet.")}
+        />
+      ) : (
+        <div className="member-grid">
+          {members.map((member) => (
+            <MemberCard key={member.studentNumber} member={member} />
+          ))}
+        </div>
+      )}
+    </StudyLayout>
   );
 }
 
 function MemberCard({ member }: { member: StudyMember }) {
   const { t } = useI18n();
+  const ui = useStudyUiText();
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -159,41 +166,28 @@ function MemberCard({ member }: { member: StudyMember }) {
   };
 
   return (
-    <Card className="border-gray-200">
-      <CardContent className="p-4">
-        <div className="flex items-center space-x-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
-            <User className="h-6 w-6 text-gray-600" />
-          </div>
-          <div>
-            <h3 className="font-semibold text-gray-900">{member.name}</h3>
-            <div className="mt-1 flex items-center text-gray-500 text-sm">
-              <span className="mr-2 font-medium">📞</span>
-              <span>{member.phone}</span>
-              <button
-                type="button"
-                aria-label={t("study.members.copyPhone")}
-                className="ml-2 rounded p-1 transition hover:bg-gray-200"
-                onClick={handleCopy}
-              >
-                <Copy
-                  className={copied ? "text-green-600" : "text-gray-400"}
-                  size={16}
-                />
-              </button>
-              {copied && (
-                <span className="ml-2 text-green-600 text-xs">
-                  {t("study.members.phoneCopied")}
-                </span>
-              )}
-            </div>
-            <div className="mt-1 flex items-center text-gray-500 text-sm">
-              <span className="mr-2 font-medium">🎓</span>
-              {t("study.members.studentIdLabel")}: {member.studentNumber}
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+    <article className="paper-card member-card">
+      <div className="member-avatar">{member.name.slice(0, 1)}</div>
+      <div>
+        <h2>{member.name}</h2>
+        <p>{member.studentNumber}</p>
+        <a href={`tel:${member.phone}`}>{member.phone}</a>
+      </div>
+      <button
+        className="icon-button"
+        type="button"
+        aria-label={
+          copied
+            ? t("study.members.phoneCopied")
+            : `${member.name} ${ui("연락처 복사", "copy contact")}`
+        }
+        onClick={handleCopy}
+      >
+        {copied ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
+      </button>
+      <span className="visually-hidden" role="status">
+        {copied ? t("study.members.phoneCopied") : ""}
+      </span>
+    </article>
   );
 }

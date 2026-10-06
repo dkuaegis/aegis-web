@@ -11,6 +11,7 @@ import {
   AlertDialogTrigger,
 } from "@study/components/ui/alert-dialog";
 import { Button } from "@study/components/ui/button";
+import { useStudyUiText } from "@study/components/ui/StudyLayout";
 import { useApplicationState } from "./ApplicationStateContext";
 
 interface FirstComeFormProps {
@@ -19,9 +20,16 @@ interface FirstComeFormProps {
 
 const FirstComeForm = ({ recruiting }: FirstComeFormProps) => {
   const { t } = useI18n();
+  const ui = useStudyUiText();
   const { isApplying, handleApply } = useApplicationState();
   return (
     <>
+      <p>
+        {ui(
+          "신청 즉시 스터디원으로 참여합니다.",
+          "You will join immediately after applying."
+        )}
+      </p>
       <div className="flex justify-center">
         <AlertDialog>
           <AlertDialogTrigger asChild>
@@ -41,7 +49,9 @@ const FirstComeForm = ({ recruiting }: FirstComeFormProps) => {
               <span className="relative z-10">
                 {isApplying
                   ? t("study.application.form.processing")
-                  : t("study.application.fcfs.applyButton")}
+                  : recruiting
+                    ? ui("바로 참여하기", "Join now")
+                    : ui("정원 마감", "Full")}
               </span>
             </Button>
           </AlertDialogTrigger>
@@ -91,11 +101,6 @@ const FirstComeForm = ({ recruiting }: FirstComeFormProps) => {
           </AlertDialogContent>
         </AlertDialog>
       </div>
-      <p className="text-center text-gray-500 text-xs">
-        {recruiting
-          ? t("study.application.fcfs.recruitingHint")
-          : t("study.application.fcfs.closedHint")}
-      </p>
     </>
   );
 };

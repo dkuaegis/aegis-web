@@ -3,11 +3,20 @@ import { useStudyDetailQuery } from "@study/api/studyDetailApi";
 import ApplicationSection from "@study/components/study-detail/ApplicationSection";
 import StudyContent from "@study/components/study-detail/StudyContent";
 import StudyHeader from "@study/components/study-detail/StudyHeader";
-import StudyInfo from "@study/components/study-detail/StudyInfo";
-import Header from "@study/components/ui/Header";
+import StudyLayout, {
+  StudyEmpty,
+  StudyError,
+  StudyLoading,
+  useStudyUiText,
+} from "@study/components/ui/StudyLayout";
 import { useStudyApplication } from "@study/hooks/useStudyUserApplication";
 import { useUserRole } from "@study/hooks/useUserRole";
-import { StudyRecruitmentMethod } from "@study/types/study";
+import {
+  StudyRecruitmentMethod,
+  studyCategoryLabelKey,
+  studyLevelLabelKey,
+} from "@study/types/study";
+import { Edit3 } from "lucide-react";
 
 interface StudyDetailProps {
   studyId: number;
@@ -27,6 +36,7 @@ const StudyDetailPage = ({
   onManageAttendance,
 }: StudyDetailProps) => {
   const { t } = useI18n();
+  const ui = useStudyUiText();
   const {
     isInstructor,
     isParticipant,
@@ -63,13 +73,13 @@ const StudyDetailPage = ({
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50">
-        <div className="text-gray-500">
-          {isRoleLoading
-            ? t("study.loading.role")
-            : t("study.loading.study")}
-        </div>
-      </div>
+      <StudyLayout>
+        <StudyLoading
+          label={
+            isRoleLoading ? t("study.loading.role") : t("study.loading.study")
+          }
+        />
+      </StudyLayout>
     );
   }
 
@@ -79,19 +89,18 @@ const StudyDetailPage = ({
 
   if (isError) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50">
-        <div className="text-red-500">
-          {error?.message ?? t("study.detail.genericError")}
-        </div>
-      </div>
+      <StudyLayout onBack={onBack}>
+        <StudyError
+          message={error?.message ?? t("study.detail.genericError")}
+        />
+      </StudyLayout>
     );
   }
-
   if (!study) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50">
-        <div className="text-gray-500">{t("study.detail.notFound")}</div>
-      </div>
+      <StudyLayout onBack={onBack}>
+        <StudyEmpty title={t("study.detail.notFound")} />
+      </StudyLayout>
     );
   }
 
@@ -99,27 +108,37 @@ const StudyDetailPage = ({
   const isMember = isParticipant(studyId);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header onBack={onBack} />
-
-      <div className="mx-auto max-w-4xl p-6">
-        <StudyHeader
-          study={study}
-          isOwner={isOwner}
-          isMember={isMember}
-          userApplicationStatus={userApplicationStatus}
-          onEdit={onEdit}
-          onViewApplications={onViewApplications}
-          onViewMembers={onViewMembers}
-          onManageAttendance={onManageAttendance}
-        />
-
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <StudyContent study={study} />
-
-          <div className="space-y-6">
-            <StudyInfo study={study} />
-
+    <StudyLayout
+      wide
+      onBack={onBack}
+      backLabel={ui("스터디 목록", "Study list")}
+      meta={`${t(studyCategoryLabelKey(study.category))} · ${t(studyLevelLabelKey(study.level))}`}
+      title={study.title}
+      actions={
+        isOwner ? (
+          <button
+            className="button button-outline"
+            type="button"
+            onClick={() => onEdit?.(study.id)}
+          >
+            <Edit3 aria-hidden="true" /> {ui("정보 수정", "Edit information")}
+          </button>
+        ) : undefined
+      }
+    >
+      <div className="study-detail-layout">
+        <StudyContent study={study} />
+        <aside className="study-side-panel paper-card">
+          <StudyHeader
+            study={study}
+            isOwner={isOwner}
+            isMember={isMember}
+            userApplicationStatus={userApplicationStatus}
+            onViewApplications={onViewApplications}
+            onViewMembers={onViewMembers}
+            onManageAttendance={onManageAttendance}
+          />
+          {!isOwner && !isMember && (
             <ApplicationSection
               study={study}
               isOwner={isOwner}
@@ -139,10 +158,10 @@ const StudyDetailPage = ({
                 setEditingApplicationText,
               }}
             />
-          </div>
-        </div>
+          )}
+        </aside>
       </div>
-    </div>
+    </StudyLayout>
   );
 };
 
