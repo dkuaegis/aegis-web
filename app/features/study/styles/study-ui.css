@@ -885,7 +885,7 @@
   font-family:
     "Pretendard Variable", Pretendard, "Apple SD Gothic Neo", sans-serif;
   font-size: clamp(2.25rem, 4vw, 3.5rem);
-  font-weight: 850;
+  font-weight: 700;
   line-height: 1.05;
   letter-spacing: -0.055em;
   overflow-wrap: anywhere;
@@ -995,7 +995,7 @@
   font-family:
     "Pretendard Variable", Pretendard, "Apple SD Gothic Neo", sans-serif;
   font-size: clamp(1.35rem, 2vw, 1.75rem);
-  font-weight: 850;
+  font-weight: 700;
   line-height: 1.25;
   letter-spacing: -0.035em;
   overflow-wrap: anywhere;
@@ -1531,7 +1531,7 @@
   color: var(--blue);
   white-space: nowrap;
   font-size: 0.76rem;
-  font-weight: 850;
+  font-weight: 700;
 }
 .study .field > label {
   color: var(--ink);
@@ -1589,7 +1589,7 @@
 .study .study-list-heading h1 {
   margin: 0;
   font-size: clamp(2rem, 4vw, 2.8rem);
-  font-weight: 850;
+  font-weight: 700;
   line-height: 1;
   letter-spacing: -0.055em;
 }
