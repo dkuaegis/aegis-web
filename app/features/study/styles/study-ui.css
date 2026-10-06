@@ -1537,3 +1537,133 @@
   font-family: "Pretendard Variable", Pretendard, sans-serif;
   font-size: 0.86rem;
 }
+
+/* Refined study surfaces: keep the editorial palette while easing the hard edges. */
+.study .service-page {
+  --line: rgb(24 24 27 / 13%);
+  --blue: #3156c9;
+  --blue-soft: #e5eaff;
+}
+
+.study .study-list-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.study .study-list-heading h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 850;
+  line-height: 1;
+  letter-spacing: -0.055em;
+}
+
+.study .button,
+.study .icon-button,
+.study .service-back-navigation .back-button,
+.study .field input,
+.study .field select,
+.study .field textarea,
+.study .repeat-fields input,
+.study .attendance-code-form input,
+.study .choice-grid label {
+  border-radius: 8px;
+}
+
+.study .paper-card,
+.study .table-wrap,
+.study .study-card,
+.study .empty-state,
+.study .error-state {
+  overflow: hidden;
+  border: 1px solid rgb(24 24 27 / 12%);
+  border-radius: 14px;
+  box-shadow: 0 5px 20px rgb(24 24 27 / 4%);
+}
+
+.study .service-form {
+  border-top-width: 1px;
+}
+
+.study .study-card {
+  min-height: 278px;
+  padding: 1.45rem;
+  background: #fcfbf8;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.study .study-card:hover,
+.study .study-card:focus-visible {
+  border-color: rgb(49 86 201 / 42%);
+  box-shadow: 0 12px 30px rgb(24 24 27 / 8%);
+  transform: translateY(-3px);
+}
+
+.study .study-card:focus-visible {
+  outline-offset: 4px;
+}
+
+.study .study-card-main {
+  gap: 1.35rem;
+}
+
+.study .study-card-meta {
+  gap: 0.45rem;
+}
+
+.study .tag,
+.study .status-chip {
+  border-radius: 999px;
+}
+
+.study .tag-category {
+  color: #4d4c48;
+  background: #eeece6;
+}
+
+.study .study-card dl {
+  gap: 0.7rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid rgb(24 24 27 / 9%);
+}
+
+.study .study-card dl svg {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+}
+
+.study .study-description,
+.study .study-overview,
+.study .detail-section,
+.study .study-side-panel {
+  border-top-width: 1px;
+  border-radius: 14px;
+}
+
+.study .study-overview dl div {
+  border-color: rgb(24 24 27 / 10%);
+}
+
+@media (max-width: 720px) {
+  .study .study-list-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .study .study-list-heading .button {
+    width: 100%;
+  }
+
+  .study .study-card {
+    min-height: 235px;
+  }
+}

@@ -39,7 +39,7 @@ const StudyCard = memo(({ study, role, onViewStudyDetail }: StudyCardProps) => {
           <span className={isOpen ? "tag tag-blue" : "tag"}>
             {isOpen ? ui("모집 중", "Recruiting") : ui("모집 완료", "Closed")}
           </span>
-          <span className="tag tag-blue">
+          <span className="tag tag-category">
             {t(studyCategoryLabelKey(study.category))}
           </span>
           <span className="tag">{t(studyLevelLabelKey(study.level))}</span>
@@ -90,8 +90,8 @@ const StudyList = ({
   const { isInstructor, isParticipant, isApplicant } = useUserRole();
   return (
     <StudyLayout wide>
-      <h1 className="visually-hidden">{ui("스터디", "Studies")}</h1>
-      <div className="study-list-actions">
+      <header className="study-list-heading">
+        <h1>{ui("스터디", "Studies")}</h1>
         <button
           className="button button-primary"
           type="button"
@@ -99,7 +99,7 @@ const StudyList = ({
         >
           <Plus aria-hidden="true" /> {ui("스터디 개설", "Create study")}
         </button>
-      </div>
+      </header>
       {loading ? (
         <StudyLoading label={ui("스터디를 불러오는 중", "Loading studies")} />
       ) : error ? (
