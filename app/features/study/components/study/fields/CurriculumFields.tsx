@@ -65,7 +65,7 @@ const CurriculumFields = () => {
               <X aria-hidden="true" />
             </button>
             {errors.curriculum?.[index] && (
-              <span className="text-red-500 text-xs">
+              <span className="repeat-field-error text-red-500 text-xs">
                 {(errors.curriculum[index] as FieldError)?.message ?? ""}
               </span>
             )}
@@ -81,7 +81,7 @@ const CurriculumFields = () => {
       </button>
       {errors.curriculum &&
         typeof (errors.curriculum as FieldError).message === "string" && (
-          <span className="text-red-500 text-xs">
+          <span className="repeat-field-error text-red-500 text-xs">
             {(errors.curriculum as FieldError).message}
           </span>
         )}

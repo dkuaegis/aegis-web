@@ -539,11 +539,14 @@
   align-items: center;
   gap: 0.5rem;
 }
-.study .repeat-fields > div > span {
+.study .repeat-fields > div > span:first-child {
   color: var(--blue);
   font:
     600 0.75rem / 1 "Stack Sans Notch",
     sans-serif;
+}
+.study .repeat-field-error {
+  grid-column: 2 / -1;
 }
 .study .repeat-fields .text-button {
   width: fit-content;
@@ -552,7 +555,35 @@
 }
 
 .study .application-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   margin-bottom: 1rem;
+}
+.study .application-filters button {
+  min-height: 40px;
+  padding: 0.55rem 0.85rem;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+.study .application-filters button:hover:not(.is-active) {
+  color: var(--ink);
+  background: rgb(24 24 27 / 4%);
+}
+.study .application-filters button.is-active {
+  color: white;
+  background: var(--ink);
+  border-color: var(--ink);
 }
 .study .table-wrap {
   overflow-x: auto;

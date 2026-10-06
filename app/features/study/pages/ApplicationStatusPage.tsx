@@ -121,6 +121,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
             key={option.key}
             type="button"
             className={selectedFilter === option.key ? "is-active" : ""}
+            aria-pressed={selectedFilter === option.key}
             onClick={() => setSelectedFilter(option.key)}
           >
             {option.label} {option.count}

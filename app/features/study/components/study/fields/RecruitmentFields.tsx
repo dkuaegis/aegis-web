@@ -66,7 +66,7 @@ const RecruitmentFields = () => {
       </div>
       <div className="field">
         <label htmlFor="maxParticipants">
-          {ui("정원 (0은 무제한)", "Capacity (0 for unlimited)")}
+          {ui("정원 (0은 제한없음)", "Capacity (0 for unlimited)")}
         </label>
         <Controller
           name="maxParticipants"

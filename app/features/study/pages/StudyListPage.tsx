@@ -32,7 +32,6 @@ const StudyCard = memo(({ study, role, onViewStudyDetail }: StudyCardProps) => {
       className="study-card"
       type="button"
       onClick={() => onViewStudyDetail(study.id)}
-      aria-label={study.title}
     >
       <div className="study-card-main">
         <div className="study-card-meta">
@@ -60,7 +59,7 @@ const StudyCard = memo(({ study, role, onViewStudyDetail }: StudyCardProps) => {
           </dt>
           <dd>
             {study.maxParticipants === 0
-              ? ui("무제한", "Unlimited")
+              ? ui("제한없음", "Unlimited")
               : t("study.list.participants", {
                   current: study.participantCount,
                   max: study.maxParticipants,

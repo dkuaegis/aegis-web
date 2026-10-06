@@ -259,13 +259,22 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
             className="button button-outline button-full"
             type="button"
             onClick={async () => {
-              await navigator.clipboard.writeText(attendanceCode);
-              toast({
-                description: ui(
-                  "출석 코드를 복사했습니다.",
-                  "Copied attendance code."
-                ),
-              });
+              try {
+                await navigator.clipboard.writeText(attendanceCode);
+                toast({
+                  description: ui(
+                    "출석 코드를 복사했습니다.",
+                    "Copied attendance code."
+                  ),
+                });
+              } catch {
+                toast({
+                  description: ui(
+                    "출석 코드를 복사하지 못했습니다.",
+                    "Could not copy attendance code."
+                  ),
+                });
+              }
             }}
           >
             <Copy aria-hidden="true" /> {ui("코드 복사", "Copy code")}

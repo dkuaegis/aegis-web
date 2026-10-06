@@ -119,17 +119,26 @@ export default function StudyMembersPage({
           type="button"
           disabled={!members.length}
           onClick={async () => {
-            await navigator.clipboard.writeText(
-              members
-                .map((member) => `${member.name} ${member.phone}`)
-                .join("\n")
-            );
-            toast({
-              description: ui(
-                "스터디원 연락처를 복사했습니다.",
-                "Copied members' contact information."
-              ),
-            });
+            try {
+              await navigator.clipboard.writeText(
+                members
+                  .map((member) => `${member.name} ${member.phone}`)
+                  .join("\n")
+              );
+              toast({
+                description: ui(
+                  "스터디원 연락처를 복사했습니다.",
+                  "Copied members' contact information."
+                ),
+              });
+            } catch {
+              toast({
+                description: ui(
+                  "스터디원 연락처를 복사하지 못했습니다.",
+                  "Could not copy members' contact information."
+                ),
+              });
+            }
           }}
         >
           <Copy aria-hidden="true" />{" "}

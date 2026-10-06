@@ -28,9 +28,8 @@ export const StudyInfo = ({ study }: { study: StudyDetail }) => {
           <dd>
             {study.participantCount} /{" "}
             {study.maxParticipants === 0
-              ? ui("무제한", "Unlimited")
-              : study.maxParticipants}
-            {ui("명", "")}
+              ? ui("제한없음", "Unlimited")
+              : `${study.maxParticipants}${ui("명", "")}`}
           </dd>
         </div>
       </dl>

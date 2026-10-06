@@ -65,7 +65,7 @@ const RequirementsFields = () => {
               <X aria-hidden="true" />
             </button>
             {errors.requirements?.[index] && (
-              <span className="text-red-500 text-xs">
+              <span className="repeat-field-error text-red-500 text-xs">
                 {(errors.requirements[index] as FieldError)?.message ?? ""}
               </span>
             )}
@@ -81,7 +81,7 @@ const RequirementsFields = () => {
       </button>
       {errors.requirements &&
         typeof (errors.requirements as FieldError).message === "string" && (
-          <span className="text-red-500 text-xs">
+          <span className="repeat-field-error text-red-500 text-xs">
             {(errors.requirements as FieldError).message}
           </span>
         )}
