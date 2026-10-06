@@ -1,77 +1,39 @@
 import { useI18n } from "@app/i18n";
+import { useStudyUiText } from "@study/components/ui/StudyLayout";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@study/components/ui/card";
-import { Label } from "@study/components/ui/label";
-import { Separator } from "@study/components/ui/separator";
-import type { StudyDetail } from "@study/types/study";
-import { getRecruitmentMethodText } from "@study/utils/studyStatusHelpers";
+  type StudyDetail,
+  studyRecruitmentMethodLabelKey,
+} from "@study/types/study";
 
-interface StudyInfoProps {
-  study: StudyDetail;
-}
-
-export const StudyInfo = ({ study }: StudyInfoProps) => {
+export const StudyInfo = ({ study }: { study: StudyDetail }) => {
   const { t } = useI18n();
-
+  const ui = useStudyUiText();
   return (
-    <Card className="border-gray-200">
-      <CardHeader>
-        <CardTitle className="font-semibold text-gray-900 text-lg">
-          {t("study.detail.info")}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <section className="paper-card study-overview">
+      <dl>
         <div>
-          <Label className="font-medium text-gray-900 text-sm">
-            {t("study.detail.instructor")}
-          </Label>
-          <p className="mt-1 text-gray-700">{study.instructor}</p>
+          <dt>{t("study.detail.instructor")}</dt>
+          <dd>{study.instructor}</dd>
         </div>
-
-        <Separator className="bg-gray-200" />
-
         <div>
-          <Label className="font-medium text-gray-900 text-sm">
-            {t("study.detail.recruitmentMethod")}
-          </Label>
-          <p className="mt-1 text-gray-700">
-            {getRecruitmentMethodText(study.recruitmentMethod)}
-          </p>
+          <dt>{t("study.detail.schedule")}</dt>
+          <dd>{study.schedule}</dd>
         </div>
-
-        <Separator className="bg-gray-200" />
-
         <div>
-          <Label className="font-medium text-gray-900 text-sm">
-            {t("study.detail.participantLimit")}
-          </Label>
-          <p className="mt-1 text-gray-700">
+          <dt>{ui("모집 방식", "Recruitment method")}</dt>
+          <dd>{t(studyRecruitmentMethodLabelKey(study.recruitmentMethod))}</dd>
+        </div>
+        <div>
+          <dt>{ui("참여 인원", "Participants")}</dt>
+          <dd>
+            {study.participantCount} /{" "}
             {study.maxParticipants === 0
-              ? t("study.list.noLimit")
-              : t("study.list.participants", {
-                  current: study.participantCount,
-                  max: study.maxParticipants,
-                })}
-          </p>
+              ? ui("제한없음", "Unlimited")
+              : `${study.maxParticipants}${ui("명", "")}`}
+          </dd>
         </div>
-
-        <Separator className="bg-gray-200" />
-
-        <div>
-          <Label className="font-medium text-gray-900 text-sm">
-            {t("study.detail.schedule")}
-          </Label>
-          <p className="mt-1 text-gray-700">{study.schedule}</p>
-        </div>
-
-        <Separator className="bg-gray-200" />
-      </CardContent>
-    </Card>
+      </dl>
+    </section>
   );
 };
-
 export default StudyInfo;

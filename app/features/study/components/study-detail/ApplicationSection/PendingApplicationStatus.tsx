@@ -10,6 +10,7 @@ import {
   AlertDialogTitle,
 } from "@study/components/ui/alert-dialog";
 import { Button } from "@study/components/ui/button";
+import { useStudyUiText } from "@study/components/ui/StudyLayout";
 import { Textarea } from "@study/components/ui/textarea";
 import type { StudyDetail } from "@study/types/study";
 import { StudyRecruitmentMethod } from "@study/types/study";
@@ -22,6 +23,7 @@ interface PendingApplicationStatusProps {
 
 const PendingApplicationStatus = ({ study }: PendingApplicationStatusProps) => {
   const { t } = useI18n();
+  const ui = useStudyUiText();
   const {
     isApplying,
     isApplicationModalOpen,
@@ -33,7 +35,7 @@ const PendingApplicationStatus = ({ study }: PendingApplicationStatusProps) => {
     setEditingApplicationText,
   } = useApplicationState();
   return (
-    <div className="space-y-4 text-center">
+    <div className="study-application-status">
       <p className="text-gray-600">
         {t("study.application.statusMessage.pending")}
       </p>
@@ -49,7 +51,7 @@ const PendingApplicationStatus = ({ study }: PendingApplicationStatusProps) => {
             <Edit className="mr-1 h-4 w-4" />
             {isLoadingApplicationDetail
               ? t("study.loading.applicationShort")
-              : t("study.application.form.editButton")}
+              : ui("지원서 수정", "Edit application")}
           </Button>
         )}
 

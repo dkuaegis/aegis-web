@@ -1,19 +1,13 @@
 import { useI18n } from "@app/i18n";
-import { Button } from "@study/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@study/components/ui/card";
+import { useStudyUiText } from "@study/components/ui/StudyLayout";
 import { Textarea } from "@study/components/ui/textarea";
 import { useStudyFormContext } from "@study/hooks/useStudyForm";
 import { Plus, X } from "lucide-react";
-import type { FieldError } from "react-hook-form";
-import { Controller } from "react-hook-form";
+import { Controller, type FieldError } from "react-hook-form";
 
 const RequirementsFields = () => {
   const { t } = useI18n();
+  const ui = useStudyUiText();
   const {
     form: {
       control,
@@ -29,81 +23,69 @@ const RequirementsFields = () => {
   } = requirementFieldArray;
 
   return (
-    <Card className="border-gray-200">
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="font-semibold text-gray-900 text-lg">
-            {t("study.form.requirementsSection")}
-          </CardTitle>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => appendRequirement({ value: "" })}
-            className="border-blue-600 bg-transparent text-blue-600 hover:bg-blue-50"
-          >
-            <Plus className="mr-1 h-4 w-4" />
-            {t("study.form.addItem")}
-          </Button>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        {requirementFields.map(
-          (field: { id: string; value: string }, index: number) => (
-            <div key={field.id} className="flex items-center gap-2">
-              <Controller
-                name={`requirements.${index}.value`}
-                control={control}
-                rules={{
-                  required: t("study.form.requirementsRequired"),
-                  validate: (value: string) =>
-                    value.trim() !== "" || t("study.form.requirementsRequired"),
-                }}
-                render={({ field, fieldState }) => (
-                  <Textarea
-                    value={field.value ?? ""}
-                    onChange={(e) => field.onChange(e.target.value)}
-                    name={field.name}
-                    onBlur={field.onBlur}
-                    ref={field.ref}
-                    placeholder={t("study.form.requirementsPlaceholder")}
-                    className={
-                      fieldState.invalid && fieldState.isDirty
-                        ? "min-h-[40px] flex-1 resize-y border-red-500 focus:border-red-500 focus:ring-red-500"
-                        : "min-h-[40px] flex-1 resize-y border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                    }
-                    aria-invalid={!!errors.requirements?.[index]}
-                  />
-                )}
-              />
-              {requirementFields.length > 1 && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => removeRequirement(index)}
-                  className="text-gray-400 hover:text-red-500"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
+    <fieldset className="repeat-fields">
+      <legend>{t("study.form.requirementsSection")}</legend>
+      {requirementFields.map(
+        (item: { id: string; value: string }, index: number) => (
+          <div key={item.id}>
+            <span>{String(index + 1).padStart(2, "0")}</span>
+            <Controller
+              name={`requirements.${index}.value`}
+              control={control}
+              rules={{
+                required: t("study.form.requirementsRequired"),
+                validate: (value: string) =>
+                  value.trim() !== "" || t("study.form.requirementsRequired"),
+              }}
+              render={({ field, fieldState }) => (
+                <Textarea
+                  value={field.value ?? ""}
+                  onChange={(event) => field.onChange(event.target.value)}
+                  name={field.name}
+                  onBlur={field.onBlur}
+                  ref={field.ref}
+                  rows={1}
+                  aria-label={`${t("study.form.requirementsSection")} ${index + 1}`}
+                  className={
+                    fieldState.invalid && fieldState.isDirty
+                      ? "border-red-500"
+                      : undefined
+                  }
+                  aria-invalid={!!errors.requirements?.[index]}
+                />
               )}
-              {errors.requirements?.[index] && (
-                <span className="ml-2 text-red-500 text-xs" role="alert">
-                  {(errors.requirements[index] as FieldError)?.message ?? ""}
-                </span>
-              )}
-            </div>
-          )
+            />
+            <button
+              className="icon-button"
+              type="button"
+              disabled={requirementFields.length === 1}
+              aria-label={`${t("study.form.requirementsSection")} ${index + 1} ${ui("삭제", "Remove")}`}
+              onClick={() => removeRequirement(index)}
+            >
+              <X aria-hidden="true" />
+            </button>
+            {errors.requirements?.[index] && (
+              <span className="repeat-field-error text-red-500 text-xs">
+                {(errors.requirements[index] as FieldError)?.message ?? ""}
+              </span>
+            )}
+          </div>
+        )
+      )}
+      <button
+        className="text-button"
+        type="button"
+        onClick={() => appendRequirement({ value: "" })}
+      >
+        <Plus aria-hidden="true" /> {ui("항목 추가", "Add item")}
+      </button>
+      {errors.requirements &&
+        typeof (errors.requirements as FieldError).message === "string" && (
+          <span className="repeat-field-error text-red-500 text-xs">
+            {(errors.requirements as FieldError).message}
+          </span>
         )}
-        {errors.requirements &&
-          typeof (errors.requirements as FieldError).message === "string" && (
-            <span className="mt-1 block text-red-500 text-xs" role="alert">
-              {(errors.requirements as FieldError).message}
-            </span>
-          )}
-      </CardContent>
-    </Card>
+    </fieldset>
   );
 };
-
 export default RequirementsFields;

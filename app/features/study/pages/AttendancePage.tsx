@@ -8,19 +8,23 @@ import {
   fetchAttendanceInstructor,
 } from "@study/api/attendanceApi";
 import StudyConfirmationDialog from "@study/components/study/StudyConfirmationDialog";
-import { Button } from "@study/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@study/components/ui/card";
-import Header from "@study/components/ui/Header";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@study/components/ui/dialog";
+import StudyLayout, {
+  StudyEmpty,
+  StudyError,
+  StudyLoading,
+  useStudyUiText,
+} from "@study/components/ui/StudyLayout";
 import { useToast } from "@study/components/ui/useToast";
 import { useUserRole } from "@study/hooks/useUserRole";
 import ForbiddenPage from "@study/pages/ForbiddenPage";
-import { Calendar, Check, Timer, X } from "lucide-react";
+import { Check, Copy, Send } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 interface AttendanceProps {
@@ -29,7 +33,8 @@ interface AttendanceProps {
 }
 
 const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
-  const { t } = useI18n();
+  const { t, language } = useI18n();
+  const ui = useStudyUiText();
   const {
     isInstructor,
     isLoading: isRoleLoading,
@@ -47,6 +52,7 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
 
   const isOwner = isInstructor(studyId);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Keep the existing fetch lifecycle; t only supplies fallback error copy.
   useEffect(() => {
     if (isRoleLoading) return;
     if (!isOwner) return;
@@ -83,65 +89,38 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
     };
   }, [studyId, isOwner, isRoleLoading, toast]);
 
-  if (isRoleLoading) {
+  if (isRoleLoading)
     return (
-      <div className="min-h-screen bg-gray-50">
-        <Header onBack={() => onBack(studyId)} />
-        <div className="flex min-h-screen items-center justify-center">
-          <div className="text-gray-500">{t("study.loading.role")}</div>
-        </div>
-      </div>
+      <StudyLayout onBack={() => onBack(studyId)}>
+        <StudyLoading label={t("study.loading.role")} />
+      </StudyLayout>
     );
-  }
-
-  if (roleError) {
-    console.error("사용자 권한 조회 오류:", roleError);
-  }
-
-  if (!isOwner) {
+  if (roleError) console.error("사용자 권한 조회 오류:", roleError);
+  if (!isOwner)
     return (
       <ForbiddenPage
         message={t("study.forbidden.attendance")}
         onBack={() => onBack(studyId)}
       />
     );
-  }
-
-  if (isLoadingAttendance) {
+  if (isLoadingAttendance)
     return (
-      <div className="min-h-screen bg-gray-50">
-        <Header onBack={() => onBack(studyId)} />
-        <div className="flex min-h-screen items-center justify-center">
-          <div className="text-gray-500">
-            {t("study.loading.attendance")}
-          </div>
-        </div>
-      </div>
+      <StudyLayout onBack={() => onBack(studyId)}>
+        <StudyLoading label={t("study.loading.attendance")} />
+      </StudyLayout>
     );
-  }
-
-  if (attendanceError) {
+  if (attendanceError)
     return (
-      <div className="min-h-screen bg-gray-50">
-        <Header onBack={() => onBack(studyId)} />
-        <div className="flex min-h-screen items-center justify-center">
-          <div className="text-red-500">{attendanceError}</div>
-        </div>
-      </div>
+      <StudyLayout onBack={() => onBack(studyId)}>
+        <StudyError message={attendanceError} />
+      </StudyLayout>
     );
-  }
-
-  if (!attendanceData) {
+  if (!attendanceData)
     return (
-      <div className="min-h-screen bg-gray-50">
-        <Header onBack={() => onBack(studyId)} />
-        <div className="flex min-h-screen items-center justify-center">
-          <div className="text-gray-500">{t("study.attendance.noData")}</div>
-        </div>
-      </div>
+      <StudyLayout onBack={() => onBack(studyId)}>
+        <StudyEmpty title={t("study.attendance.noData")} />
+      </StudyLayout>
     );
-  }
-
   const { sessions, members } = attendanceData;
 
   const generateAttendanceCode = async () => {
@@ -161,154 +140,148 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
     }
   };
 
-  const getStatusIcon = (attendance: boolean | null) => {
-    if (attendance === true)
-      return <Check className="h-4 w-4 text-green-600" />;
-    if (attendance === false) return <X className="h-4 w-4 text-red-600" />;
-    return <span className="text-gray-400">—</span>;
-  };
-
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header onBack={() => onBack(studyId)} />
-      <div className="mx-auto max-w-6xl space-y-6 p-4">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Calendar className="h-5 w-5" />
-              {t("study.attendance.statusTitle")}
-            </CardTitle>
-            <CardDescription>
-              {t("study.attendance.statusDescription")}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse rounded-lg border border-gray-200">
-                  <thead>
-                    <tr className="bg-gray-50">
-                      <th className="min-w-[100px] border border-gray-200 p-3 text-left font-medium">
-                        {t("study.attendance.nameColumn")}
-                      </th>
-                      {sessions.map((session, idx) => (
-                        <th
-                          key={session.sessionId}
-                          className="min-w-[65px] border border-gray-200 p-3 text-center font-medium"
-                        >
-                          {t("study.attendance.sessionColumn", {
-                            index: idx + 1,
-                          })}
-                        </th>
-                      ))}
-                      <th className="min-w-[80px] border border-gray-200 p-3 text-center font-medium">
-                        {t("study.attendance.rateColumn")}
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {members.map((member) => {
-                      const attendance = member.attendance ?? [];
-                      const attendanceCount = attendance.filter(Boolean).length;
-                      const denominator = sessions.length;
-                      const attendanceRate = denominator
-                        ? Math.round((attendanceCount / denominator) * 100)
-                        : 0;
-
-                      return (
-                        <tr key={member.memberId} className="hover:bg-gray-50">
-                          <td className="min-w-[100px] border border-gray-200 p-3 font-medium">
-                            {member.name}
-                          </td>
-                          {sessions.map((session, idx) => {
-                            const att = attendance[idx];
-
-                            return (
-                              <td
-                                key={session.sessionId}
-                                className="min-w-[60px] border border-gray-200 p-2 text-center"
-                              >
-                                <div className="flex flex-col items-center gap-1">
-                                  {getStatusIcon(att)}
-                                </div>
-                              </td>
-                            );
-                          })}
-                          <td className="min-w-[80px] border border-gray-200 p-3 text-center font-medium">
-                            <span className="rounded-full bg-green-100 px-2 py-1 text-green-800 text-sm">
-                              {attendanceRate}%
-                            </span>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <div className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Timer className="h-5 w-5" />
-                {t("study.attendance.codeSectionTitle")}
-              </CardTitle>
-              <CardDescription>
-                {t("study.attendance.codeSectionDescription")}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex flex-col items-center gap-4 sm:flex-row">
-                <StudyConfirmationDialog
-                  onConfirm={generateAttendanceCode}
-                  isSubmitting={isGenerating}
-                  submitText={t("study.attendance.generateShort")}
-                  submittingText={t("study.attendance.generating")}
-                  title={t("study.attendance.generateConfirmTitle")}
-                  description={t("study.attendance.generateConfirmDescription")}
-                >
-                  <Button
-                    disabled={isGenerating}
-                    className="group relative w-full overflow-hidden bg-gradient-to-br from-[#3b82f6] to-[#2563eb] text-white font-semibold shadow-[0_4px_20px_rgba(59,130,246,0.4),0_8px_32px_rgba(59,130,246,0.2)] transition-all duration-300 hover:-translate-y-0.5 hover:from-[#2563eb] hover:to-[#1d4ed8] hover:shadow-[0_6px_28px_rgba(59,130,246,0.5),0_12px_40px_rgba(59,130,246,0.3)] rounded-full sm:w-auto"
-                  >
-                    <span
-                      aria-hidden="true"
-                      className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center"
-                    >
+    <StudyLayout
+      wide
+      onBack={() => onBack(studyId)}
+      title={ui("출석 관리", "Attendance management")}
+      actions={
+        <StudyConfirmationDialog
+          onConfirm={generateAttendanceCode}
+          isSubmitting={isGenerating}
+          submitText={t("study.attendance.generateShort")}
+          submittingText={t("study.attendance.generating")}
+          title={t("study.attendance.generateConfirmTitle")}
+          description={t("study.attendance.generateConfirmDescription")}
+        >
+          <button
+            className="button button-primary"
+            type="button"
+            disabled={isGenerating}
+          >
+            <Send aria-hidden="true" />{" "}
+            {isGenerating
+              ? ui("발급 중...", "Issuing...")
+              : ui("오늘 출석 코드 발급", "Issue today's attendance code")}
+          </button>
+        </StudyConfirmationDialog>
+      }
+    >
+      {sessions.length === 0 ? (
+        <StudyEmpty
+          title={ui(
+            "아직 출석 회차가 없습니다.",
+            "There are no attendance sessions yet."
+          )}
+          description={ui(
+            "오늘 출석 코드를 발급하면 첫 회차가 생성됩니다.",
+            "Issue today's attendance code to create the first session."
+          )}
+        />
+      ) : (
+        <div className="table-wrap">
+          <table className="data-table attendance-table">
+            <thead>
+              <tr>
+                <th scope="col">{ui("스터디원", "Member")}</th>
+                {sessions.map((session, index) => (
+                  <th scope="col" key={session.sessionId}>
+                    <span>
+                      {t("study.attendance.sessionColumn", {
+                        index: index + 1,
+                      })}
+                    </span>
+                    <small>
+                      {new Date(session.date).toLocaleDateString(
+                        language === "en" ? "en-US" : "ko-KR",
+                        { month: "numeric", day: "numeric" }
+                      )}
+                    </small>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {members.map((member) => (
+                <tr key={member.memberId}>
+                  <td>
+                    <strong>{member.name}</strong>
+                  </td>
+                  {sessions.map((session, index) => (
+                    <td key={session.sessionId}>
                       <span
-                        aria-hidden="true"
-                        className="h-56 w-56 scale-0 transform rounded-full bg-white opacity-0 transition-opacity transition-transform duration-500 ease-out group-hover:scale-100 group-hover:opacity-20 motion-reduce:transform-none motion-reduce:transition-none"
-                      />
-                    </span>
-                    <span className="relative z-10">
-                      {isGenerating
-                        ? t("study.attendance.generating")
-                        : t("study.attendance.generate")}
-                    </span>
-                  </Button>
-                </StudyConfirmationDialog>
-                {attendanceCode && (
-                  <div className="flex items-center gap-4">
-                    <div className="text-center">
-                      <p className="text-gray-600 text-sm">
-                        {t("study.attendance.codeLabel")}
-                      </p>
-                      <p className="font-bold font-mono text-2xl text-[#3b82f6]">
-                        {attendanceCode}
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+                        role="img"
+                        className={
+                          member.attendance?.[index]
+                            ? "attendance-yes"
+                            : "attendance-no"
+                        }
+                        aria-label={
+                          member.attendance?.[index]
+                            ? ui("출석", "Present")
+                            : ui("미출석", "Absent")
+                        }
+                      >
+                        {member.attendance?.[index] ? (
+                          <Check aria-hidden="true" />
+                        ) : (
+                          "—"
+                        )}
+                      </span>
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-      </div>
-    </div>
+      )}
+      <Dialog
+        open={Boolean(attendanceCode)}
+        onOpenChange={(open) => {
+          if (!open) setAttendanceCode("");
+        }}
+      >
+        <DialogContent className="study-attendance-modal">
+          <DialogHeader>
+            <DialogTitle>
+              {ui("오늘의 출석 코드", "Today's attendance code")}
+            </DialogTitle>
+            <DialogDescription>
+              {ui(
+                "스터디원에게 아래 4자리 코드를 알려주세요.",
+                "Share this four-digit code with your members."
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="issued-code">{attendanceCode}</div>
+          <button
+            className="button button-outline button-full"
+            type="button"
+            onClick={async () => {
+              try {
+                await navigator.clipboard.writeText(attendanceCode);
+                toast({
+                  description: ui(
+                    "출석 코드를 복사했습니다.",
+                    "Copied attendance code."
+                  ),
+                });
+              } catch {
+                toast({
+                  description: ui(
+                    "출석 코드를 복사하지 못했습니다.",
+                    "Could not copy attendance code."
+                  ),
+                });
+              }
+            }}
+          >
+            <Copy aria-hidden="true" /> {ui("코드 복사", "Copy code")}
+          </button>
+        </DialogContent>
+      </Dialog>
+    </StudyLayout>
   );
 };
-
 export default AttendancePage;

@@ -1,81 +1,72 @@
 import { useI18n } from "@app/i18n";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@study/components/ui/card";
+import { useStudyUiText } from "@study/components/ui/StudyLayout";
 import type { StudyDetail } from "@study/types/study";
-import { CheckCircle } from "lucide-react";
+import { BookOpen, ListChecks } from "lucide-react";
+import type { ReactNode } from "react";
+import StudyInfo from "./StudyInfo";
 
-interface StudyContentProps {
-  study: StudyDetail;
-}
-
-export const StudyContent = ({ study }: StudyContentProps) => {
-  const { t } = useI18n();
-
+function DetailSection({
+  icon,
+  title,
+  items,
+}: {
+  icon: ReactNode;
+  title: string;
+  items: string[];
+}) {
+  const ui = useStudyUiText();
+  const lines = items.flatMap((item) =>
+    item
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter(Boolean)
+  );
   return (
-    <div className="space-y-6 lg:col-span-2">
-      <Card className="border-gray-200">
-        <CardHeader>
-          <CardTitle className="font-semibold text-gray-900 text-lg">
-            {t("study.detail.about")}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="whitespace-pre-line text-gray-700 leading-relaxed">
-            {study.description}
-          </p>
-        </CardContent>
-      </Card>
-
-      <Card className="border-gray-200">
-        <CardHeader>
-          <CardTitle className="font-semibold text-gray-900 text-lg">
-            {t("study.detail.curriculum")}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {(Array.isArray(study.curricula) ? study.curricula : []).map(
-              (item: string) => (
-                <div key={item} className="flex items-start">
-                  <CheckCircle className="mt-0.5 mr-3 h-5 w-5 flex-shrink-0 text-blue-600" />
-                  <span className="whitespace-pre-line text-gray-700">
-                    {item}
-                  </span>
-                </div>
-              )
-            )}
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card className="border-gray-200">
-        <CardHeader>
-          <CardTitle className="font-semibold text-gray-900 text-lg">
-            {t("study.detail.qualifications")}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            {(Array.isArray(study.qualifications)
-              ? study.qualifications
-              : []
-            ).map((qualification: string) => (
-              <div key={qualification} className="flex items-start">
-                <span className="mt-2 mr-3 h-2 w-2 flex-shrink-0 rounded-full bg-gray-400" />
-                <span className="whitespace-pre-line text-gray-700">
-                  {qualification}
-                </span>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+    <section className="paper-card detail-section">
+      <header>
+        {icon}
+        <h2>{title}</h2>
+      </header>
+      {lines.length ? (
+        <ol>
+          {lines.map((item, index) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: The API supplies an ordered, read-only list.
+            <li key={`${item}-${index}`}>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <p>{item}</p>
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <p className="muted">
+          {ui("등록된 내용이 없습니다.", "No content has been added.")}
+        </p>
+      )}
+    </section>
+  );
+}
+export const StudyContent = ({ study }: { study: StudyDetail }) => {
+  const { t } = useI18n();
+  return (
+    <div className="study-detail-content">
+      {study.description && (
+        <section className="paper-card study-description">
+          <h2>{t("study.detail.about")}</h2>
+          <p>{study.description}</p>
+        </section>
+      )}
+      <StudyInfo study={study} />
+      <DetailSection
+        icon={<BookOpen aria-hidden="true" />}
+        title={t("study.detail.curriculum")}
+        items={Array.isArray(study.curricula) ? study.curricula : []}
+      />
+      <DetailSection
+        icon={<ListChecks aria-hidden="true" />}
+        title={t("study.detail.qualifications")}
+        items={Array.isArray(study.qualifications) ? study.qualifications : []}
+      />
     </div>
   );
 };
-
 export default StudyContent;

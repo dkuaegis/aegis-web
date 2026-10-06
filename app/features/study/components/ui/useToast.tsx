@@ -30,28 +30,9 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <ToastContext.Provider value={{ toasts, toast }}>
       {children}
-      <div
-        style={{
-          position: "fixed",
-          top: 20,
-          right: 20,
-          zIndex: 9999,
-        }}
-      >
+      <div className="study-notice-region" aria-live="polite">
         {toasts.map((t) => (
-          <div
-            key={t.id}
-            style={{
-              background: "#222",
-              color: "#fff",
-              padding: "12px 20px",
-              borderRadius: 8,
-              marginBottom: 8,
-              minWidth: 200,
-              boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-              fontSize: 15,
-            }}
-          >
+          <div key={t.id} className="study-notice">
             {t.description}
           </div>
         ))}

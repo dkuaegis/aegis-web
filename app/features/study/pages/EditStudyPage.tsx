@@ -5,7 +5,11 @@ import {
 } from "@study/api/editStudyApi";
 import { useStudyDetailQuery } from "@study/api/studyDetailApi";
 import StudyFormContent from "@study/components/study/StudyFormContent";
-import Header from "@study/components/ui/Header";
+import StudyLayout, {
+  StudyError,
+  StudyLoading,
+  useStudyUiText,
+} from "@study/components/ui/StudyLayout";
 import { useToast } from "@study/components/ui/useToast";
 import { StudyFormProvider } from "@study/hooks/useStudyForm";
 import { useUserRole } from "@study/hooks/useUserRole";
@@ -32,6 +36,7 @@ interface FormValues {
 
 const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
   const { t } = useI18n();
+  const ui = useStudyUiText();
   const toast = useToast();
 
   // 사용자 역할 확인
@@ -77,9 +82,7 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
 
   const handleError = (error?: unknown) => {
     const message =
-      error instanceof Error
-        ? error.message
-        : t("study.form.editError");
+      error instanceof Error ? error.message : t("study.form.editError");
     toast({
       description: message,
     });
@@ -98,16 +101,13 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <Header onBack={onBack} />
-        <div className="flex min-h-screen items-center justify-center">
-          <div className="text-gray-500">
-            {isRoleLoading
-              ? t("study.loading.role")
-              : t("study.loading.study")}
-          </div>
-        </div>
-      </div>
+      <StudyLayout onBack={onBack}>
+        <StudyLoading
+          label={
+            isRoleLoading ? t("study.loading.role") : t("study.loading.study")
+          }
+        />
+      </StudyLayout>
     );
   }
 
@@ -119,21 +119,15 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
   // 권한이 없는 경우
   if (!isOwner) {
     return (
-      <ForbiddenPage
-        message={t("study.forbidden.edit")}
-        onBack={onBack}
-      />
+      <ForbiddenPage message={t("study.forbidden.edit")} onBack={onBack} />
     );
   }
 
   if (isError || !study) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <Header onBack={onBack} />
-        <div className="flex min-h-screen items-center justify-center">
-          <div className="text-red-500">{t("study.form.editLoadError")}</div>
-        </div>
-      </div>
+      <StudyLayout onBack={onBack}>
+        <StudyError message={t("study.form.editLoadError")} />
+      </StudyLayout>
     );
   }
 
@@ -159,23 +153,22 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header onBack={onBack} />
-
-      <div className="mx-auto max-w-4xl p-6">
-        <StudyFormProvider
-          isEditMode={true}
-          initialValues={initialValues}
-          onComplete={({ formData }) => handleUpdate(formData)}
-        >
-          <StudyFormContent
-            onCancel={onBack}
-            submitText={t("study.form.editSubmit")}
-            submittingText={t("study.form.editSubmitting")}
-          />
-        </StudyFormProvider>
-      </div>
-    </div>
+    <StudyLayout
+      onBack={onBack}
+      title={ui("스터디 정보 수정", "Edit study information")}
+    >
+      <StudyFormProvider
+        isEditMode={true}
+        initialValues={initialValues}
+        onComplete={({ formData }) => handleUpdate(formData)}
+      >
+        <StudyFormContent
+          onCancel={onBack}
+          submitText={t("study.form.editSubmit")}
+          submittingText={t("study.form.editSubmitting")}
+        />
+      </StudyFormProvider>
+    </StudyLayout>
   );
 };
 

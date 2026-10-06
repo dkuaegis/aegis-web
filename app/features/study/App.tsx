@@ -7,6 +7,7 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
+import StudyLayout, { StudyLoading } from "./components/ui/StudyLayout";
 import useAuth from "./hooks/useAuth";
 import { useGoogleAnalytics } from "./hooks/useGoogleAnalytics";
 
@@ -42,8 +43,10 @@ const App = () => {
   // 로딩 중에는 로딩 화면 표시
   if (isLoading) {
     return (
-      <div className="study flex min-h-screen items-center justify-center bg-white">
-        <div className="text-gray-500">{t("study.loading.general")}</div>
+      <div className="study">
+        <StudyLayout>
+          <StudyLoading label={t("study.loading.general")} />
+        </StudyLayout>
       </div>
     );
   }
@@ -64,9 +67,9 @@ const App = () => {
     <div className="study min-h-screen bg-white">
       <Suspense
         fallback={
-          <div className="study flex min-h-screen items-center justify-center bg-white">
-            <div className="text-gray-500">{t("study.loading.general")}</div>
-          </div>
+          <StudyLayout>
+            <StudyLoading label={t("study.loading.general")} />
+          </StudyLayout>
         }
       >
         <Routes>
