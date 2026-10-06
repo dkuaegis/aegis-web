@@ -22,16 +22,16 @@ const StudyFormContent = ({
 
   return (
     <form
-      className="study-form"
+      className="study-form paper-card service-form"
       onSubmit={form.handleSubmit(() => setConfirmOpen(true))}
     >
       <StudyFormFields />
-      <div className="study-form-actions">
+      <div className="form-actions">
         <Button
           type="button"
           variant="outline"
           onClick={onCancel}
-          className="group form-btn-cancel"
+          className="button button-outline"
         >
           <span aria-hidden="true" className="dialog-btn-ripple-container">
             <span aria-hidden="true" className="dialog-btn-ripple" />
@@ -59,7 +59,7 @@ const StudyFormContent = ({
           <Button
             type="button"
             disabled={form.formState.isSubmitting}
-            className="group form-btn-submit"
+            className="button button-primary"
           >
             <span aria-hidden="true" className="dialog-btn-ripple-container">
               <span aria-hidden="true" className="dialog-btn-ripple" />

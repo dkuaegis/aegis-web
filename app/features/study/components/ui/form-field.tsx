@@ -16,6 +16,7 @@ interface IProps {
     field: ControllerRenderProps & {
       id: string;
       "aria-invalid": boolean;
+      "aria-required"?: boolean;
       "aria-describedby"?: string;
     },
     meta: {
@@ -35,9 +36,9 @@ const FormField = ({ name, label, required, children, rules }: IProps) => {
   const errorId = `${name}-error`;
 
   return (
-    <div>
+    <div className="field">
       <Label htmlFor={name} className="font-medium text-gray-900 text-sm">
-        {label} {required && "*"}
+        {label}
       </Label>
       <Controller
         name={name}
@@ -49,6 +50,7 @@ const FormField = ({ name, label, required, children, rules }: IProps) => {
               ...field,
               id: name,
               "aria-invalid": !!error,
+              "aria-required": required,
               "aria-describedby": error ? errorId : undefined,
             },
             {

@@ -1,12 +1,13 @@
 import { useI18n } from "@app/i18n";
 import StudyFormContent from "@study/components/study/StudyFormContent";
-import Header from "@study/components/ui/Header";
+import StudyLayout, { useStudyUiText } from "@study/components/ui/StudyLayout";
 import { useToast } from "@study/components/ui/useToast";
 import { StudyFormProvider } from "@study/hooks/useStudyForm";
 import { useNavigate } from "react-router-dom";
 
 const CreateStudyPage = () => {
   const { t } = useI18n();
+  const ui = useStudyUiText();
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -20,25 +21,25 @@ const CreateStudyPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header onBack={handleBack} />
-
-      <div className="mx-auto max-w-4xl p-6">
-        <StudyFormProvider
-          onComplete={({ mode }) => {
-            if (mode === "create") {
-              handleSuccess();
-            }
-          }}
-        >
-          <StudyFormContent
-            onCancel={handleBack}
-            submitText={t("study.form.createSubmit")}
-            submittingText={t("study.form.createSubmitting")}
-          />
-        </StudyFormProvider>
-      </div>
-    </div>
+    <StudyLayout
+      onBack={handleBack}
+      backLabel={ui("스터디 목록", "Study list")}
+      title={ui("새 스터디 개설", "Create a new study")}
+    >
+      <StudyFormProvider
+        onComplete={({ mode }) => {
+          if (mode === "create") {
+            handleSuccess();
+          }
+        }}
+      >
+        <StudyFormContent
+          onCancel={handleBack}
+          submitText={ui("스터디 개설", "Create study")}
+          submittingText={t("study.form.createSubmitting")}
+        />
+      </StudyFormProvider>
+    </StudyLayout>
   );
 };
 

@@ -19,8 +19,10 @@ const IN_APP_BROWSER_PATTERNS = [
   { pattern: "whatsapp", key: "whatsapp" },
 ] as const;
 
-export type InAppBrowserKey =
-  (typeof IN_APP_BROWSER_PATTERNS)[number]["key"];
+export type InAppBrowserKey = (typeof IN_APP_BROWSER_PATTERNS)[number]["key"];
+
+const ANDROID_EXTERNAL_BROWSER_ATTEMPT_KEY =
+  "aegis-web:android-external-browser-attempt";
 
 export function useExternalBrowser() {
   const [isInAppBrowser, setIsInAppBrowser] = useState(false);
@@ -46,10 +48,32 @@ export function useExternalBrowser() {
 
     if (isAndroid) {
       const url = new URL(currentUrl);
+      const attemptUrl = `${url.origin}${url.pathname}${url.search}`;
+
+      // If the intent falls back into this in-app browser, do not launch it again.
+      // If storage is unavailable, prefer showing the manual instructions to
+      // risking a redirect loop.
+      try {
+        if (
+          window.sessionStorage.getItem(
+            ANDROID_EXTERNAL_BROWSER_ATTEMPT_KEY
+          ) === attemptUrl
+        ) {
+          return;
+        }
+        window.sessionStorage.setItem(
+          ANDROID_EXTERNAL_BROWSER_ATTEMPT_KEY,
+          attemptUrl
+        );
+      } catch {
+        return;
+      }
+
       const intentBody = url.host + url.pathname + url.search + url.hash;
       location.href =
         `intent://${intentBody}` +
-        "#Intent;scheme=https;package=com.android.chrome;" +
+        `#Intent;scheme=${url.protocol.slice(0, -1)};` +
+        "action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;" +
         `S.browser_fallback_url=${encodeURIComponent(currentUrl)};end;`;
       return;
     }

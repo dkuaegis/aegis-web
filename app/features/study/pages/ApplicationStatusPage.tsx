@@ -1,47 +1,24 @@
 import { useI18n } from "@app/i18n";
-import fireData from "@study/assets/Fire Element Effect Animation.json";
 import ApplicationCard from "@study/components/study/ApplicationCard";
-import { Badge } from "@study/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@study/components/ui/card";
-import Header from "@study/components/ui/Header";
+import StudyLayout, {
+  StudyEmpty,
+  StudyError,
+  StudyLoading,
+  useStudyUiText,
+} from "@study/components/ui/StudyLayout";
 import { useApplications } from "@study/hooks/useOwnerApplications";
 import { useUserRole } from "@study/hooks/useUserRole";
 import ForbiddenPage from "@study/pages/ForbiddenPage";
 import { ApplicationStatus, StudyRecruitmentMethod } from "@study/types/study";
-import lottie from "lottie-web";
-import { CheckCircle, Clock, User, XCircle } from "lucide-react";
-import { useEffect, useRef } from "react";
 
 interface ApplicationStatusProps {
   studyId: number;
   onBack: () => void;
 }
 
-const FireLottie = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (!containerRef.current) return;
-    const animation = lottie.loadAnimation({
-      container: containerRef.current,
-      renderer: "svg",
-      loop: true,
-      autoplay: true,
-      animationData: fireData,
-    });
-    return () => {
-      animation.destroy();
-    };
-  }, []);
-  return <div ref={containerRef} style={{ width: 300, height: 300 }} />;
-};
-
 const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
   const { t } = useI18n();
+  const ui = useStudyUiText();
   const {
     isInstructor,
     isLoading: isRoleLoading,
@@ -62,251 +39,134 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
   const isLoading = loading || isRoleLoading;
   const isOwner = isInstructor(studyId);
 
-  if (isLoading) {
+  if (isLoading)
     return (
-      <div className="min-h-screen bg-gray-50">
-        <Header onBack={onBack} />
-        <div className="mx-auto max-w-7xl p-6">
-          <div className="flex items-center justify-center py-12">
-            <div className="text-center">
-              <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-[#3b82f6] border-b-2"></div>
-              <p className="text-gray-500">
-                {isRoleLoading
-                  ? t("study.loading.role")
-                  : t("study.loading.applicants")}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <StudyLayout onBack={onBack}>
+        <StudyLoading
+          label={
+            isRoleLoading
+              ? t("study.loading.role")
+              : t("study.loading.applicants")
+          }
+        />
+      </StudyLayout>
     );
-  }
-
-  if (roleError) {
-    console.error("사용자 권한 조회 오류:", roleError);
-  }
-
-  if (!isOwner) {
+  if (roleError) console.error("사용자 권한 조회 오류:", roleError);
+  if (!isOwner)
     return (
       <ForbiddenPage
         message={t("study.forbidden.applications")}
         onBack={onBack}
       />
     );
-  }
-
-  if (studyInfo?.recruitmentMethod === StudyRecruitmentMethod.FCFS) {
+  if (studyInfo?.recruitmentMethod === StudyRecruitmentMethod.FCFS)
     return (
-      <div className="flex min-h-screen flex-col bg-gray-50">
-        <Header onBack={onBack} />
-        <div className="flex flex-1 items-center justify-center px-6">
-          <div className="mx-auto max-w-md text-center">
-            <div className="mb-8">
-              <FireLottie />
-            </div>
-            <p className="font-medium text-gray-600 text-xl">
-              {t("study.applications.fcfsTitle")}
-            </p>
-            <p className="mt-2 text-gray-500">
-              {t("study.applications.fcfsSubtitle")}
-            </p>
-          </div>
-        </div>
-      </div>
+      <StudyLayout onBack={onBack}>
+        <StudyEmpty
+          title={t("study.applications.fcfsTitle")}
+          description={t("study.applications.fcfsSubtitle")}
+        />
+      </StudyLayout>
     );
-  }
-
-  if (error) {
+  if (error)
     return (
-      <div className="min-h-screen bg-gray-50">
-        <Header onBack={onBack} />
-        <div className="mx-auto max-w-7xl p-6">
-          <div className="flex items-center justify-center py-12">
-            <div className="text-center">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
-                <XCircle className="h-8 w-8 text-red-600" />
-              </div>
-              <p className="text-lg text-red-600">{error}</p>
-              <button
-                type="button"
-                onClick={() => window.location.reload()}
-                className="mt-4 rounded-full bg-gradient-to-br from-[#3b82f6] to-[#2563eb] px-6 py-2.5 text-white font-semibold shadow-[0_4px_20px_rgba(59,130,246,0.4),0_8px_32px_rgba(59,130,246,0.2)] transition-all duration-300 hover:-translate-y-0.5 hover:from-[#2563eb] hover:to-[#1d4ed8] hover:shadow-[0_6px_28px_rgba(59,130,246,0.5),0_12px_40px_rgba(59,130,246,0.3)]"
-              >
-                {t("common.retry")}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <StudyLayout onBack={onBack}>
+        <StudyError message={error} />
+        <button
+          className="button button-primary"
+          type="button"
+          onClick={() => window.location.reload()}
+        >
+          {t("common.retry")}
+        </button>
+      </StudyLayout>
     );
-  }
-
-  if (!studyInfo) {
+  if (!studyInfo)
     return (
-      <div className="min-h-screen bg-gray-50">
-        <Header onBack={onBack} />
-        <div className="mx-auto max-w-7xl p-6">
-          <div className="flex items-center justify-center py-12">
-            <div className="text-center">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
-                <User className="h-8 w-8 text-gray-400" />
-              </div>
-              <p className="text-gray-500 text-lg">
-                {t("study.applications.noApplicants")}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <StudyLayout onBack={onBack}>
+        <StudyEmpty title={t("study.applications.noApplicants")} />
+      </StudyLayout>
     );
-  }
-
   const filterOptions = [
     {
       key: "ALL" as const,
       label: t("study.applications.filters.all"),
       count: stats.total,
-      icon: User,
-      color: "text-[#3b82f6]",
-      bgColor: "bg-blue-50",
-      hoverColor: "hover:bg-blue-100",
-      activeColor: "bg-blue-100 text-blue-700 border-blue-200",
     },
     {
-      key: ApplicationStatus.PENDING as const,
+      key: ApplicationStatus.PENDING,
       label: t("study.applications.filters.pending"),
       count: stats.pending,
-      icon: Clock,
-      color: "text-yellow-600",
-      bgColor: "bg-yellow-50",
-      hoverColor: "hover:bg-yellow-100",
-      activeColor: "bg-yellow-100 text-yellow-700 border-yellow-200",
     },
     {
-      key: ApplicationStatus.APPROVED as const,
+      key: ApplicationStatus.APPROVED,
       label: t("study.applications.filters.approved"),
       count: stats.approved,
-      icon: CheckCircle,
-      color: "text-green-600",
-      bgColor: "bg-green-50",
-      hoverColor: "hover:bg-green-100",
-      activeColor: "bg-green-100 text-green-700 border-green-200",
     },
     {
-      key: ApplicationStatus.REJECTED as const,
+      key: ApplicationStatus.REJECTED,
       label: t("study.applications.filters.rejected"),
       count: stats.rejected,
-      icon: XCircle,
-      color: "text-red-600",
-      bgColor: "bg-red-50",
-      hoverColor: "hover:bg-red-100",
-      activeColor: "bg-red-100 text-red-700 border-red-200",
     },
-  ] as const;
-
+  ];
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header onBack={onBack} />
-
-      <div className="mx-auto max-w-7xl p-6">
-        <div className="flex flex-col gap-6 lg:flex-row">
-          <aside className="w-full rounded-lg border border-gray-200 bg-white p-6 lg:h-fit lg:w-80">
-            <h2 className="mb-4 font-semibold text-gray-900 text-lg">
-              {t("study.applications.filterTitle")}
-            </h2>
-            <div className="flex gap-2 overflow-x-auto pb-2 lg:flex-col lg:overflow-x-visible lg:pb-0">
-              {filterOptions.map((option) => {
-                const IconComponent = option.icon;
-                const isActive = selectedFilter === option.key;
-                return (
-                  <button
-                    type="button"
-                    key={option.key}
-                    onClick={() => setSelectedFilter(option.key)}
-                    className={`flex flex-shrink-0 items-center justify-between rounded-lg border p-4 transition-all duration-200 lg:w-full ${
-                      isActive
-                        ? `${option.activeColor} border-current`
-                        : `border-gray-200 ${option.hoverColor} hover:border-gray-300`
-                    }`}
-                  >
-                    <div className="flex items-center">
-                      <div
-                        className={`mr-3 flex h-10 w-10 items-center justify-center rounded-full ${
-                          isActive ? "bg-white" : option.bgColor
-                        }`}
-                      >
-                        <IconComponent className={`h-5 w-5 ${option.color}`} />
-                      </div>
-                      <span
-                        className={`font-medium ${isActive ? "text-current" : "text-gray-700"}`}
-                      >
-                        {option.label}
-                      </span>
-                    </div>
-                    <Badge
-                      variant="secondary"
-                      className={`${
-                        isActive
-                          ? "border-current bg-white text-current"
-                          : "border-gray-200 bg-gray-100 text-gray-600"
-                      }`}
-                    >
-                      {option.count}
-                    </Badge>
-                  </button>
-                );
-              })}
-            </div>
-          </aside>
-
-          <main className="flex-1">
-            <Card className="border-0 shadow-sm">
-              <CardHeader className="border-gray-100 border-b bg-white">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="font-semibold text-gray-900 text-xl">
-                    {
-                      filterOptions.find((opt) => opt.key === selectedFilter)
-                        ?.label
-                    }{" "}
-                    {t("study.applications.applicantsTitle")}
-                  </CardTitle>
-                  <Badge variant="outline" className="text-gray-600">
-                    {t("study.applications.applicantsCount", {
-                      count: filteredApplications.length,
-                    })}
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="p-6">
-                {filteredApplications.length === 0 ? (
-                  <div className="py-12 text-center">
-                    <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
-                      <User className="h-8 w-8 text-gray-400" />
-                    </div>
-                    <p className="text-gray-500 text-lg">
-                      {t("study.applications.noneMatchFilter")}
-                    </p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {filteredApplications.map((application) => (
-                      <ApplicationCard
-                        key={application.id}
-                        application={application}
-                        onStatusChange={handleStatusChange}
-                        recruitmentMethod={studyInfo.recruitmentMethod}
-                        studyId={studyId}
-                      />
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </main>
-        </div>
+    <StudyLayout
+      wide
+      onBack={onBack}
+      title={ui("지원자 관리", "Manage applications")}
+    >
+      <div className="filter-chips application-filters">
+        {filterOptions.map((option) => (
+          <button
+            key={option.key}
+            type="button"
+            className={selectedFilter === option.key ? "is-active" : ""}
+            aria-pressed={selectedFilter === option.key}
+            onClick={() => setSelectedFilter(option.key)}
+          >
+            {option.label} {option.count}
+          </button>
+        ))}
       </div>
-    </div>
+      {filteredApplications.length === 0 ? (
+        <StudyEmpty
+          title={ui(
+            "해당 상태의 지원자가 없습니다.",
+            "No applications match this status."
+          )}
+        />
+      ) : (
+        <div className="table-wrap">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th scope="col">{ui("이름", "Name")}</th>
+                <th scope="col">{ui("학번", "Student ID")}</th>
+                <th scope="col">{ui("연락처", "Contact")}</th>
+                <th scope="col">{ui("지원일", "Applied")}</th>
+                <th scope="col">{ui("상태", "Status")}</th>
+                <th scope="col">
+                  <span className="visually-hidden">
+                    {t("study.applications.card.viewApplication")}
+                  </span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredApplications.map((application) => (
+                <ApplicationCard
+                  key={application.id}
+                  application={application}
+                  onStatusChange={handleStatusChange}
+                  recruitmentMethod={studyInfo.recruitmentMethod}
+                  studyId={studyId}
+                />
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </StudyLayout>
   );
 };
-
 export default ApplicationStatusPage;
