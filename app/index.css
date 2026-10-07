@@ -102,6 +102,60 @@
   }
 }
 
+.app-loading {
+  display: grid;
+  min-height: 100vh;
+  place-content: center;
+  justify-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  color: #1e293b;
+  background:
+    radial-gradient(circle at 20% 15%, rgb(51 85 216 / 10%), transparent 36rem),
+    #f8faff;
+  text-align: center;
+}
+
+.app-loading__brand {
+  color: #2444b8;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+}
+
+.app-loading__spinner {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 3px solid rgb(51 85 216 / 16%);
+  border-top-color: #3355d8;
+  border-radius: 50%;
+  animation: app-loading-spin 800ms linear infinite;
+}
+
+.app-loading__message {
+  color: #52617a;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+@supports (min-height: 100dvh) {
+  .app-loading {
+    min-height: 100dvh;
+  }
+}
+
+@keyframes app-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-loading__spinner {
+    animation: none;
+  }
+}
+
 .auth-continue-page {
   display: grid;
   min-height: 100dvh;
