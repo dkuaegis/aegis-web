@@ -55,5 +55,18 @@ export default function App() {
 }
 
 export function HydrateFallback() {
-  return <p>Loading...</p>;
+  return (
+    <main
+      className="app-loading"
+      role="status"
+      aria-live="polite"
+      aria-busy="true"
+    >
+      <span className="app-loading__brand" aria-hidden="true">
+        AEGIS
+      </span>
+      <span className="app-loading__spinner" aria-hidden="true" />
+      <p className="app-loading__message">Loading your page...</p>
+    </main>
+  );
 }
