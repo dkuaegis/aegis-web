@@ -73,6 +73,8 @@
 }
 
 :root {
+  /* Keep rem-based sizing stable across language-specific browser defaults. */
+  font-size: 16px;
   --bg: #000000;
   --accent: #3355d8;
   --text: #f4f7ff;
