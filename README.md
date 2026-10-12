@@ -104,9 +104,21 @@ The top-level routes are declared in [`app/routes.ts`](app/routes.ts):
 
 ## Production and deployment
 
-The [`Dockerfile`](Dockerfile) builds the client bundle and serves it with Nginx. At container startup, `docker/40-runtime-config.sh` validates the required environment variables and writes `/runtime-config.js`. Configure those variables in the deployment environment; do not bake private credentials into the image.
+The [`Dockerfile`](Dockerfile) builds the client bundle and serves it with Nginx. At container startup, `docker/40-runtime-config.sh` validates the required environment variables and writes `/runtime-config.js`. Configure public runtime values in the deployment environment; do not bake private credentials into the image. The Docker build context excludes local environment files, common credential stores, private keys, and certificates, except for the safe `.env.example` template.
 
-The GitHub Actions workflow builds and publishes a `linux/arm64` image to GitHub Container Registry and triggers deployment through Coolify for `dev` and `main`. A README-only change is excluded from the workflow's path filters and does not trigger a deployment.
+The [deployment workflow](.github/workflows/build_and_deploy.yaml) builds and publishes a `linux/arm64` image to GitHub Container Registry, scans that image by digest, then triggers deployment through Coolify for `dev` and `main`. CRITICAL vulnerabilities block deployment regardless of fix availability; HIGH and lower findings are reported without blocking. The PR workflow does not publish images or deploy. A README-only change is excluded from the deployment workflow's path filters.
+
+The deployment workflow uses the `development` Environment for `dev` and the `production` Environment for `main`. Both Environments require the secret names `COOLIFY_URL`, `COOLIFY_APP_UUID`, `COOLIFY_WRITE_TOKEN`, `COOLIFY_DEPLOY_TOKEN`, and `WAF_DEPLOY_TOKEN`. Repository administrators should verify the names in GitHub Environment settings and add any missing values there. Never place secret values in source files, issues, job summaries, or logs. Deployment requests use 10-second connection and 30-second overall timeouts; failures report the HTTP status and a bounded response body with known credentials redacted. The script does not retry failed PATCH or POST requests.
+
+Pull requests targeting `main` or `dev` run `pnpm check:ci`, `pnpm check:i18n`, `pnpm test`, and `pnpm build` in the `validate` job. This workflow has read-only repository permissions and no image publishing or deployment credentials. Repository administrators must configure the `validate` status check as required for both branches.
+
+GitHub Actions references and Docker base images are pinned to immutable commit SHAs and digests. Dependabot proposes weekly GitHub Actions and Docker updates. Review the upstream release notes and changed references, inspect the image scan results, and verify the PR checks before merging updates; do not auto-approve dependency updates.
+
+Nginx in this container serves internal HTTP, so it does not set HSTS. Configure public security headers at the actual TLS termination point (such as Coolify or the WAF): `Strict-Transport-Security: max-age=31536000`, `X-Content-Type-Options: nosniff`, and `Referrer-Policy: strict-origin-when-cross-origin`. After deployment, verify the public HTTPS endpoint with:
+
+```sh
+curl -sSI https://dkuaegis.org | grep -Ei '^(strict-transport-security|x-content-type-options|referrer-policy):'
+```
 
 ## Troubleshooting a blank or persistent loading page
 
