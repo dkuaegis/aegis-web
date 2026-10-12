@@ -8,8 +8,27 @@ set -eu
 : "${VITE_ADMIN_ACCOUNT_HOLDER_KO:?VITE_ADMIN_ACCOUNT_HOLDER_KO is required}"
 : "${VITE_ADMIN_ACCOUNT_HOLDER_EN:?VITE_ADMIN_ACCOUNT_HOLDER_EN is required}"
 
-config=$(jq -cn 'env | with_entries(select(.key | startswith("VITE_")))')
-output=/usr/share/nginx/html/runtime-config.js
+config=$(jq -cn '
+  env as $env |
+  {
+    VITE_API_URL: $env.VITE_API_URL,
+    VITE_ADMIN_PHONE: $env.VITE_ADMIN_PHONE,
+    VITE_ADMIN_KAKAO: $env.VITE_ADMIN_KAKAO,
+    VITE_ADMIN_ACCOUNT_NUMBER: $env.VITE_ADMIN_ACCOUNT_NUMBER,
+    VITE_ADMIN_ACCOUNT_HOLDER_KO: $env.VITE_ADMIN_ACCOUNT_HOLDER_KO,
+    VITE_ADMIN_ACCOUNT_HOLDER_EN: $env.VITE_ADMIN_ACCOUNT_HOLDER_EN,
+    VITE_KAKAO_NOTICEROOM_URL: $env.VITE_KAKAO_NOTICEROOM_URL,
+    VITE_KAKAO_COMMUNITYROOM_URL: $env.VITE_KAKAO_COMMUNITYROOM_URL,
+    VITE_PRESIDENT_NAME_KO: $env.VITE_PRESIDENT_NAME_KO,
+    VITE_PRESIDENT_NAME_EN: $env.VITE_PRESIDENT_NAME_EN,
+    VITE_PRESIDENT_PHONE: $env.VITE_PRESIDENT_PHONE,
+    VITE_GA_MEASUREMENT_ID: $env.VITE_GA_MEASUREMENT_ID,
+    VITE_GOOGLE_ANALYTICS_ID: $env.VITE_GOOGLE_ANALYTICS_ID,
+    VITE_MIXPANEL_PROJECT_TOKEN: $env.VITE_MIXPANEL_PROJECT_TOKEN,
+    VITE_ENV: $env.VITE_ENV
+  } | with_entries(select(.value != null))
+')
+output="${RUNTIME_CONFIG_OUTPUT:-/usr/share/nginx/html/runtime-config.js}"
 temporary_output="${output}.tmp"
 printf 'window.__RUNTIME_CONFIG__ = %s;\n' "$config" > "$temporary_output"
 mv "$temporary_output" "$output"

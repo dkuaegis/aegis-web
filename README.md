@@ -44,7 +44,7 @@ Open the local URL printed by Vite. The `VITE_DEV_BYPASS_AUTH=true` option can b
 
 ## Environment variables
 
-The example values are in [`.env.example`](.env.example). Production containers generate `/runtime-config.js` at startup from the `VITE_` environment variables, allowing the same image to be configured per environment.
+The example values are in [`.env.example`](.env.example). Production containers generate `/runtime-config.js` at startup from an explicit allowlist of public `VITE_` variables, allowing the same image to be configured per environment. Development proxy settings and the development-only auth bypass are not published at runtime.
 
 The following variables are required when starting the production container:
 
@@ -59,7 +59,7 @@ The following variables are required when starting the production container:
 
 Other values in `.env.example` configure payment contact details, Kakao chat links, analytics, and the development server. Set them as needed for the features and environment in use. `VITE_API_PROXY_TARGET` configures the Vite development-server proxy and defaults to `VITE_API_URL` when unset.
 
-> **Security:** `VITE_` values are exposed to client-side code. Do not put passwords, tokens, or other private credentials in them.
+> **Security:** `VITE_` values are exposed to client-side code. Never put passwords, deployment credentials, or other private secrets in them. The runtime allowlist is limited to the API URL, displayed contact and membership information, analytics identifiers, and the public environment label. `VITE_MIXPANEL_PROJECT_TOKEN` is a client-side project identifier, not a private API credential. `VITE_API_PROXY_TARGET` is used only by the development server; `VITE_DEV_BYPASS_AUTH` is development-only and is not included in production runtime configuration.
 
 ## Available commands
 
