@@ -19,7 +19,6 @@ on:
 
 permissions:
   contents: read
-  packages: write
 
 concurrency:
   group: build-and-deploy
@@ -27,16 +26,20 @@ concurrency:
 
 jobs:
   build:
+    if: github.ref_name == 'main' || github.ref_name == 'dev'
     runs-on: ubuntu-24.04-arm
+    permissions:
+      contents: read
+      packages: write
     outputs:
       image_repository: ${{ steps.image.outputs.repository }}
       image_tag: ${{ steps.image.outputs.tag }}
-
+      image_digest: ${{ steps.digest.outputs.digest }}
     steps:
-      - name: 코드 체크아웃
-        uses: actions/checkout@v7
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
 
-      - name: 이미지 태그 계산
+      - name: Calculate image reference
         id: image
         shell: bash
         run: |
@@ -47,17 +50,17 @@ jobs:
             echo "full_tag=$image:sha-$GITHUB_SHA"
           } >> "$GITHUB_OUTPUT"
 
-      - name: Docker Buildx 설정
-        uses: docker/setup-buildx-action@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069
 
-      - name: GHCR 로그인
-        uses: docker/login-action@v4
+      - name: Log in to GHCR
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 기존 이미지 확인
+      - name: Check whether the image already exists
         id: image_exists
         shell: bash
         env:
@@ -69,10 +72,10 @@ jobs:
             echo "value=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: 이미지 빌드 및 GHCR 게시
+      - name: Build and publish image
         id: build
         if: steps.image_exists.outputs.value != 'true'
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc
         with:
           context: .
           push: true
@@ -82,7 +85,8 @@ jobs:
           cache-from: type=gha,scope=aegis-web
           cache-to: type=gha,mode=max,scope=aegis-web
 
-      - name: 이미지 digest 요약 기록
+      - name: Resolve image digest
+        id: digest
         shell: bash
         env:
           IMAGE_REPOSITORY: ${{ steps.image.outputs.repository }}
@@ -93,27 +97,76 @@ jobs:
           if [[ -n "$BUILT_DIGEST" ]]; then
             digest="$BUILT_DIGEST"
           else
-            digest="$(
-              docker buildx imagetools inspect "$FULL_TAG" --format '{{json .Manifest}}' \
-              | jq -r '.digest'
-            )"
+            digest="$(docker buildx imagetools inspect "$FULL_TAG" --format '{{.Digest}}')"
           fi
 
+          if [[ ! "$digest" =~ ^sha256:[0-9a-f]{64}$ ]]; then
+            echo "Could not resolve a valid image digest." >&2
+            exit 1
+          fi
+          echo "digest=$digest" >> "$GITHUB_OUTPUT"
+
           {
-            echo "### 컨테이너 이미지"
+            echo "### Container image"
             echo
             echo "- Package: [${PACKAGE_URL}](${PACKAGE_URL})"
             echo "- Digest: \`${IMAGE_REPOSITORY}@${digest}\`"
             echo "- Tag: \`${FULL_TAG}\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
-  deploy:
+  scan:
     needs: build
     if: github.ref_name == 'main' || github.ref_name == 'dev'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - name: Log in to GHCR for image scanning
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Report image vulnerabilities
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
+        with:
+          image-ref: ${{ needs.build.outputs.image_repository }}@${{ needs.build.outputs.image_digest }}
+          format: table
+          exit-code: "0"
+          ignore-unfixed: false
+          vuln-type: os,library
+          severity: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL
+          timeout: 10m
+
+      - name: Block images with CRITICAL vulnerabilities
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
+        with:
+          image-ref: ${{ needs.build.outputs.image_repository }}@${{ needs.build.outputs.image_digest }}
+          format: table
+          exit-code: "1"
+          ignore-unfixed: false
+          vuln-type: os,library
+          severity: CRITICAL
+          timeout: 10m
+
+  deploy:
+    needs:
+      - build
+      - scan
+    if: github.ref_name == 'main' || github.ref_name == 'dev'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
     environment: ${{ github.ref_name == 'main' && 'production' || 'development' }}
     steps:
-      - name: Coolify 이미지 배포
+      - name: Check out deployment script
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Deploy image through Coolify
         env:
           COOLIFY_URL: ${{ secrets.COOLIFY_URL }}
           COOLIFY_APP_UUID: ${{ secrets.COOLIFY_APP_UUID }}
@@ -123,27 +176,4 @@ jobs:
           IMAGE_REPOSITORY: ${{ needs.build.outputs.image_repository }}
           IMAGE_TAG: ${{ needs.build.outputs.image_tag }}
         shell: bash
-        run: |
-          : "${COOLIFY_URL:?GitHub Environment secret COOLIFY_URL을 설정해 주세요}"
-          : "${COOLIFY_APP_UUID:?GitHub Environment secret COOLIFY_APP_UUID를 설정해 주세요}"
-          : "${COOLIFY_WRITE_TOKEN:?GitHub Environment secret COOLIFY_WRITE_TOKEN을 설정해 주세요}"
-          : "${COOLIFY_DEPLOY_TOKEN:?GitHub Environment secret COOLIFY_DEPLOY_TOKEN을 설정해 주세요}"
-          : "${WAF_DEPLOY_TOKEN:?GitHub Environment secret WAF_DEPLOY_TOKEN을 설정해 주세요}"
-
-          api_url="${COOLIFY_URL%/}/api/v1"
-          image_update="$(jq -n \
-            --arg name "$IMAGE_REPOSITORY" \
-            --arg tag "$IMAGE_TAG" \
-            '{docker_registry_image_name: $name, docker_registry_image_tag: $tag}')"
-
-          curl --fail --silent --show-error --output /dev/null \
-            --request PATCH "$api_url/applications/$COOLIFY_APP_UUID" \
-            --header "Authorization: Bearer $COOLIFY_WRITE_TOKEN" \
-            --header "X-Aegis-Deploy-Token: $WAF_DEPLOY_TOKEN" \
-            --header 'Content-Type: application/json' \
-            --data "$image_update"
-
-          curl --fail --silent --show-error --output /dev/null \
-            --request POST "$api_url/deploy?uuid=$COOLIFY_APP_UUID" \
-            --header "Authorization: Bearer $COOLIFY_DEPLOY_TOKEN" \
-            --header "X-Aegis-Deploy-Token: $WAF_DEPLOY_TOKEN"
+        run: bash scripts/deploy-coolify.sh

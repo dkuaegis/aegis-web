@@ -1,4 +1,4 @@
-FROM node:24.21.0-bookworm-slim AS builder
+FROM node:24.21.0-bookworm-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20 AS builder
 
 WORKDIR /app
 
@@ -12,7 +12,7 @@ COPY . .
 
 RUN pnpm build
 
-FROM nginx:1.30.5-alpine-slim
+FROM nginx:1.30.5-alpine-slim@sha256:32463212baf0e7d91aded2e9b843a4f2b9e017804b8c9d5bae7b51dcef64389c
 
 RUN apk add --no-cache jq
 
