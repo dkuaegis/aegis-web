@@ -41,16 +41,11 @@ export const StudentDepartment = forwardRef<
     ? t(departmentLabelKey(field.value))
     : t("join.personalInfo.departmentPlaceholder");
 
-  // 학과명이 길어 한 줄을 넘기므로 말줄임표로 처리합니다.
-  const commandItemStyle = {
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-  };
-
   return (
     <div className="space-y-2" {...props} ref={ref}>
-      <Label htmlFor="department">{t("join.personalInfo.departmentLabel")}</Label>
+      <Label htmlFor="department">
+        {t("join.personalInfo.departmentLabel")}
+      </Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <div className="relative">
@@ -63,12 +58,17 @@ export const StudentDepartment = forwardRef<
                 !field.value && "text-muted-foreground"
               )}
             >
-              {selectedLabel}
+              <span className="min-w-0 flex-1 truncate text-left">
+                {selectedLabel}
+              </span>
               <ChevronsUpDown className="size-4 opacity-50" />
             </Button>
           </div>
         </PopoverTrigger>
-        <PopoverContent className="w-[400px] p-0">
+        <PopoverContent
+          align="start"
+          className="w-[var(--radix-popover-trigger-width)] max-w-[calc(100vw-2rem)] p-0"
+        >
           <Command>
             <CommandInput
               placeholder={t("join.personalInfo.departmentSearchPlaceholder")}
@@ -95,14 +95,16 @@ export const StudentDepartment = forwardRef<
                         field.onChange(departmentValue as Department);
                         setOpen(false);
                       }}
-                      style={commandItemStyle}
+                      className="items-start"
                     >
                       {field.value === departmentValue ? (
-                        <Check className="mr-2 h-4 w-4" />
+                        <Check className="mt-0.5 mr-2 h-4 w-4" />
                       ) : (
-                        <div className="mr-2 h-4 w-4" />
+                        <div className="mt-0.5 mr-2 h-4 w-4 shrink-0" />
                       )}
-                      {label}
+                      <span className="min-w-0 flex-1 whitespace-normal break-words">
+                        {label}
+                      </span>
                     </CommandItem>
                   );
                 })}
