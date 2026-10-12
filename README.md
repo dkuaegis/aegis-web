@@ -68,8 +68,10 @@ Other values in `.env.example` configure payment contact details, Kakao chat lin
 | `pnpm dev` | Start the local development server |
 | `pnpm build` | Type-check and create the production build in `build/client` |
 | `pnpm preview` | Preview the production build locally (run `pnpm build` first) |
-| `pnpm check:ci` | Run Biome checks without modifying files |
-| `pnpm lint` | Run Biome lint checks |
+| `pnpm check:ci` | Run read-only Biome checks without modifying files |
+| `pnpm check:i18n` | Validate locale keys, shapes, placeholders, and literal translation references |
+| `pnpm test` | Run unit and integration tests with Vitest |
+| `pnpm lint` | Run read-only Biome lint checks |
 | `pnpm format` | Format files in place |
 | `pnpm check` | Run Biome checks and apply fixes in place |
 
