@@ -72,8 +72,7 @@ export const pages = {
   contact: {
     meta: { title: "Contact - Aegis", description: "Aegis 문의하기" },
     title: "문의",
-    subtitle:
-      "더 궁금한 질문이 있거나 후원을 원하신다면 언제든 연락해 주세요!",
+    subtitle: "더 궁금한 질문이 있거나 후원을 원하신다면 언제든 연락해 주세요!",
     presidentLabel: "회장",
     copyPhone: "전화번호 복사",
   },

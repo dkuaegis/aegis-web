@@ -1,6 +1,9 @@
 export const pages = {
   faq: {
-    meta: { title: "FAQ - Aegis", description: "Aegis frequently asked questions" },
+    meta: {
+      title: "FAQ - Aegis",
+      description: "Aegis frequently asked questions",
+    },
     title: "Frequently asked questions",
     subtitle: "Here is what people usually want to know before they join.",
     items: {
@@ -52,8 +55,7 @@ export const pages = {
     notice: {
       targetIconAlt: "Profile",
       targetLabel: "Who can apply:",
-      targetValue:
-        " Dankook University students — new, current, or on leave",
+      targetValue: " Dankook University students — new, current, or on leave",
       targetSub:
         "Your year and major do not matter. If you are interested in security or development, you are welcome!",
       emailIconAlt: "Email",
@@ -136,8 +138,7 @@ export const pages = {
       ],
     },
     safariHint: {
-      kakaotalk:
-        "Or long-press the link to copy it, then paste it into Safari",
+      kakaotalk: "Or long-press the link to copy it, then paste it into Safari",
     },
   },
 } as const;

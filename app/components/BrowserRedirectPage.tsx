@@ -25,16 +25,12 @@ const BrowserRedirectPage = () => {
   }, [openInDefaultBrowser]);
 
   const guided = GUIDED_BROWSERS.find((key) => key === browserKey);
-  const steps = tList(
-    `pages.browserRedirect.steps.${guided ?? "fallback"}`
-  );
+  const steps = tList(`pages.browserRedirect.steps.${guided ?? "fallback"}`);
   const safariHint =
     guided === "kakaotalk"
       ? t("pages.browserRedirect.safariHint.kakaotalk")
       : null;
-  const browserName = t(
-    `pages.browserRedirect.names.${browserKey ?? "inApp"}`
-  );
+  const browserName = t(`pages.browserRedirect.names.${browserKey ?? "inApp"}`);
 
   return (
     <div className="wrap-break-word mx-10 flex h-screen flex-col items-center justify-center space-y-4">

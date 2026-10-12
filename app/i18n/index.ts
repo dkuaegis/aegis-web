@@ -3,9 +3,9 @@ export { LanguageToggle } from "./LanguageToggle";
 export { getLanguage, setLanguage, t, tList } from "./store";
 export {
   DEFAULT_LANGUAGE,
+  isLanguage,
   LANGUAGE_LABELS,
   LANGUAGE_NAMES,
   LANGUAGES,
-  isLanguage,
   type Language,
 } from "./types";

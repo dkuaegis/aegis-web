@@ -29,8 +29,7 @@ export const join = {
         articles: {
           "1": {
             title: "Name",
-            content:
-              "This organization is named Aegis (hereafter \"the Club\").",
+            content: 'This organization is named Aegis (hereafter "the Club").',
           },
           "2": {
             title: "Purpose",
@@ -165,7 +164,8 @@ export const join = {
     studentIdError: "Your student ID must be 8 digits starting with 32",
     residentNumberLabel: "Resident registration number",
     birthDatePlaceholder: "Birth date (YYMMDD)",
-    residentNumberError: "That resident registration number does not look valid",
+    residentNumberError:
+      "That resident registration number does not look valid",
     departmentLabel: "Department",
     departmentPlaceholder: "Select your department",
     departmentSearchPlaceholder: "Search for your department",
@@ -183,8 +183,7 @@ export const join = {
     },
     validation: {
       birthDateLength: "Enter your birth date as 6 digits (YYMMDD)",
-      birthDateInvalid:
-        "That birth date is not valid (month 1-12, day 1-31)",
+      birthDateInvalid: "That birth date is not valid (month 1-12, day 1-31)",
       genderDigit: "This digit must be a number from 1 to 8.",
       studentIdLength: "Your student ID must be 8 digits",
       studentIdFormat: "Your student ID must be 8 digits starting with 32",
@@ -240,8 +239,7 @@ export const join = {
     couponLoading: "Loading your coupons.",
     couponLoadError: "We could not load your coupons.",
     completeMessage: "Your payment is complete",
-    loadError:
-      "We could not load your payment status. Please try again later.",
+    loadError: "We could not load your payment status. Please try again later.",
     account: {
       sectionLabel: "Bank transfer details",
       accountNumber: "Account",

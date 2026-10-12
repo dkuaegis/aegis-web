@@ -24,7 +24,7 @@ export function LanguageToggle({
   const activeIndex = LANGUAGES.indexOf(language);
 
   return (
-    <div
+    <fieldset
       className={[
         "language-toggle",
         size === "compact" ? "is-compact" : "",
@@ -32,9 +32,10 @@ export function LanguageToggle({
       ]
         .filter(Boolean)
         .join(" ")}
-      role="group"
-      aria-label={t("common.languageToggleLabel")}
     >
+      <legend className="language-toggle-sr">
+        {t("common.languageToggleLabel")}
+      </legend>
       <span
         className="language-toggle-thumb"
         aria-hidden="true"
@@ -58,6 +59,6 @@ export function LanguageToggle({
           <span className="language-toggle-sr">{LANGUAGE_NAMES[code]}</span>
         </button>
       ))}
-    </div>
+    </fieldset>
   );
 }

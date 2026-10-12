@@ -104,8 +104,7 @@ export const useStudyApplication = ({
         });
       } else {
         toast({
-          description:
-            t("study.application.toast.appliedForm"),
+          description: t("study.application.toast.appliedForm"),
         });
       }
       setApplicationText("");
