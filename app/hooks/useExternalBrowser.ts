@@ -24,18 +24,51 @@ export type InAppBrowserKey = (typeof IN_APP_BROWSER_PATTERNS)[number]["key"];
 const ANDROID_EXTERNAL_BROWSER_ATTEMPT_KEY =
   "aegis-web:android-external-browser-attempt";
 
+export function detectInAppBrowser(userAgent: string): InAppBrowserKey | null {
+  const normalizedUserAgent = userAgent.toLowerCase();
+  return (
+    IN_APP_BROWSER_PATTERNS.find(({ pattern }) =>
+      normalizedUserAgent.includes(pattern)
+    )?.key ?? null
+  );
+}
+
+export function createAndroidIntentUrl(
+  currentUrl: string,
+  storage: Pick<Storage, "getItem" | "setItem">
+): string | null {
+  try {
+    const url = new URL(currentUrl);
+    const attemptUrl = `${url.origin}${url.pathname}${url.search}`;
+
+    // If the intent falls back into this in-app browser, do not launch it again.
+    if (storage.getItem(ANDROID_EXTERNAL_BROWSER_ATTEMPT_KEY) === attemptUrl) {
+      return null;
+    }
+    storage.setItem(ANDROID_EXTERNAL_BROWSER_ATTEMPT_KEY, attemptUrl);
+
+    const intentBody = url.host + url.pathname + url.search + url.hash;
+    return (
+      `intent://${intentBody}` +
+      `#Intent;scheme=${url.protocol.slice(0, -1)};` +
+      "action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;" +
+      `S.browser_fallback_url=${encodeURIComponent(currentUrl)};end;`
+    );
+  } catch {
+    // If storage is unavailable, prefer manual instructions to a redirect loop.
+    return null;
+  }
+}
+
 export function useExternalBrowser() {
   const [isInAppBrowser, setIsInAppBrowser] = useState(false);
   const [browserKey, setBrowserKey] = useState<InAppBrowserKey | null>(null);
 
   useEffect(() => {
-    const ua = navigator.userAgent.toLowerCase();
-    const detected = IN_APP_BROWSER_PATTERNS.find(({ pattern }) =>
-      ua.includes(pattern)
-    );
+    const detected = detectInAppBrowser(navigator.userAgent);
 
     setIsInAppBrowser(Boolean(detected));
-    setBrowserKey(detected?.key ?? null);
+    setBrowserKey(detected);
   }, []);
 
   const openInDefaultBrowser = useCallback(() => {
@@ -47,34 +80,15 @@ export function useExternalBrowser() {
     const currentUrl = window.location.href;
 
     if (isAndroid) {
-      const url = new URL(currentUrl);
-      const attemptUrl = `${url.origin}${url.pathname}${url.search}`;
-
-      // If the intent falls back into this in-app browser, do not launch it again.
-      // If storage is unavailable, prefer showing the manual instructions to
-      // risking a redirect loop.
       try {
-        if (
-          window.sessionStorage.getItem(
-            ANDROID_EXTERNAL_BROWSER_ATTEMPT_KEY
-          ) === attemptUrl
-        ) {
-          return;
-        }
-        window.sessionStorage.setItem(
-          ANDROID_EXTERNAL_BROWSER_ATTEMPT_KEY,
-          attemptUrl
+        const intentUrl = createAndroidIntentUrl(
+          currentUrl,
+          window.sessionStorage
         );
+        if (intentUrl) location.href = intentUrl;
       } catch {
-        return;
+        // If storage is unavailable, prefer manual instructions to a redirect loop.
       }
-
-      const intentBody = url.host + url.pathname + url.search + url.hash;
-      location.href =
-        `intent://${intentBody}` +
-        `#Intent;scheme=${url.protocol.slice(0, -1)};` +
-        "action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;" +
-        `S.browser_fallback_url=${encodeURIComponent(currentUrl)};end;`;
       return;
     }
 
