@@ -142,7 +142,8 @@ export const study = {
       confirmTitle: "스터디 신청 확인",
       confirmDescription: "정말로 신청하시겠습니까?",
       confirmSubmit: "신청",
-      recruitingHint: "선착순으로 모집되며, 정원이 마감되면 자동으로 마감됩니다.",
+      recruitingHint:
+        "선착순으로 모집되며, 정원이 마감되면 자동으로 마감됩니다.",
       closedHint: "모집이 마감되었습니다.",
     },
     toast: {

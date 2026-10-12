@@ -8,7 +8,12 @@ const EmptyState: React.FC<EmptyStateProps> = ({ type }) => {
 
   return (
     <div className="empty-state">
-      <img src={cartIcon} alt="" aria-hidden="true" className="empty-state-image" />
+      <img
+        src={cartIcon}
+        alt=""
+        aria-hidden="true"
+        className="empty-state-image"
+      />
       <p className="empty-state-text">{t(`mypage.emptyState.${type}`)}</p>
     </div>
   );

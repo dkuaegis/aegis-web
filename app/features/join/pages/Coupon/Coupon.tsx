@@ -39,9 +39,7 @@ const Coupon = ({ onClose, coupons, onCouponsChange }: CouponProps) => {
     } catch (error: unknown) {
       console.error("제출 중 오류 발생:", error);
       toast.error(
-        error instanceof Error
-          ? error.message
-          : t("join.coupon.applyFailure")
+        error instanceof Error ? error.message : t("join.coupon.applyFailure")
       );
       Analytics.safeTrack("Coupon_Apply_Failed", {
         category: "Payment",

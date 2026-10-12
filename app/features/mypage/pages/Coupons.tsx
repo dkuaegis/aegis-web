@@ -56,13 +56,16 @@ const Coupons: React.FC = () => {
         setIsLoading(false);
       }
     })();
-  }, []);
+  }, [t]);
 
   // 로딩 중일 때는 아무것도 렌더링하지 않음
   if (isLoading) {
     return (
       <div>
-        <Header leftChild={t("mypage.nav.back")} title={t("mypage.coupons.title")} />
+        <Header
+          leftChild={t("mypage.nav.back")}
+          title={t("mypage.coupons.title")}
+        />
         <TabNavigation />
       </div>
     );
@@ -77,7 +80,10 @@ const Coupons: React.FC = () => {
 
   return (
     <div>
-      <Header leftChild={t("mypage.nav.back")} title={t("mypage.coupons.title")} />
+      <Header
+        leftChild={t("mypage.nav.back")}
+        title={t("mypage.coupons.title")}
+      />
       <TabNavigation />
       {couponItems.length === 0 ? (
         <EmptyState type="coupon" />

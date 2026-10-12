@@ -30,7 +30,9 @@ export const StudentId = forwardRef<HTMLInputElement, StudentIdProps>(
 
     return (
       <div className="space-y-2">
-        <Label htmlFor="studentId">{t("join.personalInfo.studentIdLabel")}</Label>
+        <Label htmlFor="studentId">
+          {t("join.personalInfo.studentIdLabel")}
+        </Label>
         <Input
           type="text"
           id="studentId"

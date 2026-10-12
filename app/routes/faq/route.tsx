@@ -25,7 +25,6 @@ function FAQ() {
   const { t } = useI18n();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-
   const toggleFaq = (index: number) => {
     setOpenFaq(openFaq === index ? null : index);
   };

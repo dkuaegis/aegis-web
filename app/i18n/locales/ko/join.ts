@@ -236,7 +236,8 @@ export const join = {
     couponLoading: "쿠폰을 불러오는 중입니다.",
     couponLoadError: "쿠폰을 불러오지 못했습니다.",
     completeMessage: "납부가 완료됐어요",
-    loadError: "결제 상태를 불러오는 데 실패했습니다. 나중에 다시 시도해주세요.",
+    loadError:
+      "결제 상태를 불러오는 데 실패했습니다. 나중에 다시 시도해주세요.",
     account: {
       sectionLabel: "입금 계좌 정보",
       accountNumber: "입금 계좌",

@@ -1,12 +1,12 @@
 import { en } from "./locales/en";
 import { ko } from "./locales/ko";
-import { translate, translateList, type TranslationVars } from "./resolve";
+import { type TranslationVars, translate, translateList } from "./resolve";
 import {
   DEFAULT_LANGUAGE,
+  type Dictionary,
   isLanguage,
   LANGUAGE_HTML_LANG,
   LANGUAGE_STORAGE_KEY,
-  type Dictionary,
   type Language,
 } from "./types";
 
@@ -35,7 +35,8 @@ function detectInitialLanguage(): Language {
   // First visit: a browser that is not asking for Korean is most likely an
   // international visitor, so start them in English. Their first explicit
   // choice is remembered from then on.
-  const preferred = window.navigator.languages?.[0] ?? window.navigator.language;
+  const preferred =
+    window.navigator.languages?.[0] ?? window.navigator.language;
   if (preferred && !preferred.toLowerCase().startsWith("ko")) return "en";
 
   return DEFAULT_LANGUAGE;
@@ -45,7 +46,9 @@ export function getLanguage(): Language {
   return currentLanguage;
 }
 
-export function getDictionary(language: Language = currentLanguage): Dictionary {
+export function getDictionary(
+  language: Language = currentLanguage
+): Dictionary {
   return DICTIONARIES[language];
 }
 

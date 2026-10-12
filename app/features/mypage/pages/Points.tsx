@@ -33,7 +33,10 @@ const Points: React.FC = () => {
   if (isLoading) {
     return (
       <div>
-        <Header leftChild={t("mypage.nav.back")} title={t("mypage.points.title")} />
+        <Header
+          leftChild={t("mypage.nav.back")}
+          title={t("mypage.points.title")}
+        />
       </div>
     );
   }
@@ -61,7 +64,10 @@ const Points: React.FC = () => {
 
   return (
     <div>
-      <Header leftChild={t("mypage.nav.back")} title={t("mypage.points.title")} />
+      <Header
+        leftChild={t("mypage.nav.back")}
+        title={t("mypage.points.title")}
+      />
       {transactions.length === 0 && balance === 0 ? (
         <EmptyState type="point" />
       ) : (

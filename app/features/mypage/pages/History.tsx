@@ -1,4 +1,4 @@
-import { useI18n, getLanguage } from "@app/i18n";
+import { getLanguage, useI18n } from "@app/i18n";
 import { useEffect, useState } from "react";
 import { getMyDrawHistory } from "../api/PointDrawMe";
 import Card from "../components/Card";
