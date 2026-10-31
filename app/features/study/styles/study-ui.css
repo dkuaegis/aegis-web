@@ -532,7 +532,6 @@
     sans-serif;
   letter-spacing: 0.35em;
 }
-/* biome-ignore lint/style/noDescendingSpecificity: These rules target separate study components. */
 .study .repeat-fields > div {
   display: grid;
   grid-template-columns: 2.6rem 1fr auto;
@@ -1352,7 +1351,6 @@
 .study .study-card dt {
   flex: none;
 }
-/* biome-ignore lint/style/noDescendingSpecificity: Cards and members have separate parent classes. */
 .study .member-card > div,
 .study .study-card dd {
   min-width: 0;

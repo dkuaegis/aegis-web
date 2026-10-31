@@ -2,10 +2,10 @@ import { useI18n } from "@app/i18n";
 import { useCreateStudyMutation } from "@study/api/createStudyApi";
 import {
   StudyCategory,
-  studyCategoryLabelKey,
   StudyLevel,
-  studyLevelLabelKey,
   StudyRecruitmentMethod,
+  studyCategoryLabelKey,
+  studyLevelLabelKey,
 } from "@study/types/study";
 import type React from "react";
 import { createContext, useContext } from "react";

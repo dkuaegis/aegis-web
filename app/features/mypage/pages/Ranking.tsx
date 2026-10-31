@@ -34,7 +34,10 @@ const Ranking: React.FC = () => {
 
   return (
     <div>
-      <Header leftChild={t("mypage.nav.back")} title={t("mypage.ranking.title")} />
+      <Header
+        leftChild={t("mypage.nav.back")}
+        title={t("mypage.ranking.title")}
+      />
       <RankingInfo totalParticipants={info.totalParticipants} />
       <RankingList items={top10} />
       {me && (

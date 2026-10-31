@@ -11,7 +11,9 @@ import { isValidBirthDate } from "./PersonalInfo.helper";
 export const personalInfoSchema = z.object({
   birthDate: z
     .string()
-    .length(6, { error: () => t("join.personalInfo.validation.birthDateLength") })
+    .length(6, {
+      error: () => t("join.personalInfo.validation.birthDateLength"),
+    })
     .refine(isValidBirthDate, {
       error: () => t("join.personalInfo.validation.birthDateInvalid"),
     }),
@@ -20,7 +22,9 @@ export const personalInfoSchema = z.object({
   }),
   studentId: z
     .string()
-    .length(8, { error: () => t("join.personalInfo.validation.studentIdLength") })
+    .length(8, {
+      error: () => t("join.personalInfo.validation.studentIdLength"),
+    })
     .refine((val) => /^32\d{6}$/.test(val), {
       error: () => t("join.personalInfo.validation.studentIdFormat"),
     }),

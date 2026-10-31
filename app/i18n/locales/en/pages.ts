@@ -1,7 +1,4 @@
 export const pages = {
-
-
-
   authContinue: {
     checking: "Checking your sign-in details...",
     failed: "We could not confirm whether you are signed in.",
@@ -54,8 +51,7 @@ export const pages = {
       ],
     },
     safariHint: {
-      kakaotalk:
-        "Or long-press the link to copy it, then paste it into Safari",
+      kakaotalk: "Or long-press the link to copy it, then paste it into Safari",
     },
   },
 } as const;

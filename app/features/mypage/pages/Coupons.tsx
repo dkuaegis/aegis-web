@@ -16,7 +16,7 @@ const Coupons: React.FC = () => {
   const [couponItems, setCouponItems] = useState<
     Array<{
       id: number;
-      price: string;
+      discountAmount: number;
       desc: string;
       status: CouponCardProps["status"];
     }>
@@ -42,9 +42,7 @@ const Coupons: React.FC = () => {
         const data = await getCoupons(); // [{ issuedCouponId, couponName, discountAmount, isValid }, ...]
         const mapped = (data ?? []).map((c) => ({
           id: c.issuedCouponId,
-          price: t("mypage.coupons.priceFormat", {
-            amount: c.discountAmount.toLocaleString(),
-          }),
+          discountAmount: c.discountAmount,
           desc: c.couponName,
           status: (c.isValid ? "UNUSED" : "USED") as CouponCardProps["status"],
         }));
@@ -62,7 +60,10 @@ const Coupons: React.FC = () => {
   if (isLoading) {
     return (
       <div>
-        <Header leftChild={t("mypage.nav.back")} title={t("mypage.coupons.title")} />
+        <Header
+          leftChild={t("mypage.nav.back")}
+          title={t("mypage.coupons.title")}
+        />
         <TabNavigation />
       </div>
     );
@@ -77,7 +78,10 @@ const Coupons: React.FC = () => {
 
   return (
     <div>
-      <Header leftChild={t("mypage.nav.back")} title={t("mypage.coupons.title")} />
+      <Header
+        leftChild={t("mypage.nav.back")}
+        title={t("mypage.coupons.title")}
+      />
       <TabNavigation />
       {couponItems.length === 0 ? (
         <EmptyState type="coupon" />
@@ -106,7 +110,9 @@ const Coupons: React.FC = () => {
               <Card
                 key={item.id}
                 type="coupon"
-                price={item.price}
+                price={t("mypage.coupons.priceFormat", {
+                  amount: item.discountAmount.toLocaleString(),
+                })}
                 desc={item.desc}
                 status={item.status}
               />

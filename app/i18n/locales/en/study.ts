@@ -1,5 +1,4 @@
 export const study = {
-
   loading: {
     general: "Loading...",
     role: "Checking your permissions...",
@@ -11,13 +10,13 @@ export const study = {
     applicationShort: "Loading...",
   },
 
-
   forbidden: {
     default: "You do not have permission to view this.",
     edit: "You do not have permission to edit this study.",
     members: "You do not have permission to manage this study's members.",
     attendance: "You do not have permission to manage this study's attendance.",
-    applications: "You do not have permission to view this study's applications.",
+    applications:
+      "You do not have permission to view this study's applications.",
   },
 
   invalidStudyId: "That study ID is not valid.",

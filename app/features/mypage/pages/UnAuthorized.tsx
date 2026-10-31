@@ -18,7 +18,9 @@ const UnAuthorized = () => {
         <br />
         {t("mypage.unauthorized.titleLine3")}
       </h1>
-      <p className="login-unauth-desc">{t("mypage.unauthorized.description")}</p>
+      <p className="login-unauth-desc">
+        {t("mypage.unauthorized.description")}
+      </p>
       <div className="button-group-section">
         <Button
           text={t("mypage.unauthorized.join")}

@@ -1,5 +1,4 @@
 export const study = {
-
   loading: {
     general: "로딩 중...",
     role: "권한 정보를 불러오는 중...",
@@ -10,7 +9,6 @@ export const study = {
     application: "지원서를 불러오는 중...",
     applicationShort: "불러오는 중...",
   },
-
 
   forbidden: {
     default: "권한이 없습니다.",

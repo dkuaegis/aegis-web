@@ -1,7 +1,4 @@
 export const pages = {
-
-
-
   authContinue: {
     checking: "로그인 정보를 확인하고 있습니다.",
     failed: "로그인 상태를 확인하지 못했습니다.",

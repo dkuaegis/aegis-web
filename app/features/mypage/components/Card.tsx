@@ -16,7 +16,11 @@ const Card: React.FC<CardProps> = (props) => {
     const isPlus = props.amount > 0;
     return (
       <div className="card point-card">
-        <img src={coinIcon} alt={t("mypage.points.coinAlt")} className="card-icon" />
+        <img
+          src={coinIcon}
+          alt={t("mypage.points.coinAlt")}
+          className="card-icon"
+        />
         <div className="card-content">
           <div className="card-title">{props.title}</div>
           <div className="card-date">{props.date}</div>

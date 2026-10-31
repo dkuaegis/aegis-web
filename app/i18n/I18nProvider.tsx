@@ -7,7 +7,7 @@ import {
   useState,
 } from "react";
 import { ko } from "./locales/ko";
-import { translate, translateList, type TranslationVars } from "./resolve";
+import { type TranslationVars, translate, translateList } from "./resolve";
 import {
   getDictionary,
   getLanguage,

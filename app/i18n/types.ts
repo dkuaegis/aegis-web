@@ -35,10 +35,7 @@ export function isLanguage(value: unknown): value is Language {
  * Everything is `readonly` because the locale files are declared `as const`,
  * which both freezes them and lets editors autocomplete real keys.
  */
-export type DictionaryValue =
-  | string
-  | readonly string[]
-  | Dictionary;
+export type DictionaryValue = string | readonly string[] | Dictionary;
 
 export interface Dictionary {
   readonly [key: string]: DictionaryValue;

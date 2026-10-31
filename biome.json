@@ -46,6 +46,9 @@
       "nursery": {
         "useTailwindSortedClasses": "off"
       },
+      "style": {
+        "noDescendingSpecificity": "off"
+      },
       "suspicious": {
         "noArrayIndexKey": "warn",
         "noDuplicateProperties": "warn"

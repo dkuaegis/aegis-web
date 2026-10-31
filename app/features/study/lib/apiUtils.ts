@@ -12,7 +12,8 @@ export function handleHTTPError(
 ): never {
   if (error instanceof ApiError) {
     const status = error.status;
-    const key = (status && errorMessageKeys[status]) || errorMessageKeys.default;
+    const key =
+      (status && errorMessageKeys[status]) || errorMessageKeys.default;
     throw new Error(t(key));
   }
   if (error instanceof Error) {
