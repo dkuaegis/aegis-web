@@ -23,6 +23,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
     isInstructor,
     isLoading: isRoleLoading,
     error: roleError,
+    refetch: refetchRole,
   } = useUserRole();
 
   const {
@@ -53,7 +54,16 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
         />
       </StudyLayout>
     );
-  if (roleError) console.error("사용자 권한 조회 오류:", roleError);
+  if (roleError) {
+    return (
+      <StudyLayout onBack={onBack}>
+        <StudyError
+          message={t("study.errors.roleFetch")}
+          onRetry={refetchRole}
+        />
+      </StudyLayout>
+    );
+  }
   if (!isOwner)
     return (
       <ForbiddenPage

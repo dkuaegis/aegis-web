@@ -44,6 +44,7 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
     isInstructor,
     isLoading: isRoleLoading,
     error: roleError,
+    refetch: refetchRole,
   } = useUserRole();
 
   // 권한 확인 - 강사만 스터디를 수정할 수 있음
@@ -113,8 +114,14 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
   }
 
   if (roleError) {
-    console.error("사용자 권한 조회 오류:", roleError);
-    // 권한 오류 시에도 기본 권한으로 계속 진행
+    return (
+      <StudyLayout onBack={onBack}>
+        <StudyError
+          message={t("study.errors.roleFetch")}
+          onRetry={refetchRole}
+        />
+      </StudyLayout>
+    );
   }
 
   // 권한이 없는 경우

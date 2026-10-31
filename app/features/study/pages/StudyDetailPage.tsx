@@ -42,6 +42,7 @@ const StudyDetailPage = ({
     isParticipant,
     isLoading: isRoleLoading,
     error: roleError,
+    refetch: refetchRole,
   } = useUserRole();
 
   const {
@@ -85,7 +86,14 @@ const StudyDetailPage = ({
   }
 
   if (roleError) {
-    console.error("사용자 권한 조회 오류:", roleError);
+    return (
+      <StudyLayout onBack={onBack}>
+        <StudyError
+          message={t("study.errors.roleFetch")}
+          onRetry={refetchRole}
+        />
+      </StudyLayout>
+    );
   }
 
   if (isError) {

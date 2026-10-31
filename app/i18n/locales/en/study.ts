@@ -197,6 +197,7 @@ export const study = {
   },
 
   errors: {
+    roleFetch: "We couldn't load your study permissions.",
     notInstructor: "You are not the leader of this study.",
     notMember: "You are not a member of this study.",
     studyNotFound: "We could not find that study.",

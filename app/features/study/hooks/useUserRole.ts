@@ -8,13 +8,18 @@ interface UserRoleResult {
   isParticipant: (studyId: number) => boolean;
   isApplicant: (studyId: number) => boolean;
   hasApplied: (studyId: number) => boolean;
-  canManageStudy: (studyId: number) => boolean;
   isLoading: boolean;
   error: Error | null;
+  refetch: () => void;
 }
 
 export const useUserRole = (): UserRoleResult => {
-  const { data: userRoles, isLoading, error } = useUserStudyRolesQuery();
+  const {
+    data: userRoles,
+    isLoading,
+    error,
+    refetch,
+  } = useUserStudyRolesQuery();
 
   const getUserRole = useMemo(() => {
     return (studyId: number): UserRole => {
@@ -65,20 +70,14 @@ export const useUserRole = (): UserRoleResult => {
     };
   }, [userRoles]);
 
-  const canManageStudy = useMemo(() => {
-    return (studyId: number): boolean => {
-      return isInstructor(studyId);
-    };
-  }, [isInstructor]);
-
   return {
     getUserRole,
     isInstructor,
     isParticipant,
     isApplicant,
     hasApplied,
-    canManageStudy,
     isLoading,
     error: error as Error | null,
+    refetch: () => void refetch(),
   };
 };

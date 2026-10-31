@@ -193,6 +193,7 @@ export const study = {
   },
 
   errors: {
+    roleFetch: "권한 정보를 불러오지 못했습니다.",
     notInstructor: "스터디장이 아닙니다.",
     notMember: "스터디원이 아닙니다.",
     studyNotFound: "스터디를 찾을 수 없습니다.",

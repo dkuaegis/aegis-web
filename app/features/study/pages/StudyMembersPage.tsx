@@ -33,6 +33,7 @@ export default function StudyMembersPage({
     isInstructor,
     isLoading: isRoleLoading,
     error: roleError,
+    refetch: refetchRole,
   } = useUserRole();
 
   const [members, setMembers] = useState<StudyMember[]>([]);
@@ -92,7 +93,14 @@ export default function StudyMembersPage({
   }
 
   if (roleError) {
-    console.error("사용자 권한 조회 오류:", roleError);
+    return (
+      <StudyLayout onBack={onBack}>
+        <StudyError
+          message={t("study.errors.roleFetch")}
+          onRetry={refetchRole}
+        />
+      </StudyLayout>
+    );
   }
 
   if (!isOwner) {

@@ -39,6 +39,7 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
     isInstructor,
     isLoading: isRoleLoading,
     error: roleError,
+    refetch: refetchRole,
   } = useUserRole();
 
   const [isGenerating, setIsGenerating] = useState(false);
@@ -95,7 +96,16 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
         <StudyLoading label={t("study.loading.role")} />
       </StudyLayout>
     );
-  if (roleError) console.error("사용자 권한 조회 오류:", roleError);
+  if (roleError) {
+    return (
+      <StudyLayout onBack={() => onBack(studyId)}>
+        <StudyError
+          message={t("study.errors.roleFetch")}
+          onRetry={refetchRole}
+        />
+      </StudyLayout>
+    );
+  }
   if (!isOwner)
     return (
       <ForbiddenPage
