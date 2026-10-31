@@ -120,7 +120,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
       onBack={onBack}
       title={ui("지원자 관리", "Manage applications")}
     >
-      <div className="filter-chips application-filters">
+      <div className="application-filters">
         {filterOptions.map((option) => (
           <button
             key={option.key}

@@ -11,7 +11,6 @@ interface AuthState {
   status: AuthStatus;
 
   // Actions
-  setStatus: (status: AuthStatus) => void;
   setUnauthorized: () => void;
   setAuthenticated: () => void;
   setPending: () => void;
@@ -24,7 +23,6 @@ export const useAuthStore = create<AuthState>()(
     (set) => ({
       status: AuthStatus.LOADING,
 
-      setStatus: (status) => set({ status }, false, "setStatus"),
       setUnauthorized: () =>
         set(
           {

@@ -2,11 +2,11 @@ import { useNavigate } from "react-router";
 import type { HeaderProps } from "../model/Header";
 import "../style/Header.css";
 
-const Header: React.FC<HeaderProps> = ({ title, leftChild, backPath }) => {
+const Header: React.FC<HeaderProps> = ({ title, leftChild }) => {
   const navigate = useNavigate();
 
   const handleBack = () => {
-    navigate(backPath || "/mypage");
+    navigate("/mypage");
   };
 
   return (

@@ -1075,15 +1075,6 @@
   color: #b8c6ff;
 }
 
-.study .study-site-navigation a.is-emphasis {
-  color: #83a0ff;
-}
-
-.study .study-site-navigation.is-loading {
-  min-width: 14rem;
-  visibility: hidden;
-}
-
 .study .study-site-menu-button {
   display: none;
   color: inherit;
@@ -1141,19 +1132,6 @@
     padding: 0 1.2rem;
     border: 0;
     border-bottom: 1px solid rgb(255 255 255 / 12%);
-  }
-
-  .study .study-site-navigation.is-loading {
-    position: static;
-    grid-column: 2;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    background: transparent;
-  }
-
-  .study .study-site-navigation.is-loading {
-    min-width: 60px;
   }
 }
 

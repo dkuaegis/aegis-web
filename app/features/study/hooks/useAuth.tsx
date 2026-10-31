@@ -17,7 +17,7 @@ const useAuth = () => {
 
   useEffect(() => reset, [reset]);
 
-  const { refetch } = useQuery({
+  useQuery({
     queryKey: ["auth"],
     queryFn: async () => {
       setLoading();
@@ -61,9 +61,7 @@ const useAuth = () => {
     status,
     isLoading: status === AuthStatus.LOADING,
     isAuthenticated: status === AuthStatus.AUTHENTICATED,
-    isUnauthorized: status === AuthStatus.UNAUTHORIZED,
     isPending: status === AuthStatus.PENDING,
-    checkAuth: refetch,
   };
 };
 

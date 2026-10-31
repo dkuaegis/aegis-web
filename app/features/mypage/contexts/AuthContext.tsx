@@ -24,24 +24,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const checkAuthStatus = useCallback(
     async (shouldNavigate: boolean = false) => {
-      try {
-        const authenticated = await checkAuth();
-        setIsAuthenticated(authenticated);
+      // checkAuth는 실패하면 false를 돌려주므로 따로 예외를 처리하지 않습니다.
+      const authenticated = await checkAuth();
+      setIsAuthenticated(authenticated);
 
-        // 명시적으로 요청된 경우에만 네비게이션 처리
-        if (shouldNavigate) {
-          if (authenticated) {
-            navigate("/mypage");
-          } else {
-            navigate("/mypage/login/unauthorized");
-          }
-        }
-      } catch (error) {
-        console.error("인증 확인 실패:", error);
-        setIsAuthenticated(false);
-        if (shouldNavigate) {
-          navigate("/mypage/login/auth");
-        }
+      // 명시적으로 요청된 경우에만 네비게이션 처리
+      if (shouldNavigate) {
+        navigate(authenticated ? "/mypage" : "/mypage/login/unauthorized");
       }
     },
     [navigate]
