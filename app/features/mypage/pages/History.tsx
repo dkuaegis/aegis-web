@@ -11,15 +11,18 @@ import type { DrawHistoryItem } from "../model/DrawMe";
 export default function History() {
   const { t } = useI18n();
   const [isLoading, setIsLoading] = useState(true);
-  const [historyData, setHistoryData] = useState<HistoryCardProps[]>([]);
+  const [historyData, setHistoryData] = useState<
+    (HistoryCardProps & { id: number })[]
+  >([]);
 
   // 뽑기 이력 조회
   useEffect(() => {
     (async () => {
       try {
         const data = await getMyDrawHistory();
-        const convertedData: HistoryCardProps[] = data.map(
-          (item: DrawHistoryItem) => ({
+        const convertedData = data.map(
+          (item: DrawHistoryItem): HistoryCardProps & { id: number } => ({
+            id: item.drawHistoryId,
             type: "history",
             title: item.item,
             // Formatting follows the selected language rather than being
@@ -65,8 +68,8 @@ export default function History() {
         <EmptyState type="history" />
       ) : (
         <div style={{ padding: "18px" }}>
-          {historyData.map((item) => (
-            <Card key={`${item.title}-${item.date}`} {...item} />
+          {historyData.map(({ id, ...card }) => (
+            <Card key={id} {...card} />
           ))}
         </div>
       )}

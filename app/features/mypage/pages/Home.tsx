@@ -1,4 +1,6 @@
 import { useI18n } from "@app/i18n";
+import { t as translate } from "@app/i18n/store";
+import { ApiError } from "@app/lib/api";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { getMyPage } from "../api/Mypage";
@@ -8,6 +10,7 @@ import ActivitySection from "../components/ActivitySection";
 import Button from "../components/Button";
 import Profile from "../components/Profile";
 import QRModal from "../components/QRModal";
+import { showError } from "../utils/alert";
 
 const Home: React.FC = () => {
   const { t } = useI18n();
@@ -30,7 +33,11 @@ const Home: React.FC = () => {
         setIsLoading(false);
       } catch (error) {
         console.error("사용자 정보 조회 실패:", error);
-        navigate("/mypage/login/auth");
+        if (error instanceof ApiError && error.status === 401) {
+          navigate("/mypage/login/auth");
+        } else {
+          showError(translate("common.error.unknown"));
+        }
       }
     })();
   }, [navigate]);

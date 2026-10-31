@@ -76,7 +76,6 @@ const PointShop: React.FC = () => {
           <div className="gacha-container">
             <GachaMachine3D
               items={items}
-              onResult={(it: GachaItem) => console.log("결과:", it.label)}
               width={320}
               height={385}
               modelScale={0.7}

@@ -12,7 +12,6 @@ import type { CouponCardProps } from "../model/Card";
 const Coupons: React.FC = () => {
   const { t } = useI18n();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [selectedTab, setSelectedTab] = useState(0);
   const [couponItems, setCouponItems] = useState<
     Array<{
       id: number;
@@ -23,17 +22,9 @@ const Coupons: React.FC = () => {
   >([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // URL 쿼리 파라미터에 따른 초기 탭 설정
-  useEffect(() => {
-    const filter = searchParams.get("filter");
-    if (filter === "unused") {
-      setSelectedTab(1);
-    } else if (filter === "used") {
-      setSelectedTab(2);
-    } else {
-      setSelectedTab(0);
-    }
-  }, [searchParams]);
+  // 선택한 탭은 URL 쿼리 파라미터가 기준입니다.
+  const filter = searchParams.get("filter");
+  const selectedTab = filter === "unused" ? 1 : filter === "used" ? 2 : 0;
 
   // 쿠폰 API 호출
   useEffect(() => {
@@ -95,7 +86,6 @@ const Coupons: React.FC = () => {
             ]}
             selected={selectedTab}
             onSelect={(tabIndex) => {
-              setSelectedTab(tabIndex);
               if (tabIndex === 1) {
                 setSearchParams({ filter: "unused" });
               } else if (tabIndex === 2) {

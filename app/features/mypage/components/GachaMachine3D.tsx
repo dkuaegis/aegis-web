@@ -3,11 +3,9 @@ import { Html, OrbitControls } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useMemo, useRef, useState } from "react";
 import * as THREE from "three";
-import { getMyPage } from "../api/Mypage";
 import { drawPoint } from "../api/PointDraw";
 import { useValueAnimator } from "../hooks/useValueAnimator";
 import type { GachaItem, GachaMachine3DProps } from "../model/Gacha";
-import { showError } from "../utils/alert";
 import { easeInOutCubic, easeOutCubic } from "../utils/Easing";
 import GachaResultCard from "./GachaResultCard";
 
@@ -24,13 +22,11 @@ function BallMesh({ color = "#FFD54F" }: { color?: string }) {
 // 본체
 function Machine3D({
   items,
-  onResult,
   onShowResult,
   isOverlayOpen,
   overlayContainer,
 }: {
   items: GachaItem[];
-  onResult?: (item: GachaItem) => void;
   onShowResult: (item: GachaItem | null) => void;
   isOverlayOpen: boolean;
   overlayContainer: React.RefObject<HTMLElement>;
@@ -65,16 +61,7 @@ function Machine3D({
     setSpinning(true);
 
     try {
-      // 먼저 마이페이지 정보를 가져와서 잔액 확인
-      const myPageInfo = await getMyPage();
-
-      if (myPageInfo.pointBalance < 100) {
-        showError(t("mypage.gacha.insufficientBalance"));
-        setSpinning(false);
-        return;
-      }
-
-      // 잔액이 충분하면 뽑기 API 호출
+      // 잔액이 부족하면 서버가 400으로 응답하고 drawPoint가 안내합니다.
       const result = await drawPoint();
 
       // API 호출이 성공하면 회전 애니메이션 시작
@@ -105,7 +92,6 @@ function Machine3D({
             // Nothing on the wheel matches, so show the result straight away.
             const resultItem = { id: "api-result", label: result.item };
             onShowResult(resultItem);
-            onResult?.(resultItem);
           }
         },
       });
@@ -154,7 +140,6 @@ function Machine3D({
         // the display name.
         const resultItem = { id: "api-result", label: apiItemCode };
         onShowResult(resultItem);
-        onResult?.(resultItem);
       },
     });
   };
@@ -264,7 +249,6 @@ function Machine3D({
 // 최종 결과
 export default function GachaMachine3D({
   items,
-  onResult,
   width = "100%",
   height = 520,
   className,
@@ -307,7 +291,6 @@ export default function GachaMachine3D({
         <group scale={[modelScale, modelScale, modelScale]}>
           <Machine3D
             items={safeItems}
-            onResult={onResult}
             onShowResult={setResultItem}
             isOverlayOpen={!!resultItem}
             overlayContainer={containerRef as React.RefObject<HTMLElement>}

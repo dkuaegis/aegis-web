@@ -8,7 +8,6 @@ export type GachaItem = {
 
 export interface GachaMachine3DProps {
   items: GachaItem[];
-  onResult?: (item: GachaItem) => void;
   width?: number | string;
   height?: number | string;
   className?: string;

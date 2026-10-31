@@ -48,6 +48,7 @@ const Profile: React.FC<ProfileProps> = ({ mypage }) => {
 
       {showProfileEditModal && (
         <ProfileEditModal
+          name={mypage?.name ?? ""}
           selectedKey={selectedKey}
           imageKeys={ICON_KEYS}
           onSelectKey={setSelectedKey}

@@ -1,12 +1,10 @@
 import { useI18n } from "@app/i18n";
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router";
 import type { IconKey } from "../constants/ProfileIcons";
 import { PROFILE_ICONS } from "../constants/ProfileIcons";
 import type { ProfileEditModalProps } from "../model/ProfileEditModal";
 import Button from "./Button";
 import "../style/ProfileEditModal.css";
-import { getMyPage } from "../api/Mypage";
 import { ProfileEdit } from "../api/ProfileEdit";
 
 // import { toIconId } from "../utils/Icon";
@@ -15,6 +13,7 @@ const IMAGES_PER_PAGE = 8;
 const PAGE_WIDTH = 400;
 
 const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
+  name,
   selectedKey,
   imageKeys,
   onSelectKey,
@@ -22,12 +21,6 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
 }) => {
   const { t } = useI18n();
   const [tempKey, setTempKey] = useState<IconKey>(selectedKey);
-  const [mypage, setMypage] = useState<{
-    name: string;
-    profileIcon: string;
-    pointBalance: number;
-  } | null>(null);
-  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
   const gridRef = useRef<HTMLDivElement>(null);
 
@@ -54,19 +47,6 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
       console.error("프로필 아이콘 저장 실패:", e);
     }
   };
-
-  // 사용자 정보 조회 API 호출
-  useEffect(() => {
-    (async () => {
-      try {
-        const data = await getMyPage();
-        setMypage(data);
-      } catch (error) {
-        console.error("사용자 정보 조회 실패:", error);
-        navigate("/mypage/login/auth");
-      }
-    })();
-  }, [navigate]);
 
   useEffect(() => {
     const el = gridRef.current;
@@ -96,7 +76,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
     <div className="profile-modal-overlay">
       <div className="profile-modal">
         <h2 className="profile-title">
-          {t("mypage.profile.editTitle", { name: mypage?.name ?? "" })
+          {t("mypage.profile.editTitle", { name })
             .split("\n")
             .map((line, index) => (
               <span key={line}>
