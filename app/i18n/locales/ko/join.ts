@@ -12,6 +12,7 @@ export const join = {
     next: "다음",
     goBack: "이전 단계로",
     agreeAndContinue: "동의하고 계속하기",
+    submitFailed: "저장하지 못했어요. 잠시 후 다시 시도해 주세요.",
   },
 
   regulation: {

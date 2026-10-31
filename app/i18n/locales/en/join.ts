@@ -12,6 +12,7 @@ export const join = {
     next: "Next",
     goBack: "Back a step",
     agreeAndContinue: "Agree and continue",
+    submitFailed: "We couldn't save this. Please try again in a moment.",
   },
 
   regulation: {
