@@ -40,11 +40,13 @@ export function PageHeader({
       {back && (
         <Link
           to={back.to}
-          className="group mb-6 inline-flex items-center gap-1.5 text-[0.875rem] font-[700] text-ink-muted transition-colors hover:text-ink"
+          className="group mb-6 inline-flex items-center gap-[5px] text-[0.875rem] font-[700] text-ink-muted transition-colors hover:text-ink"
         >
+          {/* The glyph starts 3px into its box; pull it back so the stroke
+              lines up with the title, and the label with eyebrow markers. */}
           <ArrowLeftIcon
             aria-hidden="true"
-            className="size-4 transition-transform group-hover:-translate-x-0.5"
+            className="-ml-[3px] size-4 transition-transform group-hover:-translate-x-0.5"
           />
           {back.label}
         </Link>
