@@ -9,7 +9,6 @@ import {
 } from "react-router";
 import StudyLayout, { StudyLoading } from "./components/ui/StudyLayout";
 import useAuth from "./hooks/useAuth";
-import { useGoogleAnalytics } from "./hooks/useGoogleAnalytics";
 
 const StudyListPage = lazy(() => import("./pages/StudyListPage"));
 const CreateStudyPage = lazy(() => import("./pages/CreateStudyPage"));
@@ -36,9 +35,6 @@ const App = () => {
   const { isAuthenticated, isLoading, isPending } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  const shouldTrackPageView = !isLoading;
-  const authState = !isPending && isAuthenticated ? "LOGGED_IN" : "LOGGED_OUT";
-  useGoogleAnalytics(shouldTrackPageView, authState);
 
   // 로딩 중에는 로딩 화면 표시
   if (isLoading) {

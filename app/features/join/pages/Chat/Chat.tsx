@@ -1,7 +1,6 @@
 import { useI18n } from "@app/i18n";
 import NavigationButtons from "@join/components/ui/custom/navigationButton";
 import useFunnel from "@join/hooks/useFunnel";
-import { Analytics } from "@join/service/analytics";
 import { Check, ExternalLink, MessageCircle } from "lucide-react";
 import { useState } from "react";
 
@@ -24,9 +23,6 @@ const Chat = () => {
   const allJoined = Object.values(joined).every(Boolean);
 
   const handleJoin = (key: keyof JoinedState) => {
-    Analytics.safeTrack("Kakao_External_Open", {
-      category: "Kakao",
-    });
     setJoined((prev) => ({ ...prev, [key]: true }));
   };
 
@@ -89,7 +85,6 @@ const Chat = () => {
       <NavigationButtons
         disabled={!allJoined}
         onClick={() => {
-          Analytics.safeTrack("Chat_Next_Click", { category: "Chat" });
           next();
         }}
       />

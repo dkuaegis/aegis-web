@@ -54,7 +54,7 @@ The following variables are required when starting the production container:
 | `VITE_ADMIN_ACCOUNT_HOLDER_KO` | Payment account holder displayed in Korean |
 | `VITE_ADMIN_ACCOUNT_HOLDER_EN` | Payment account holder displayed in English |
 
-Other values in `.env.example` configure payment contact details, Kakao chat links, analytics, and the development server. Set them as needed for the features and environment in use. `VITE_API_PROXY_TARGET` configures the Vite development-server proxy and defaults to `VITE_API_URL` when unset.
+Other values in `.env.example` configure payment contact details, Kakao chat links, and the development server. Set them as needed for the features and environment in use. `VITE_API_PROXY_TARGET` configures the Vite development-server proxy and defaults to `VITE_API_URL` when unset.
 
 > **Security:** `VITE_` values are exposed to client-side code. Do not put passwords, tokens, or other private credentials in them.
 

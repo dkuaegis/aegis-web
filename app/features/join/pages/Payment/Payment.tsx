@@ -1,7 +1,6 @@
 import { useI18n } from "@app/i18n";
 import "./Payment.css";
 import NavigationButtons from "@join/components/ui/custom/navigationButton";
-import { Analytics } from "@join/service/analytics";
 import { useAuthStore } from "@join/stores/authStore";
 import { ChevronRight } from "lucide-react";
 import React, { Suspense, useEffect, useState } from "react";
@@ -40,23 +39,14 @@ const Payment = () => {
     const loadCoupons = async () => {
       setCouponStatus("loading");
       try {
-        Analytics.safeTrack("Coupon_Fetch_Start", { category: "Payment" });
         const data = await fetchCoupon();
         if (active) {
           setCoupons(data);
           setCouponStatus("success");
         }
-        Analytics.safeTrack("Coupon_Fetch_Success", {
-          category: "Payment",
-          coupon_count: data.length,
-        });
       } catch (error) {
         if (active) setCouponStatus("error");
         console.error("쿠폰 불러오는데 오류 발생:", error);
-        Analytics.safeTrack("Coupon_Fetch_Failed", {
-          category: "Payment",
-          error_message: error instanceof Error ? error.message : String(error),
-        });
       }
     };
     void loadCoupons();
@@ -86,12 +76,6 @@ const Payment = () => {
       </p>
     );
 
-  useEffect(() => {
-    if (status === "error") {
-      Analytics.safeTrack("Payment_View_Error", { category: "Payment" });
-    }
-  }, [status]);
-
   if (status === "loading") {
     return null;
   }
@@ -118,9 +102,6 @@ const Payment = () => {
                 type="button"
                 disabled={couponStatus !== "success"}
                 onClick={() => {
-                  Analytics.safeTrack("Payment_Open_Coupon_Click", {
-                    category: "Payment",
-                  });
                   setCurrentView("coupon");
                 }}
               >
@@ -144,9 +125,6 @@ const Payment = () => {
             <NavigationButtons
               disabled={!isValid}
               onClick={() => {
-                Analytics.safeTrack("Payment_Complete_Next_Click", {
-                  category: "Payment",
-                });
                 completeRegistration();
               }}
             />
@@ -165,9 +143,6 @@ const Payment = () => {
             coupons={coupons}
             onCouponsChange={setCoupons}
             onClose={() => {
-              Analytics.safeTrack("Coupon_Apply_And_Fetch_And_Close", {
-                category: "Coupon",
-              });
               void refreshFinalPrice();
               setCouponStatus("loading");
               setCouponFetchAttempt((attempt) => attempt + 1);

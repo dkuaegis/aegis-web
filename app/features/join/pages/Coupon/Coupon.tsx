@@ -1,5 +1,4 @@
 import { useI18n } from "@app/i18n";
-import { Analytics } from "@join/service/analytics";
 import { type FormEvent, useState } from "react";
 import toast from "react-hot-toast";
 import { submitAndFetchCouponCode, submitCoupon } from "./Coupon.Api";
@@ -26,27 +25,13 @@ const Coupon = ({ onClose, coupons, onCouponsChange }: CouponProps) => {
 
     setIsSubmitting(true);
     try {
-      Analytics.safeTrack("Coupon_Apply_Start", {
-        category: "Payment",
-        selected_count: selectedCoupons.length,
-      });
       await submitCoupon(selectedCoupons);
-      Analytics.safeTrack("Coupon_Apply_Success", {
-        category: "Payment",
-        selected_count: selectedCoupons.length,
-      });
       onClose();
     } catch (error: unknown) {
       console.error("제출 중 오류 발생:", error);
       toast.error(
         error instanceof Error ? error.message : t("join.coupon.applyFailure")
       );
-      Analytics.safeTrack("Coupon_Apply_Failed", {
-        category: "Payment",
-        selected_count: selectedCoupons.length,
-        error_message:
-          error instanceof Error ? error.message : String(error ?? ""),
-      });
     } finally {
       setIsSubmitting(false);
     }

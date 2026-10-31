@@ -3,7 +3,6 @@ import {
   makePayment,
   pollPaymentStatus,
 } from "@join/pages/Payment/Payment.Api";
-import { Analytics } from "@join/service/analytics";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 type PaymentStatus = "loading" | "polling" | "success" | "error";
@@ -13,7 +12,6 @@ export const usePaymentPolling = () => {
   const [finalPrice, setFinalPrice] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const inFlightRef = useRef(false);
-  const pollingCountRef = useRef(0);
 
   const refreshFinalPrice = useCallback(async () => {
     if (inFlightRef.current) {
@@ -42,19 +40,12 @@ export const usePaymentPolling = () => {
 
       inFlightRef.current = true;
 
-      pollingCountRef.current += 1;
-
       try {
         const result = await pollPaymentStatus();
         setFinalPrice(result.finalPrice);
 
         if (result.status === "COMPLETED") {
           setStatus("success");
-
-          Analytics.safeTrack("payment_polling_success", {
-            category: "Payment",
-            count: pollingCountRef.current,
-          });
 
           if (intervalRef.current) {
             clearInterval(intervalRef.current);
@@ -64,12 +55,6 @@ export const usePaymentPolling = () => {
       } catch (err) {
         console.error("재시도 필요. Payment polling failed:", err);
         setStatus("error");
-
-        Analytics.safeTrack("payment_polling_error", {
-          category: "Payment",
-          count: pollingCountRef.current,
-          error_message: err instanceof Error ? err.message : String(err),
-        });
 
         if (intervalRef.current) {
           clearInterval(intervalRef.current);
@@ -124,12 +109,6 @@ export const usePaymentPolling = () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
-
-        // 4. 컴포넌트 이탈로 폴링이 중단될 때 트래킹 이벤트를 전송합니다.
-        Analytics.safeTrack("payment_polling_aborted", {
-          category: "Payment",
-          count: pollingCountRef.current,
-        });
       }
     };
   }, []);
