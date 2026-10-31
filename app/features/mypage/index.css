@@ -1,21 +1,3 @@
-@font-face {
-  font-family: "SUIT Variable";
-  src: url("/mypage/SUIT-Variable.ttf");
-  font-weight: 100 900;
-}
-
-@font-face {
-  font-family: "Stack Sans Notch";
-  font-style: normal;
-  font-display: swap;
-  font-weight: 700;
-  src:
-    url("https://cdn.jsdelivr.net/fontsource/fonts/stack-sans-notch@latest/latin-700-normal.woff2")
-    format("woff2"),
-    url("https://cdn.jsdelivr.net/fontsource/fonts/stack-sans-notch@latest/latin-700-normal.woff")
-    format("woff");
-}
-
 .mypage-body,
 .mypage-shell {
   --mypage-background: #f8fafc;
@@ -57,7 +39,7 @@
   min-height: 100vh;
   background: var(--mypage-background);
   color: var(--mypage-foreground);
-  font-family: "SUIT Variable", sans-serif;
+  font-family: "Pretendard Variable", Pretendard, sans-serif;
 }
 
 .mypage-site-header {
@@ -277,7 +259,7 @@
 .Toastify__toast--error {
   background-color: #ff4444;
   color: #ffffff;
-  font-family: "SUIT Variable", sans-serif;
+  font-family: "Pretendard Variable", Pretendard, sans-serif;
   font-weight: 500;
   max-width: 300px;
   justify-content: center;
@@ -287,7 +269,7 @@
 .Toastify__toast--success {
   background-color: #00aa44;
   color: #ffffff;
-  font-family: "SUIT Variable", sans-serif;
+  font-family: "Pretendard Variable", Pretendard, sans-serif;
   font-weight: 500;
   max-width: 300px;
   justify-content: center;

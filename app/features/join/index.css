@@ -129,7 +129,7 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: "SUIT", sans-serif;
+    font-family: "Pretendard Variable", Pretendard, sans-serif;
   }
 }
 
