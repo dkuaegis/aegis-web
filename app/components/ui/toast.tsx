@@ -63,7 +63,7 @@ function ToastList() {
         "data-limited:opacity-0 data-starting-style:[transform:translateY(150%)] data-ending-style:opacity-0 data-ending-style:[transform:translateY(150%)]"
       )}
     >
-      <ToastPrimitive.Content className="flex items-center gap-3 border border-ink bg-ink py-3.5 pr-2 pl-4 text-paper shadow-[0_1rem_2rem_rgb(24_24_27/24%)] transition-opacity data-behind:opacity-0 data-expanded:opacity-100">
+      <ToastPrimitive.Content className="flex items-center gap-3 border border-white/16 bg-ink py-3.5 pr-2 pl-4 text-paper shadow-[0_1rem_2rem_rgb(24_24_27/28%)] outline outline-ink transition-opacity data-behind:opacity-0 data-expanded:opacity-100">
         <ToastIcon type={item.type} />
         <ToastPrimitive.Title className="m-0 min-w-0 flex-1 text-[0.9375rem] leading-snug font-[650]" />
         <ToastPrimitive.Close

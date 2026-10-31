@@ -5,6 +5,8 @@ export const common = {
   loading: "불러오는 중...",
   retry: "다시 시도",
   close: "닫기",
+  decrease: "줄이기",
+  increase: "늘리기",
   cancel: "취소",
   back: "뒤로",
   save: "저장",
@@ -37,6 +39,10 @@ export const common = {
     notFoundDescription:
       "주소가 바뀌었거나 삭제된 페이지입니다. 홈에서 다시 찾아보세요.",
     forbiddenTitle: "볼 수 없는 페이지입니다",
+    signedOutTitle: "다시 로그인해 주세요",
+    signedOutDescription:
+      "로그인이 만료되었습니다. 로그인하면 이 페이지로 돌아옵니다.",
+    signIn: "로그인",
     errorTitle: "문제가 생겼습니다",
     errorDescription:
       "잠시 후 다시 시도해 주세요. 계속되면 운영진에게 알려 주세요.",
@@ -71,6 +77,9 @@ export const common = {
     STUDY_APPLICATION_ALREADY_APPROVED:
       "이미 승인된 지원서는 수정할 수 없습니다.",
     STUDY_APPLICATION_REASON_REQUIRED: "지원 이유를 입력해 주세요.",
+    STUDY_APPLICATION_ACCESS_DENIED: "본인 지원서만 볼 수 있습니다.",
+    STUDY_APPLICATION_STATUS_NOT_SUPPORTED:
+      "지금 상태에서는 처리할 수 없는 지원서입니다.",
     STUDY_SESSION_NOT_FOUND: "오늘은 출석 코드가 발급되지 않았습니다.",
     STUDY_ATTENDANCE_CODE_INVALID: "출석 코드가 맞지 않습니다.",
     STUDY_ATTENDANCE_ALREADY_MARKED: "오늘은 이미 출석했습니다.",

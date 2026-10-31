@@ -68,6 +68,7 @@ function FieldError({
   children,
   ...props
 }: FieldPrimitive.Error.Props) {
+  if (!children) return null;
   return (
     <FieldPrimitive.Error
       data-slot="field-error"
@@ -81,6 +82,27 @@ function FieldError({
       <CircleAlertIcon aria-hidden="true" className="mt-px size-3.5 shrink-0" />
       <span>{children}</span>
     </FieldPrimitive.Error>
+  );
+}
+
+/** The same message as `FieldError`, for groups that are not a single Field. */
+function ErrorText({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"p">) {
+  if (!children) return null;
+  return (
+    <p
+      className={cn(
+        "m-0 flex items-start gap-1.5 text-[0.8125rem] leading-snug font-[650] text-danger",
+        className
+      )}
+      {...props}
+    >
+      <CircleAlertIcon aria-hidden="true" className="mt-px size-3.5 shrink-0" />
+      <span>{children}</span>
+    </p>
   );
 }
 
@@ -121,6 +143,7 @@ function FieldGroup({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 export {
+  ErrorText,
   Field,
   FieldControl,
   FieldDescription,

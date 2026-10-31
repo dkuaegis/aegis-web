@@ -12,7 +12,6 @@ export default defineConfig({
   plugins: [runtimeEnvPlugin(), tailwindcss(), svgr(), reactRouter()],
   resolve: {
     alias: {
-      "@study": path.resolve(appRoot, "app/features/study"),
       "@join": path.resolve(appRoot, "app/features/join"),
       "@mypage": path.resolve(appRoot, "app/features/mypage"),
       "@app": path.resolve(appRoot, "app"),

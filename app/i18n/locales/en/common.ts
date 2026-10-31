@@ -5,6 +5,8 @@ export const common = {
   loading: "Loading...",
   retry: "Try again",
   close: "Close",
+  decrease: "Decrease",
+  increase: "Increase",
   cancel: "Cancel",
   back: "Back",
   save: "Save",
@@ -37,6 +39,10 @@ export const common = {
     notFoundDescription:
       "It may have moved or been removed. Try again from the home page.",
     forbiddenTitle: "You cannot view this page",
+    signedOutTitle: "Please sign in again",
+    signedOutDescription:
+      "Your session expired. Sign in and you will come back here.",
+    signIn: "Sign in",
     errorTitle: "Something went wrong",
     errorDescription:
       "Please try again in a moment. If it keeps happening, let the organizers know.",
@@ -72,6 +78,9 @@ export const common = {
     STUDY_APPLICATION_ALREADY_APPROVED:
       "An approved application can no longer be edited.",
     STUDY_APPLICATION_REASON_REQUIRED: "Please tell us why you want to join.",
+    STUDY_APPLICATION_ACCESS_DENIED: "You can only view your own application.",
+    STUDY_APPLICATION_STATUS_NOT_SUPPORTED:
+      "This application cannot be changed in its current state.",
     STUDY_SESSION_NOT_FOUND: "No check-in code has been issued today.",
     STUDY_ATTENDANCE_CODE_INVALID: "That check-in code is not right.",
     STUDY_ATTENDANCE_ALREADY_MARKED: "You have already checked in today.",

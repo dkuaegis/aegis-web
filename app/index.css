@@ -49,6 +49,8 @@
   --tone-green: #bdce83;
   --tone-lime: #c6d69a;
   --tone-sage: #dce8dd;
+  --tone-sand: #e6d8b0;
+  --tone-stone: #d9d5cb;
 
   --font-body:
     "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
@@ -111,6 +113,8 @@
   --color-tone-green: var(--tone-green);
   --color-tone-lime: var(--tone-lime);
   --color-tone-sage: var(--tone-sage);
+  --color-tone-sand: var(--tone-sand);
+  --color-tone-stone: var(--tone-stone);
 
   --font-sans: var(--font-body);
   --font-wordmark: var(--font-wordmark);

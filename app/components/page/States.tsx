@@ -3,11 +3,17 @@ import { Period } from "@app/components/site/Wordmark";
 import { buttonVariants } from "@app/components/ui/button";
 import { Skeleton } from "@app/components/ui/skeleton";
 import { useI18n } from "@app/i18n";
+import { loginPath } from "@app/lib/auth";
 import { errorMessage } from "@app/lib/errors";
 import { cn } from "@app/lib/utils";
 import { ArrowRightIcon, RotateCwIcon } from "lucide-react";
 import type * as React from "react";
-import { isRouteErrorResponse, Link, useRevalidator } from "react-router";
+import {
+  isRouteErrorResponse,
+  Link,
+  useLocation,
+  useRevalidator,
+} from "react-router";
 
 interface StateProps {
   title: React.ReactNode;
@@ -155,6 +161,7 @@ export function NotFoundState() {
 export function RouteErrorState({ error }: { error: unknown }) {
   const { t } = useI18n();
   const revalidator = useRevalidator();
+  const location = useLocation();
 
   const status = isRouteErrorResponse(error)
     ? error.status
@@ -163,6 +170,26 @@ export function RouteErrorState({ error }: { error: unknown }) {
       : undefined;
 
   if (status === 404) return <NotFoundState />;
+
+  if (status === 401) {
+    return (
+      <StateMessage
+        size="page"
+        role="alert"
+        title={t("common.states.signedOutTitle")}
+        description={t("common.states.signedOutDescription")}
+        action={
+          <Link
+            to={loginPath(location.pathname + location.search)}
+            className={buttonVariants({ variant: "ink" })}
+          >
+            {t("common.states.signIn")}
+            <ArrowRightIcon aria-hidden="true" />
+          </Link>
+        }
+      />
+    );
+  }
 
   if (status === 403) {
     return (

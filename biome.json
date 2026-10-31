@@ -79,9 +79,7 @@
   },
   "overrides": [
     {
-      "includes": [
-        "app/api/generated/**"
-      ],
+      "includes": ["app/api/generated/**"],
       "linter": {
         "enabled": false
       },

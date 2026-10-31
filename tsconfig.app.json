@@ -9,7 +9,6 @@
     "rootDirs": [".", "./.react-router/types"],
     "skipLibCheck": true,
     "paths": {
-      "@study/*": ["./app/features/study/*"],
       "@join/*": ["./app/features/join/*"],
       "@mypage/*": ["./app/features/mypage/*"],
       "@app/*": ["./app/*"]
