@@ -72,6 +72,7 @@ const ApplicationForm = ({ recruiting }: Iprops) => {
           </AlertDialogHeader>
           <Textarea
             id="application"
+            aria-label={t("study.application.form.dialogTitle")}
             placeholder={t("study.application.form.placeholder")}
             value={applicationText}
             onChange={(e) => setApplicationText(e.target.value)}

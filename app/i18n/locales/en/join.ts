@@ -163,6 +163,8 @@ export const join = {
     studentIdLabel: "Student ID",
     studentIdPlaceholder: "32000000",
     studentIdError: "Your student ID must be 8 digits starting with 32",
+    residentNumberBackLabel:
+      "First digit of the second part of your resident registration number",
     residentNumberLabel: "Resident registration number",
     birthDatePlaceholder: "Birth date (YYMMDD)",
     residentNumberError:

@@ -13,7 +13,7 @@ const StudentResidentNumber = () => {
   } = useControllerField({ name: "birthDate" });
 
   const {
-    field: residentNumberBackField, // 2. 변수 이름도 명확하게 바꿔줍니다.
+    field: residentNumberBackField,
     error: residentNumberBackError,
     isValid: isResidentNumberBackValid,
   } = useControllerField({ name: "residentNumber_back" });
@@ -25,6 +25,7 @@ const StudentResidentNumber = () => {
       </Label>
       <div className="flex items-center space-x-2">
         <Input
+          id="registrationNumber"
           type="text"
           inputMode="numeric"
           placeholder={t("join.personalInfo.birthDatePlaceholder")}
@@ -34,7 +35,7 @@ const StudentResidentNumber = () => {
           value={birthDateField.value || ""}
           onChange={birthDateField.onChange}
           onBlur={birthDateField.onBlur}
-          ref={birthDateField.ref} // ref도 연결해줍니다.
+          ref={birthDateField.ref}
         />
         <span className="font-bold text-gray-400 text-xl">-</span>
         <Input
@@ -42,6 +43,7 @@ const StudentResidentNumber = () => {
           inputMode="numeric"
           className="h-12 w-16 text-center text-base"
           maxLength={1}
+          aria-label={t("join.personalInfo.residentNumberBackLabel")}
           aria-invalid={!isResidentNumberBackValid}
           // 항상 제어 컴포넌트가 되도록 value를 문자열로 강제
           value={residentNumberBackField.value ?? ""}

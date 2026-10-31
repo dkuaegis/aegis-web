@@ -67,14 +67,25 @@ const Card: React.FC<CardProps> = (props) => {
           <div className="history-card card-date">{props.date}</div>
         </div>
         <div className="help-icon-container">
-          <IoHelpCircleOutline
-            size={24}
-            className="help-icon"
+          {/* 터치와 키보드에서도 열 수 있도록 버튼으로 둡니다. */}
+          <button
+            type="button"
+            className="help-icon-button"
+            aria-label={t("mypage.history.tooltip.label")}
+            aria-expanded={showTooltip}
+            onClick={() => setShowTooltip((open) => !open)}
             onMouseEnter={() => setShowTooltip(true)}
             onMouseLeave={() => setShowTooltip(false)}
-          />
+            onBlur={() => setShowTooltip(false)}
+          >
+            <IoHelpCircleOutline
+              size={24}
+              className="help-icon"
+              aria-hidden="true"
+            />
+          </button>
           {showTooltip && (
-            <div className="tooltip">
+            <div className="tooltip" role="status">
               {props.title === "ENERGY_DRINK"
                 ? t("mypage.history.tooltip.energyDrink")
                 : props.title === "CLUB_DUES_DISCOUNT_COUPON"

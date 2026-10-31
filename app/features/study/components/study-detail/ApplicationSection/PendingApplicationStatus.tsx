@@ -73,6 +73,7 @@ const PendingApplicationStatus = ({ study }: PendingApplicationStatusProps) => {
               </AlertDialogHeader>
               <Textarea
                 id="application-edit"
+                aria-label={t("study.application.form.editDialogTitle")}
                 placeholder={t("study.application.form.placeholder")}
                 value={editingApplicationText}
                 onChange={(e) => setEditingApplicationText(e.target.value)}

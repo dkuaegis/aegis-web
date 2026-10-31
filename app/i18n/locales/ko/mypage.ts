@@ -47,6 +47,7 @@ export const mypage = {
     title: "선물함",
     tabs: { history: "뽑기내역", coupons: "쿠폰" },
     tooltip: {
+      label: "수령 안내 보기",
       energyDrink: "동아리방(우리은행 건물 혜당관 530호)에서 수령가능해요!",
       discountCoupon: "지급받은 쿠폰은 다음 학기 등록에 사용할 수 있습니다!",
       default: "일주일에 한 번씩 기프티콘으로 일괄 지급해드립니다!",

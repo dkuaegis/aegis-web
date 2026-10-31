@@ -78,19 +78,17 @@ const Agreement = () => {
                 open={openChapters.includes(chapter.id)}
                 onOpenChange={() => toggleChapter(chapter.id)}
               >
-                <CollapsibleTrigger asChild>
-                  <div className="flex cursor-pointer items-center justify-between p-4 hover:bg-gray-50">
-                    <div className="flex items-center space-x-3">
-                      <span className="font-medium text-base text-gray-900">
-                        {t(`join.regulation.chapters.${chapter.id}.title`)}
-                      </span>
-                    </div>
-                    {openChapters.includes(chapter.id) ? (
-                      <ChevronDown className="h-4 w-4 text-gray-500" />
-                    ) : (
-                      <ChevronRight className="h-4 w-4 text-gray-500" />
-                    )}
+                <CollapsibleTrigger className="flex w-full cursor-pointer items-center justify-between p-4 text-left hover:bg-gray-50">
+                  <div className="flex items-center space-x-3">
+                    <span className="font-medium text-base text-gray-900">
+                      {t(`join.regulation.chapters.${chapter.id}.title`)}
+                    </span>
                   </div>
+                  {openChapters.includes(chapter.id) ? (
+                    <ChevronDown className="h-4 w-4 text-gray-500" />
+                  ) : (
+                    <ChevronRight className="h-4 w-4 text-gray-500" />
+                  )}
                 </CollapsibleTrigger>
 
                 <CollapsibleContent>

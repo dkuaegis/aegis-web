@@ -6,6 +6,7 @@ import "../style/QRModal.css";
 import closeImg from "../assets/close.svg";
 import refreshImg from "../assets/refresh.svg";
 import Button from "../components/Button";
+import ModalDialog from "../components/ModalDialog";
 import { showError } from "../utils/alert";
 
 const QRModal: React.FC<QRModalProps> = ({ onClose, qrImageUrl }) => {
@@ -29,9 +30,11 @@ const QRModal: React.FC<QRModalProps> = ({ onClose, qrImageUrl }) => {
   };
 
   return (
-    <div className="qr-modal-overlay">
+    <ModalDialog className="qr-modal-overlay" onClose={onClose}>
       <div className="qr-modal">
-        <h2 className="qr-title">{t("mypage.qr.title")}</h2>
+        <ModalDialog.Title asChild>
+          <h2 className="qr-title">{t("mypage.qr.title")}</h2>
+        </ModalDialog.Title>
         <p className="qr-desc">{t("mypage.qr.description")}</p>
         <div className="qr-image-wrapper">
           <img src={qrUrl} alt="QR Code" className="qr-image" />
@@ -66,7 +69,7 @@ const QRModal: React.FC<QRModalProps> = ({ onClose, qrImageUrl }) => {
           </>
         }
       />
-    </div>
+    </ModalDialog>
   );
 };
 

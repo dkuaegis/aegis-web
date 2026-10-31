@@ -47,6 +47,7 @@ export const mypage = {
     title: "Rewards",
     tabs: { history: "Draw history", coupons: "Coupons" },
     tooltip: {
+      label: "How to receive this",
       energyDrink:
         "Pick this up in the club room — Room 530, Hyedang Hall (the Woori Bank building)!",
       discountCoupon:

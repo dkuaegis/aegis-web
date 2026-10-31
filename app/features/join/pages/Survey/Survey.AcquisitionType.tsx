@@ -34,10 +34,13 @@ export const AcquisitionType = () => {
 
   return (
     <div className="space-y-2">
-      <Label htmlFor="acquisitionType" className="text-lg">
+      <Label id="acquisitionType-label" className="text-lg">
         {t("join.survey.acquisitionLabel")}
       </Label>
-      <div className="grid auto-rows-fr grid-cols-3 gap-4">
+      <fieldset
+        aria-labelledby="acquisitionType-label"
+        className="grid min-w-0 auto-rows-fr grid-cols-3 gap-4"
+      >
         {acquisitionTypes.map(({ value, icon }) => (
           <AcquisitionCard
             key={value}
@@ -49,7 +52,7 @@ export const AcquisitionType = () => {
             }
           />
         ))}
-      </div>
+      </fieldset>
       <ErrorMessage
         isShown={!!errors.acquisitionType}
         message={errors.acquisitionType?.message}

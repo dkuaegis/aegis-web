@@ -49,6 +49,7 @@ export const StudentDepartment = ({
         <PopoverTrigger asChild>
           <div className="relative">
             <Button
+              id="department"
               variant="outline-form"
               type="button"
               aria-invalid={!isValid}

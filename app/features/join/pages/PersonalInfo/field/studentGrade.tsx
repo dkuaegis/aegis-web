@@ -23,7 +23,11 @@ export const StudentGrade = ({ name, ...props }: StudentGradeProps) => {
     <div className="space-y-2" {...props}>
       <Label htmlFor="grade">{t("join.personalInfo.gradeLabel")}</Label>
       <Select value={field.value ?? ""} onValueChange={field.onChange}>
-        <SelectTrigger aria-invalid={!isValid} className="h-12 w-full text-lg">
+        <SelectTrigger
+          id="grade"
+          aria-invalid={!isValid}
+          className="h-12 w-full text-lg"
+        >
           <SelectValue placeholder={t("join.personalInfo.gradePlaceholder")} />
         </SelectTrigger>
         <SelectContent>

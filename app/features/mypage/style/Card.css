@@ -128,14 +128,24 @@
   align-items: center;
 }
 
+.help-icon-button {
+  display: inline-flex;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.help-icon-button:hover .help-icon,
+.help-icon-button:focus-visible .help-icon {
+  color: var(--mypage-primary);
+}
+
 .help-icon {
   color: var(--mypage-muted);
   cursor: pointer;
   transition: color 0.2s ease;
-}
-
-.help-icon:hover {
-  color: var(--mypage-primary);
 }
 
 .tooltip {

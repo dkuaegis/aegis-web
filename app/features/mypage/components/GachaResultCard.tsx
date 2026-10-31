@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { PRIZE_ICONS, prizeNameKey } from "../constants/prizes";
 import type { GachaResultCardProps } from "../model/Gacha";
 import Button from "./Button";
+import ModalDialog from "./ModalDialog";
 
 export default function GachaResultCard({
   item,
@@ -20,13 +21,13 @@ export default function GachaResultCard({
   const prizeName = PRIZE_ICONS[label] ? t(prizeNameKey(label)) : label;
 
   return (
-    <div className="result-overlay" role="dialog" aria-modal="true">
+    <ModalDialog className="result-overlay" onClose={onClose}>
       <div className="result-card">
         <p className="result-desc">{t("mypage.gacha.resultLabel")}</p>
-        <h3 className="result-title">
+        <ModalDialog.Title className="result-title">
           {t("mypage.gacha.resultTitle")} <br />
           {t("mypage.gacha.resultPrize", { prize: prizeName })}
-        </h3>
+        </ModalDialog.Title>
         <div className="result-image-wrapper">
           {img && <img className="result-image" src={img} alt={prizeName} />}
         </div>
@@ -44,6 +45,6 @@ export default function GachaResultCard({
           onClick={onClose}
         />
       </div>
-    </div>
+    </ModalDialog>
   );
 }

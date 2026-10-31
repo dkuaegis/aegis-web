@@ -4,6 +4,7 @@ import type { IconKey } from "../constants/ProfileIcons";
 import { PROFILE_ICONS } from "../constants/ProfileIcons";
 import type { ProfileEditModalProps } from "../model/ProfileEditModal";
 import Button from "./Button";
+import ModalDialog from "./ModalDialog";
 import "../style/ProfileEditModal.css";
 import { ProfileEdit } from "../api/ProfileEdit";
 import { showError } from "../utils/alert";
@@ -79,9 +80,9 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
   };
 
   return (
-    <div className="profile-modal-overlay">
+    <ModalDialog className="profile-modal-overlay" onClose={onClose}>
       <div className="profile-modal">
-        <h2 className="profile-title">
+        <ModalDialog.Title className="profile-title">
           {t("mypage.profile.editTitle", { name })
             .split("\n")
             .map((line, index) => (
@@ -90,7 +91,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
                 {line}
               </span>
             ))}
-        </h2>
+        </ModalDialog.Title>
         <img
           src={PROFILE_ICONS[tempKey]}
           alt="profile-img"
@@ -145,7 +146,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
           />
         </div>
       </div>
-    </div>
+    </ModalDialog>
   );
 };
 

@@ -161,6 +161,7 @@ export const join = {
     studentIdLabel: "학번",
     studentIdPlaceholder: "32000000",
     studentIdError: "학번은 32로 시작하는 8자리 숫자여야 합니다",
+    residentNumberBackLabel: "주민등록번호 뒷자리 첫 번째 숫자",
     residentNumberLabel: "주민등록번호",
     birthDatePlaceholder: "생년월일 6자리",
     residentNumberError: "유효하지 않은 주민등록번호입니다",

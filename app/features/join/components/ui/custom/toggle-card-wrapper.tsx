@@ -16,6 +16,7 @@ const ToggleCardWrapper = ({
   return (
     <button
       type="button"
+      aria-pressed={isSelected}
       className={cn(
         "flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 bg-white p-4",
         // 살짝 튀어 오르는 이징으로 선택·호버 시 떠오르는 움직임을 표현합니다.
