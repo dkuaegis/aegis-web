@@ -17,7 +17,7 @@ import {
 } from "@join/components/ui/popover";
 import {
   DEPARTMENT_VALUES,
-  departmentLabelKey,
+  departmentLabel,
 } from "@join/constants/departments";
 import { cn } from "@join/lib/utils";
 import type { Department } from "@join/types/api/member";
@@ -33,12 +33,12 @@ export const StudentDepartment = forwardRef<
   HTMLDivElement,
   StudentDepartmentProps
 >(({ name, ...props }, ref) => {
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const [open, setOpen] = useState(false);
   const { field, error, isValid } = useControllerField({ name });
 
   const selectedLabel = field.value
-    ? t(departmentLabelKey(field.value))
+    ? departmentLabel(field.value, language)
     : t("join.personalInfo.departmentPlaceholder");
 
   return (
@@ -79,7 +79,7 @@ export const StudentDepartment = forwardRef<
               </CommandEmpty>
               <CommandGroup>
                 {DEPARTMENT_VALUES.map((departmentValue) => {
-                  const label = t(departmentLabelKey(departmentValue));
+                  const label = departmentLabel(departmentValue, language);
 
                   return (
                     <CommandItem

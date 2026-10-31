@@ -1,6 +1,11 @@
+import type { Language } from "@app/i18n/types";
+import { departments as en } from "./departments.en";
+import { departments as ko } from "./departments.ko";
+
 /**
  * 학과 목록. 값은 API 계약이므로 그대로 두고, 화면에 보이는 이름은
- * 언어별 사전(`departments.<value>`)에서 가져옵니다.
+ * 언어별 학과명 사전에서 가져옵니다. 가입 화면에서만 쓰므로 전역 번역
+ * 사전이 아니라 가입 번들에 둡니다.
  */
 export const DEPARTMENT_VALUES = [
   "SW융합대학_소프트웨어학과",
@@ -122,4 +127,10 @@ export const DEPARTMENT_VALUES = [
   "약학대학_약학과",
 ] as const;
 
-export const departmentLabelKey = (value: string) => `departments.${value}`;
+const DEPARTMENT_LABELS: Record<Language, Readonly<Record<string, string>>> = {
+  ko,
+  en,
+};
+
+export const departmentLabel = (value: string, language: Language) =>
+  DEPARTMENT_LABELS[language][value] ?? value;
