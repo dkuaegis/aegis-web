@@ -57,7 +57,12 @@
     "Apple SD Gothic Neo", system-ui, sans-serif;
   --font-wordmark: "Stack Sans Notch", Arial, sans-serif;
 
-  --page-gutter: clamp(1.25rem, 4.6vw, 5rem);
+  /* Content stays within --page-frame; bands and rules still run edge to
+     edge. --page-inset is the extra margin on screens wider than that. */
+  --page-frame: 160rem;
+  --page-inset: max(0px, (100vw - var(--page-frame)) / 2);
+  --page-pad: clamp(1.25rem, 4.6vw, 5rem);
+  --page-gutter: calc(var(--page-inset) + var(--page-pad));
   --header-height: 64px;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -137,6 +142,8 @@
   html {
     -webkit-text-size-adjust: 100%;
     scroll-padding-top: calc(var(--header-height) + 1rem);
+    /* Keeps the centred frame from shifting between short and long pages. */
+    scrollbar-gutter: stable;
   }
 
   body {
@@ -219,6 +226,11 @@
 
 @utility gutter-x {
   padding-inline: var(--page-gutter);
+}
+
+/* Caps a full-bleed block, like a tile grid, at the page frame. */
+@utility frame-x {
+  padding-inline: var(--page-inset);
 }
 
 @utility tabular {

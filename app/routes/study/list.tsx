@@ -202,16 +202,18 @@ export default function StudyList({ loaderData }: Route.ComponentProps) {
         </div>
 
         {visible.length > 0 ? (
-          <ul className="m-0 grid list-none border-t border-ink p-0 lg:grid-cols-2">
-            {visible.map((study, index) => (
-              <StudyTile
-                key={study.id}
-                study={study}
-                index={index}
-                role={roleOf(roles, study.id)}
-              />
-            ))}
-          </ul>
+          <div className="frame-x border-t border-ink">
+            <ul className="m-0 grid list-none p-0 lg:grid-cols-2">
+              {visible.map((study, index) => (
+                <StudyTile
+                  key={study.id}
+                  study={study}
+                  index={index}
+                  role={roleOf(roles, study.id)}
+                />
+              ))}
+            </ul>
+          </div>
         ) : (
           <div className="gutter-x">
             {studies.length === 0 ? (

@@ -162,7 +162,7 @@ export default function StudyDetail({ loaderData }: Route.ComponentProps) {
         className="border-b-0"
       />
 
-      <dl className="m-0 grid grid-cols-2 border-y border-ink bg-[color-mix(in_srgb,var(--study-tone)_22%,var(--paper))] lg:grid-cols-4">
+      <dl className="frame-x m-0 grid grid-cols-2 border-y border-ink bg-[color-mix(in_srgb,var(--study-tone)_22%,var(--paper))] lg:grid-cols-4">
         <Fact label={t("study.detail.instructor")}>{study.instructor}</Fact>
         <Fact label={t("study.detail.capacity")}>
           <span className="tabular">{capacityLabel(study)}</span>
@@ -268,7 +268,7 @@ function Fact({
   children: React.ReactNode;
 }) {
   return (
-    <div className="grid content-start gap-1.5 border-line px-[var(--page-gutter)] py-5 not-last:border-r max-lg:nth-[2]:border-r-0 max-lg:nth-[-n+2]:border-b lg:px-6 lg:first:pl-[var(--page-gutter)]">
+    <div className="grid content-start gap-1.5 border-line px-(--page-pad) py-5 not-last:border-r max-lg:nth-[2]:border-r-0 max-lg:nth-[-n+2]:border-b lg:px-6 lg:first:pl-(--page-pad)">
       <dt className="eyebrow text-ink-muted">{label}</dt>
       <dd className="m-0 text-[1rem] leading-snug font-[720]">{children}</dd>
     </div>

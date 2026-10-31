@@ -69,7 +69,8 @@
   min-width: 0;
   min-height: calc(100svh - 64px);
   flex-direction: column;
-  padding: clamp(9rem, 20svh, 14rem) clamp(1.6rem, 4.6vw, 5rem) 0;
+  padding: clamp(9rem, 20svh, 14rem)
+    calc(var(--page-inset) + clamp(1.6rem, 4.6vw, 5rem)) 0;
 }
 
 .home-hero h1 {
@@ -100,7 +101,10 @@
   position: absolute;
   z-index: 1;
   top: 52%;
-  right: clamp(3rem, calc(3rem + (100vw - 68.75rem) * 0.28), 11rem);
+  right: calc(
+    var(--page-inset) +
+    clamp(3rem, calc(3rem + (100vw - 68.75rem) * 0.28), 11rem)
+  );
   width: clamp(20rem, 25vw, 29rem);
   aspect-ratio: 1;
   pointer-events: none;
@@ -318,12 +322,13 @@
 }
 
 .home-hero-divider {
-  margin: 0 calc(clamp(1.6rem, 4.6vw, 5rem) * -1);
+  margin: 0 calc((var(--page-inset) + clamp(1.6rem, 4.6vw, 5rem)) * -1);
   border-top: 1px solid var(--home-ink);
 }
 
 .home-faq {
-  padding: clamp(4rem, 8vw, 8.5rem) clamp(1.5rem, 4.6vw, 5rem);
+  padding: clamp(4rem, 8vw, 8.5rem)
+    calc(var(--page-inset) + clamp(1.5rem, 4.6vw, 5rem));
   border-bottom: 1px solid var(--home-ink);
 }
 
@@ -394,7 +399,8 @@
   display: grid;
   grid-template-columns: 1fr;
   align-items: start;
-  padding: clamp(4rem, 8vw, 8rem) clamp(1.5rem, 4.6vw, 5rem);
+  padding: clamp(4rem, 8vw, 8rem)
+    calc(var(--page-inset) + clamp(1.5rem, 4.6vw, 5rem));
   border-bottom: 1px solid var(--home-ink);
 }
 
@@ -437,6 +443,7 @@
 }
 
 .home-activity-story {
+  padding-inline: var(--page-inset);
   background: var(--home-paper-light);
 }
 
@@ -452,7 +459,7 @@
   --home-activity-color: var(--home-activity-study);
   position: relative;
   display: grid;
-  grid-template-columns: minmax(8.5rem, 9vw) minmax(0, 1fr);
+  grid-template-columns: minmax(8.5rem, min(9vw, 9rem)) minmax(0, 1fr);
   min-height: clamp(13.5rem, 17vw, 17.5rem);
   overflow: hidden;
   border-right: 1px solid var(--home-line);
@@ -587,6 +594,7 @@
 .home-partners {
   display: grid;
   grid-template-columns: minmax(22rem, 0.8fr) 1fr;
+  padding-inline: var(--page-inset);
   border-bottom: 1px solid var(--home-ink);
 }
 
@@ -632,7 +640,8 @@
 }
 
 .home-join {
-  padding: clamp(4rem, 9vw, 9.5rem) clamp(1.5rem, 4.6vw, 5rem);
+  padding: clamp(4rem, 9vw, 9.5rem)
+    calc(var(--page-inset) + clamp(1.5rem, 4.6vw, 5rem));
   color: white;
   background: var(--home-ink);
 }
@@ -961,7 +970,7 @@
   }
 
   .home-partners > header {
-    padding: 3rem clamp(1.5rem, 4.6vw, 5rem);
+    padding: 3rem calc(var(--page-inset) + clamp(1.5rem, 4.6vw, 5rem));
     border-right: 0;
     border-bottom: 1px solid var(--home-ink);
   }
