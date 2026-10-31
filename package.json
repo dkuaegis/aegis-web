@@ -35,7 +35,6 @@
     "isbot": "^5.2.2",
     "lottie-web": "^5.13.0",
     "lucide-react": "^1.64.0",
-    "motion": "^14.7.1",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-hook-form": "^7.91.0",

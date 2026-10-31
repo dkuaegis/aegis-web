@@ -2,62 +2,39 @@ import { useI18n } from "@app/i18n";
 import { Button } from "@join/components/ui/button";
 import { cn } from "@join/lib/utils";
 import { Loader2 } from "lucide-react"; // 로딩 아이콘
-import { AnimatePresence, motion } from "motion/react";
 
-// 기능 개선을 위해 Props 인터페이스 확장
 interface NavigationButtonsProps {
   onClick?: () => void;
   text?: string;
   disabled?: boolean;
   isLoading?: boolean;
-  isVisible?: boolean; // 애니메이션 제어를 위한 prop
   isVisuallyDisabled?: boolean;
 }
-
-// 애니메이션 효과 정의
-const variants = {
-  initial: { y: "100%", opacity: 0 },
-  animate: { y: "0%", opacity: 1 },
-  exit: { y: "100%", opacity: 0 },
-};
 
 export default function NavigationButtons({
   onClick,
   text,
   disabled = false,
   isLoading = false,
-  isVisible = true,
   isVisuallyDisabled = false,
 }: NavigationButtonsProps) {
   const { t } = useI18n();
   const label = text ?? t("join.actions.next");
 
-  // AnimatePresence: isVisible 값이 바뀔 때 exit 애니메이션을 실행
   return (
-    <AnimatePresence>
-      {isVisible && (
-        <motion.div
-          variants={variants}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          transition={{ type: "spring", stiffness: 200, damping: 20 }}
-          className="join-navigation"
+    <div className="join-navigation">
+      <div className="join-navigation-inner">
+        <Button
+          type="submit"
+          onClick={onClick}
+          disabled={isLoading || disabled}
+          className={cn("w-full", isVisuallyDisabled && "opacity-50")}
+          size="lg"
         >
-          <div className="join-navigation-inner">
-            <Button
-              type="submit"
-              onClick={onClick}
-              disabled={isLoading || disabled}
-              className={cn("w-full", isVisuallyDisabled && "opacity-50")}
-              size="lg"
-            >
-              {/* isLoading 상태일 때 로딩 아이콘 표시 */}
-              {isLoading ? <Loader2 className="h-6 w-6 animate-spin" /> : label}
-            </Button>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+          {/* isLoading 상태일 때 로딩 아이콘 표시 */}
+          {isLoading ? <Loader2 className="h-6 w-6 animate-spin" /> : label}
+        </Button>
+      </div>
+    </div>
   );
 }

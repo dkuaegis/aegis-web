@@ -400,6 +400,20 @@
   justify-content: center;
   margin: 0;
   padding: 1.5rem 0 0;
+  animation: join-navigation-enter 450ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes join-navigation-enter {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .join-navigation {
+    animation: none;
+  }
 }
 
 .join-navigation-inner {
