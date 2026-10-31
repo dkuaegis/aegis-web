@@ -6,6 +6,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { useRevalidator } from "react-router";
 import { ko } from "./locales/ko";
 import { type TranslationVars, translate, translateList } from "./resolve";
 import {
@@ -31,13 +32,21 @@ const I18nContext = createContext<I18nContextValue | null>(null);
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguageState] = useState<Language>(DEFAULT_LANGUAGE);
+  const { revalidate } = useRevalidator();
 
   // Detection runs in an effect so the first client render matches the
   // prerendered markup, then settles on the stored preference immediately.
+  // Route `meta` (the page title) is only recomputed when the router state
+  // changes, so it is nudged whenever the language moves.
   useEffect(() => {
-    setLanguageState(initLanguage());
-    return subscribeToLanguage(() => setLanguageState(getLanguage()));
-  }, []);
+    const detected = initLanguage();
+    setLanguageState(detected);
+    if (detected !== DEFAULT_LANGUAGE) void revalidate();
+    return subscribeToLanguage(() => {
+      setLanguageState(getLanguage());
+      void revalidate();
+    });
+  }, [revalidate]);
 
   const setLanguage = useCallback((next: Language) => {
     setStoreLanguage(next);

@@ -1,4 +1,4 @@
-import type { LinksFunction } from "react-router";
+import type { LinksFunction, MetaFunction } from "react-router";
 import {
   isRouteErrorResponse,
   Links,
@@ -18,6 +18,22 @@ import "./index.css";
 export const links: LinksFunction = () => [
   { rel: "icon", href: "/aegis-logo.ico" },
 ];
+
+// Defaults for every page, and the only tags in the prerendered index.html
+// that link-preview crawlers (which do not run JS) will see.
+export const meta: MetaFunction = () => {
+  const title = t("home.meta.title");
+  const description = t("home.meta.description");
+  return [
+    { title },
+    { name: "description", content: description },
+    { property: "og:type", content: "website" },
+    { property: "og:site_name", content: "Aegis" },
+    { property: "og:title", content: title },
+    { property: "og:description", content: description },
+    { name: "twitter:card", content: "summary" },
+  ];
+};
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (

@@ -69,16 +69,15 @@ export function setLanguage(language: Language) {
   for (const listener of listeners) listener();
 }
 
-/** Called once by the provider so detection does not run during module import. */
+/**
+ * Called once by the provider after hydration. Detecting earlier would make
+ * the first render (including the `<title>` from route `meta`) differ from the
+ * prerendered Korean markup.
+ */
 export function initLanguage(): Language {
-  const detected = detectInitialLanguage();
-  currentLanguage = detected;
-
-  if (typeof document !== "undefined") {
-    document.documentElement.lang = LANGUAGE_HTML_LANG[detected];
-  }
-
-  return detected;
+  currentLanguage = detectInitialLanguage();
+  document.documentElement.lang = LANGUAGE_HTML_LANG[currentLanguage];
+  return currentLanguage;
 }
 
 export function subscribeToLanguage(listener: () => void): () => void {
