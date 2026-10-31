@@ -52,7 +52,7 @@ export default function History() {
           leftChild={t("mypage.nav.back")}
           title={t("mypage.history.title")}
         />
-        <TabNavigation defaultTab="history" />
+        <TabNavigation />
       </div>
     );
   }
@@ -63,7 +63,7 @@ export default function History() {
         leftChild={t("mypage.nav.back")}
         title={t("mypage.history.title")}
       />
-      <TabNavigation defaultTab="history" />
+      <TabNavigation />
       {historyData.length === 0 ? (
         <EmptyState type="history" />
       ) : (

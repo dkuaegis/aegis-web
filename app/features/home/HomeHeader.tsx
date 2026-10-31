@@ -78,16 +78,29 @@ export function HomeHeader({ authUser, loading }: HomeHeaderProps) {
           .join(" ")}
         aria-label={t("common.mainMenu")}
       >
-        {items.map((item) => (
-          <a
-            key={item.href}
-            href={item.href}
-            className={item.emphasis ? "is-emphasis" : undefined}
-            onClick={() => setMenuOpen(false)}
-          >
-            {item.label}
-          </a>
-        ))}
+        {items.map((item) =>
+          // The OAuth login URL lives on the API host; everything else is an
+          // in-app route and should not reload the page.
+          item.href.startsWith("/") ? (
+            <Link
+              key={item.href}
+              to={item.href}
+              className={item.emphasis ? "is-emphasis" : undefined}
+              onClick={() => setMenuOpen(false)}
+            >
+              {item.label}
+            </Link>
+          ) : (
+            <a
+              key={item.href}
+              href={item.href}
+              className={item.emphasis ? "is-emphasis" : undefined}
+              onClick={() => setMenuOpen(false)}
+            >
+              {item.label}
+            </a>
+          )
+        )}
       </nav>
     </header>
   );

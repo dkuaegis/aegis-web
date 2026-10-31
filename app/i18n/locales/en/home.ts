@@ -30,7 +30,6 @@ export const home = {
     joinInfo: "How to join",
     browseStudies: "Browse studies",
     myActivity: "My activity",
-    clubActivities: "See what we do",
     login: "Log in",
     joinAndLoginLinks: "Join and log in links",
   },

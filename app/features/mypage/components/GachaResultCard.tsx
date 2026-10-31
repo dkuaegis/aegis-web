@@ -1,5 +1,6 @@
 import "../style/GachaResultCard.css";
 import { useI18n } from "@app/i18n";
+import { useNavigate } from "react-router";
 import { PRIZE_ICONS, prizeNameKey } from "../constants/prizes";
 import type { GachaResultCardProps } from "../model/Gacha";
 import Button from "./Button";
@@ -9,6 +10,7 @@ export default function GachaResultCard({
   onClose,
 }: GachaResultCardProps) {
   const { t } = useI18n();
+  const navigate = useNavigate();
   const { label } = item;
 
   // `label` is the API prize code. If it is one we know, the icon and the
@@ -33,7 +35,7 @@ export default function GachaResultCard({
           type="GACHAHIS"
           onClick={() => {
             onClose();
-            window.location.href = "/mypage/category/giftbox/history";
+            navigate("/mypage/category/giftbox/history");
           }}
         />
         <Button

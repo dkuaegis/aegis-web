@@ -110,17 +110,12 @@ export default function HomePage() {
     { label: t("home.actions.browseStudies"), href: "/study" },
     { label: t("home.actions.myActivity"), href: "/mypage" },
   ];
+  const [browseStudies, myActivity] = memberActions;
   const primaryAction = isMember
-    ? (memberActions[0] ?? {
-        label: t("home.actions.clubActivities"),
-        href: "#activities",
-      })
+    ? browseStudies
     : { label: t("home.actions.join"), href: joinHref };
   const secondaryAction = isMember
-    ? (memberActions[1] ?? {
-        label: t("home.actions.joinInfo"),
-        href: "#faq",
-      })
+    ? myActivity
     : { label: t("home.actions.joinInfo"), href: "#faq" };
 
   return (
@@ -157,9 +152,9 @@ export default function HomePage() {
                 {t("home.hero.summaryTail")}
               </p>
               <div className="home-hero-actions">
-                <a href={primaryAction.href}>
+                <Link to={primaryAction.href}>
                   {primaryAction.label} <ExternalMark />
-                </a>
+                </Link>
                 <Link
                   to={secondaryAction.href}
                   onClick={
@@ -283,26 +278,16 @@ export default function HomePage() {
           <div>
             <nav aria-label={t("home.actions.joinAndLoginLinks")}>
               {isMember ? (
-                memberActions.length > 0 ? (
-                  memberActions.map((action) => (
-                    <a href={action.href} key={action.href}>
-                      {action.label} <ExternalMark />
-                    </a>
-                  ))
-                ) : (
-                  <Link
-                    to="#activity"
-                    onClick={(event) => scrollToHomeSection(event, "activity")}
-                  >
-                    {t("home.actions.clubActivities")}{" "}
-                    <ArrowDown aria-hidden="true" />
+                memberActions.map((action) => (
+                  <Link to={action.href} key={action.href}>
+                    {action.label} <ExternalMark />
                   </Link>
-                )
+                ))
               ) : (
                 <>
-                  <a href={joinHref}>
+                  <Link to={joinHref}>
                     {t("home.actions.join")} <ExternalMark />
-                  </a>
+                  </Link>
                   {isGuest ? (
                     <Link
                       to="#faq"

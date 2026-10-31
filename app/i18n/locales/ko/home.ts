@@ -30,7 +30,6 @@ export const home = {
     joinInfo: "가입 정보 보기",
     browseStudies: "스터디 둘러보기",
     myActivity: "내 활동 보기",
-    clubActivities: "동아리 활동 보기",
     login: "로그인",
     joinAndLoginLinks: "가입 및 로그인 링크",
   },
