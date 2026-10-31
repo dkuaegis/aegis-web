@@ -6,6 +6,7 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "types": ["vite/client"],
+    "rootDirs": [".", "./.react-router/types"],
     "skipLibCheck": true,
     "paths": {
       "@study/*": ["./app/features/study/*"],
@@ -28,5 +29,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["app"]
+  "include": ["app", ".react-router/types/**/*"]
 }

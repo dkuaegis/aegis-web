@@ -1,20 +1,10 @@
-import { useI18n } from "@app/i18n";
-import { t as translate } from "@app/i18n/store";
-import { Link } from "react-router";
+import { NotFoundState } from "@app/components/page/States";
+import { t } from "@app/i18n/store";
 
 export function meta() {
-  return [{ title: translate("pages.notFound.title") }];
+  return [{ title: t("common.states.notFoundTitle") }];
 }
 
-export default function NotFoundPage() {
-  const { t } = useI18n();
-
-  return (
-    <main className="auth-continue-page">
-      <p role="alert">{t("pages.notFound.title")}</p>
-      <Link className="auth-continue-retry" to="/">
-        {t("pages.notFound.home")}
-      </Link>
-    </main>
-  );
+export default function NotFound() {
+  return <NotFoundState />;
 }

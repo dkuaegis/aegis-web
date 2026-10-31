@@ -8,8 +8,8 @@ import {
   ScrollRestoration,
   useRouteError,
 } from "react-router";
-import { AuthIntentRedirect } from "./components/AuthIntentRedirect";
 import BrowserRedirectPage from "./components/BrowserRedirectPage";
+import { Toaster } from "./components/ui/toast";
 import { useExternalBrowser } from "./hooks/useExternalBrowser";
 import { I18nProvider } from "./i18n";
 import { t } from "./i18n/store";
@@ -27,6 +27,7 @@ export const meta: MetaFunction = () => {
   return [
     { title },
     { name: "description", content: description },
+    { name: "theme-color", content: "#18181b" },
     { property: "og:type", content: "website" },
     { property: "og:site_name", content: "Aegis" },
     { property: "og:title", content: title },
@@ -71,40 +72,42 @@ export default function App() {
 
   return (
     <I18nProvider>
-      {isInAppBrowser ? (
-        <BrowserRedirectPage />
-      ) : (
-        <>
-          <AuthIntentRedirect />
-          <Outlet />
-        </>
-      )}
+      <Toaster>{isInAppBrowser ? <BrowserRedirectPage /> : <Outlet />}</Toaster>
     </I18nProvider>
   );
 }
 
+/**
+ * Last resort when the app shell itself failed. Route errors are handled by
+ * the site layout, which keeps the header and footer on screen.
+ */
 export function ErrorBoundary() {
   const error = useRouteError();
   const notFound = isRouteErrorResponse(error) && error.status === 404;
   if (!notFound) console.error(error);
 
-  // Rendered in place of App, so the I18nProvider is not available here.
   return (
-    <main className="auth-continue-page">
-      <p role="alert">
-        {t(notFound ? "pages.notFound.title" : "pages.appError.title")}
+    <main className="grid min-h-dvh place-content-center justify-items-start gap-5 bg-paper p-8 text-ink">
+      <p className="m-0 font-wordmark text-[1.6rem] font-bold">AEGIS</p>
+      <p role="alert" className="m-0 text-[1.375rem] font-[800]">
+        {t(
+          notFound ? "common.states.notFoundTitle" : "common.states.errorTitle"
+        )}
       </p>
       {notFound ? (
-        <a className="auth-continue-retry" href="/">
-          {t("pages.notFound.home")}
+        <a
+          className="font-[750] text-blue underline-offset-4 hover:underline"
+          href="/"
+        >
+          {t("common.states.goHome")}
         </a>
       ) : (
         <button
-          className="auth-continue-retry"
           type="button"
+          className="cursor-pointer font-[750] text-blue underline-offset-4 hover:underline"
           onClick={() => window.location.reload()}
         >
-          {t("pages.appError.reload")}
+          {t("common.states.reload")}
         </button>
       )}
     </main>
@@ -113,17 +116,10 @@ export function ErrorBoundary() {
 
 export function HydrateFallback() {
   return (
-    <main
-      className="app-loading"
-      role="status"
-      aria-live="polite"
-      aria-busy="true"
-    >
-      <span className="app-loading__brand" aria-hidden="true">
-        AEGIS
-      </span>
-      <span className="app-loading__spinner" aria-hidden="true" />
-      <p className="app-loading__message">Loading your page...</p>
-    </main>
+    <div className="app-loading" role="status" aria-busy="true">
+      <span className="app-loading__brand">AEGIS</span>
+      <span className="app-loading__bar" aria-hidden="true" />
+      <span className="sr-only">Loading</span>
+    </div>
   );
 }

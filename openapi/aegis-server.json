@@ -1,0 +1,3143 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Aegis Server API"
+  },
+  "servers": [],
+  "tags": [
+    {
+      "name": "Admin Coupon",
+      "description": "관리자 쿠폰 관리 API"
+    },
+    {
+      "name": "Coupon",
+      "description": "사용자 쿠폰 관리 API"
+    },
+    {
+      "name": "Feature Flag",
+      "description": "운영 플래그 공개 조회 API"
+    },
+    {
+      "name": "QRCode",
+      "description": "QR 코드 관리 API"
+    },
+    {
+      "name": "Auth",
+      "description": "인증 관련 API"
+    },
+    {
+      "name": "Study Applicant",
+      "description": "스터디 지원서 제출자가 사용하는 API / 선착순 스터디에 대해서는 지원하지 않음"
+    },
+    {
+      "name": "Study Instructor",
+      "description": "스터디장용 API"
+    },
+    {
+      "name": "Admin Point",
+      "description": "관리자 포인트 관리 API"
+    },
+    {
+      "name": "Payment",
+      "description": "결제 관리 API"
+    },
+    {
+      "name": "Study General",
+      "description": "일반 회원이 사용하는 스터디 API"
+    },
+    {
+      "name": "Study Participant",
+      "description": "스터디원용 API"
+    },
+    {
+      "name": "Admin QRCode",
+      "description": "관리자용 QR 코드 조회 API"
+    },
+    {
+      "name": "Mypage",
+      "description": "마이페이지 관련 API"
+    },
+    {
+      "name": "Point Shop",
+      "description": "포인트 샵 API"
+    },
+    {
+      "name": "Dev Transaction",
+      "description": "개발 환경용 거래 시뮬레이션 API"
+    },
+    {
+      "name": "Admin Feature Flag",
+      "description": "관리자 운영 플래그 관리 API"
+    },
+    {
+      "name": "Admin Payment",
+      "description": "관리자 결제 관리 API"
+    },
+    {
+      "name": "Admin Member",
+      "description": "관리자 회원 관리 API"
+    },
+    {
+      "name": "Admin ActivityParticipation",
+      "description": "관리자 활동 참여 관리 API"
+    },
+    {
+      "name": "Member",
+      "description": "회원 개인정보 관리 API"
+    },
+    {
+      "name": "Dev Payment",
+      "description": "개발 환경용 결제 관리 API"
+    },
+    {
+      "name": "Survey",
+      "description": "설문조사 관리 API"
+    },
+    {
+      "name": "Admin Activity",
+      "description": "관리자 활동 관리 API"
+    },
+    {
+      "name": "Admin Member Record",
+      "description": "관리자 회원 기록 API"
+    },
+    {
+      "name": "Point",
+      "description": "포인트 관리 API"
+    }
+  ],
+  "paths": {
+    "/studies/{studyId}": {
+      "get": {
+        "tags": [
+          "Study General"
+        ],
+        "summary": "스터디 상세 조회",
+        "description": "스터디의 상세 정보를 조회합니다.",
+        "operationId": "getStudy",
+        "parameters": [
+          {
+            "name": "studyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "스터디 상세 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralStudyDetail"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "스터디를 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Study Instructor"
+        ],
+        "summary": "스터디 정보 수정",
+        "description": "스터디장 또는 관리자가 스터디 정보를 수정합니다.",
+        "operationId": "updateStudy",
+        "parameters": [
+          {
+            "name": "studyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StudyCreateUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "스터디 수정 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralStudyDetail"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청 데이터",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "스터디장/관리자 권한 아님",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "스터디를 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/studies/{studyId}/applications": {
+      "get": {
+        "tags": [
+          "Study Applicant"
+        ],
+        "summary": "스터디 지원서 상세 조회",
+        "description": "본인이 제출한 스터디 지원서의 상세 내용을 조회합니다. 선착순 스터디는 이 API를 지원하지 않습니다.",
+        "operationId": "getMyStudyApplication",
+        "parameters": [
+          {
+            "name": "studyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "지원서 상세 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplicantStudyApplicationDetail"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "선착순 스터디에서는 지원하지 않음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "스터디 또는 지원서를 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Study Applicant"
+        ],
+        "summary": "스터디 지원서 수정",
+        "description": "본인이 제출한 스터디 지원서를 수정합니다. 선착순 스터디는 이 API를 지원하지 않습니다.",
+        "operationId": "updateMyStudyApplication",
+        "parameters": [
+          {
+            "name": "studyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StudyEnrollRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "지원서 수정 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplicantStudyApplicationDetail"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "선착순 스터디에서는 지원하지 않음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "스터디 또는 지원서를 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/studies/{studyId}/applications/{studyApplicationId}/reject": {
+      "put": {
+        "tags": [
+          "Study Instructor"
+        ],
+        "summary": "스터디 지원서 거절",
+        "description": "스터디장 또는 관리자가 지원서를 거절합니다.",
+        "operationId": "rejectStudyApplication",
+        "parameters": [
+          {
+            "name": "studyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "studyApplicationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "지원서 거절 성공"
+          },
+          "403": {
+            "description": "스터디장/관리자 권한 아님",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "지원서를 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/studies/{studyId}/applications/{studyApplicationId}/approve": {
+      "put": {
+        "tags": [
+          "Study Instructor"
+        ],
+        "summary": "스터디 지원서 승인",
+        "description": "스터디장 또는 관리자가 지원서를 승인하여 지원자를 스터디 멤버로 추가합니다.",
+        "operationId": "approveStudyApplication",
+        "parameters": [
+          {
+            "name": "studyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "studyApplicationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "지원서 승인 성공"
+          },
+          "403": {
+            "description": "스터디장/관리자 권한 아님",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "지원서를 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payments": {
+      "put": {
+        "tags": [
+          "Payment"
+        ],
+        "summary": "결제 요청 수정",
+        "description": "기존 PENDING 상태의 결제 요청을 수정합니다.",
+        "operationId": "updatePayment",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "결제 요청 수정 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "쿠폰이 해당 사용자에게 발급되지 않음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "인증되지 않은 사용자",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "PENDING 상태의 결제 정보를 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "이미 완료된 결제이거나 초과 결제 상태",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Payment"
+        ],
+        "summary": "결제 요청 생성",
+        "description": "쿠폰을 사용하여 결제 요청을 생성합니다.",
+        "operationId": "createPayment",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "결제 요청 생성 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "쿠폰이 해당 사용자에게 발급되지 않음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "인증되지 않은 사용자",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "학생 정보를 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "이미 해당 학기의 결제가 존재함",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/members/profile-icon": {
+      "put": {
+        "tags": [
+          "Member"
+        ],
+        "summary": "프로필 아이콘 수정",
+        "description": "로그인한 사용자의 프로필 아이콘을 수정합니다.",
+        "operationId": "updateProfileIcon",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfileIconUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "프로필 아이콘 수정 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonalInfoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청 데이터",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "인증되지 않은 사용자",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "사용자 정보를 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/survey": {
+      "get": {
+        "tags": [
+          "Survey"
+        ],
+        "summary": "내 설문조사 조회",
+        "description": "로그인한 사용자의 설문조사 답변을 조회합니다.",
+        "operationId": "getSurvey",
+        "responses": {
+          "200": {
+            "description": "설문조사 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SurveyCommon"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "인증되지 않은 사용자",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "설문조사 답변을 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Survey"
+        ],
+        "summary": "설문조사 작성/수정",
+        "description": "로그인한 사용자의 설문조사 답변을 작성하거나 수정합니다.",
+        "operationId": "saveSurvey",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SurveyCommon"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "설문조사 작성/수정 성공"
+          },
+          "400": {
+            "description": "잘못된 요청 데이터",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "인증되지 않은 사용자",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/studies": {
+      "get": {
+        "tags": [
+          "Study General"
+        ],
+        "summary": "스터디 목록 조회",
+        "description": "모든 스터디의 목록을 조회합니다.",
+        "operationId": "getStudies",
+        "responses": {
+          "200": {
+            "description": "스터디 목록 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GeneralStudySummary"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Study General"
+        ],
+        "summary": "스터디 생성",
+        "description": "새로운 스터디를 생성합니다. 생성한 사용자는 자동으로 스터디장이 됩니다.",
+        "operationId": "createStudy",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StudyCreateUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "스터디 생성 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralStudyDetail"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청 데이터",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "스터디 개설 차단됨",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "사용자 정보를 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/studies/{studyId}/enrollment": {
+      "post": {
+        "tags": [
+          "Study General"
+        ],
+        "summary": "스터디 참여 신청",
+        "description": "스터디에 참여 신청을 합니다.",
+        "operationId": "enrollStudy",
+        "parameters": [
+          {
+            "name": "studyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StudyEnrollRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "스터디 참여 신청 성공"
+          },
+          "400": {
+            "description": "잘못된 요청 데이터",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "스터디 신청 차단됨",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "스터디를 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/studies/{studyId}/attendance": {
+      "post": {
+        "tags": [
+          "Study Participant"
+        ],
+        "summary": "출석 처리",
+        "description": "스터디원이 오늘 세션의 출석 코드를 입력해 출석을 완료합니다.",
+        "operationId": "markAttendance",
+        "parameters": [
+          {
+            "name": "studyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AttendanceMarkRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "출석 완료",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttendanceMarkResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 출석 코드",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "스터디원이 아님",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "오늘 세션 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "이미 출석 완료",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/studies/{studyId}/attendance-code": {
+      "post": {
+        "tags": [
+          "Study Instructor"
+        ],
+        "summary": "출석 코드 발급",
+        "description": "스터디장 또는 관리자가 오늘 날짜의 세션에 대한 출석 코드를 발급합니다. 같은 날 재발급 시 동일 코드를 반환합니다.",
+        "operationId": "issueAttendanceCode",
+        "parameters": [
+          {
+            "name": "studyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "출석 코드 발급 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttendanceCodeIssueResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "스터디장/관리자 권한 아님",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "스터디를 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/qrcode/issue": {
+      "post": {
+        "tags": [
+          "QRCode"
+        ],
+        "summary": "QR 코드 발급",
+        "description": "사용자 QR 코드를 발급합니다. 기존 QR 코드가 있으면 삭제 후 새로 발급합니다.",
+        "operationId": "issueQrCode",
+        "responses": {
+          "201": {
+            "description": "QR 코드 발급 성공",
+            "content": {
+              "text/plain": {}
+            }
+          },
+          "401": {
+            "description": "인증 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/point-shop/draw": {
+      "post": {
+        "tags": [
+          "Point Shop"
+        ],
+        "summary": "포인트 샵 뽑기",
+        "description": "포인트 잔액을 차감하고 가중치에 따라 상품을 뽑습니다.",
+        "operationId": "drawPointShop",
+        "responses": {
+          "200": {
+            "description": "뽑기 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PointShopDrawResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잔액 부족",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "인증되지 않은 사용자",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "포인트 계좌 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/members": {
+      "get": {
+        "tags": [
+          "Member"
+        ],
+        "summary": "개인정보 조회",
+        "description": "로그인한 사용자의 개인정보를 조회합니다.",
+        "operationId": "getPersonalInfo",
+        "responses": {
+          "200": {
+            "description": "개인정보 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonalInfoResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "인증되지 않은 사용자",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "사용자 정보를 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Member"
+        ],
+        "summary": "개인정보 수정",
+        "description": "로그인한 사용자의 개인정보를 수정합니다.",
+        "operationId": "updatePersonalInfo",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonalInfoUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "개인정보 수정 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonalInfoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청 데이터",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "인증되지 않은 사용자",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "사용자 정보를 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coupons/code": {
+      "post": {
+        "tags": [
+          "Coupon"
+        ],
+        "summary": "쿠폰 코드 사용",
+        "description": "쿠폰 코드를 사용하여 쿠폰을 발급받습니다.",
+        "operationId": "redeemCouponCode",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CouponCodeUseRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "쿠폰 코드 사용 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CouponCodeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 쿠폰 코드 형식",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "인증되지 않은 사용자",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "존재하지 않는 쿠폰 코드",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "이미 사용된 쿠폰 코드 또는 중복 사용",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/studies/{studyId}/members-instructor": {
+      "get": {
+        "tags": [
+          "Study Instructor"
+        ],
+        "summary": "스터디원 목록 조회",
+        "description": "스터디장 또는 관리자가 스터디의 스터디원 목록을 조회합니다.",
+        "operationId": "getStudyMembers",
+        "parameters": [
+          {
+            "name": "studyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "스터디원 목록 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InstructorStudyMemberResponse"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "스터디장/관리자 권한 아님",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "스터디를 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/studies/{studyId}/attendance-instructor": {
+      "get": {
+        "tags": [
+          "Study Instructor"
+        ],
+        "summary": "회차별 출석 현황 조회",
+        "description": "스터디장 또는 관리자가 이름 기준 행, 회차 기준 열의 매트릭스를 조회합니다.",
+        "operationId": "getAttendanceMatrix",
+        "parameters": [
+          {
+            "name": "studyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "출석 현황 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttendanceMatrixResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "스터디장/관리자 권한 아님",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "스터디를 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/studies/{studyId}/applications/{studyApplicationId}": {
+      "get": {
+        "tags": [
+          "Study Instructor"
+        ],
+        "summary": "스터디 지원서 상세 조회",
+        "description": "스터디장 또는 관리자가 특정 지원서의 상세 내용을 조회합니다.",
+        "operationId": "getStudyApplicationReason",
+        "parameters": [
+          {
+            "name": "studyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "studyApplicationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "지원서 상세 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InstructorStudyApplicationReason"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "스터디장/관리자 권한 아님",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "지원서를 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/studies/{studyId}/applications/status": {
+      "get": {
+        "tags": [
+          "Study Applicant"
+        ],
+        "summary": "스터디 지원서 상태 조회",
+        "description": "지원서 스터디에 대해 본인의 지원서 상태를 조회합니다. 지원서를 제출하지 않았다면 200과 함께 status=NONE, id=null을 반환합니다. 선착순 스터디는 이 API를 지원하지 않습니다.",
+        "operationId": "getMyStudyApplicationStatus",
+        "parameters": [
+          {
+            "name": "studyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "지원서 상태 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplicantStudyApplicationStatus"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "선착순 스터디에서는 지원하지 않음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "스터디를 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/studies/{studyId}/applications-instructor": {
+      "get": {
+        "tags": [
+          "Study Instructor"
+        ],
+        "summary": "스터디 지원서 목록 조회",
+        "description": "스터디장 또는 관리자가 스터디의 모든 지원서 목록을 조회합니다.",
+        "operationId": "getStudyApplications",
+        "parameters": [
+          {
+            "name": "studyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "지원서 목록 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InstructorStudyApplicationSummary"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "스터디장/관리자 권한 아님",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "스터디를 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/studies/roles": {
+      "get": {
+        "tags": [
+          "Study General"
+        ],
+        "summary": "내 스터디 권한 조회",
+        "description": "본인이 스터디장/스터디원/지원자인 스터디 목록을 조회합니다. 관리자는 현재 학기의 모든 스터디를 스터디장 권한으로 반환합니다.",
+        "operationId": "getMyStudyRoles",
+        "responses": {
+          "200": {
+            "description": "조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralStudyRolesIdsResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "사용자 정보를 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/points/summary": {
+      "get": {
+        "tags": [
+          "Point"
+        ],
+        "summary": "포인트 요약 조회",
+        "description": "로그인한 사용자의 포인트 요약 정보를 조회합니다.",
+        "operationId": "getPointSummary",
+        "responses": {
+          "200": {
+            "description": "포인트 요약 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PointSummaryResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "인증되지 않은 사용자",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "사용자 정보를 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/points/ranking": {
+      "get": {
+        "tags": [
+          "Point"
+        ],
+        "summary": "포인트 랭킹 조회",
+        "description": "현재 학기 기준 포인트 적립량 상위 10명과 로그인한 사용자의 랭킹 정보를 조회합니다. STAFF(Role_STAFF)는 집계에서 제외되며, 이 경우 'me'가 null일 수 있습니다.",
+        "operationId": "getPointRanking",
+        "responses": {
+          "200": {
+            "description": "포인트 랭킹 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PointRankingListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "인증되지 않은 사용자",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "사용자 정보를 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/point-shop/draws/me": {
+      "get": {
+        "tags": [
+          "Point Shop"
+        ],
+        "summary": "내 뽑기 기록 조회",
+        "description": "로그인한 사용자의 포인트 샵 뽑기 이력을 최신순으로 조회합니다.",
+        "operationId": "getMyDrawHistories",
+        "responses": {
+          "200": {
+            "description": "조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PointShopDrawHistoryResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "인증되지 않은 사용자",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payments/status": {
+      "get": {
+        "tags": [
+          "Payment"
+        ],
+        "summary": "결제 상태 조회",
+        "description": "로그인한 사용자의 결제 상태를 조회합니다. 결제가 없을 경우 NOT_CREATED 상태를 반환합니다.",
+        "operationId": "getPaymentStatus",
+        "responses": {
+          "200": {
+            "description": "결제 상태 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentStatusResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "인증되지 않은 사용자",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mypage": {
+      "get": {
+        "tags": [
+          "Mypage"
+        ],
+        "summary": "마이페이지 조회",
+        "description": "사용자의 기본 정보(이름, 프로필 아이콘, 포인트 잔액)를 조회합니다.",
+        "operationId": "getMypage",
+        "responses": {
+          "200": {
+            "description": "마이페이지 정보 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MypageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/feature-flags": {
+      "get": {
+        "tags": [
+          "Feature Flag"
+        ],
+        "summary": "운영 정책 조회",
+        "description": "회원가입, 스터디 개설, 스터디 신청이 지금 허용되는지 조회합니다. 로그인하지 않아도 조회할 수 있습니다.",
+        "operationId": "getFeaturePolicy",
+        "responses": {
+          "200": {
+            "description": "운영 정책 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeaturePolicyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coupons/me": {
+      "get": {
+        "tags": [
+          "Coupon"
+        ],
+        "summary": "내 발급된 쿠폰 조회",
+        "description": "로그인한 사용자의 모든 발급된 쿠폰을 조회합니다.",
+        "operationId": "getMyCoupons",
+        "responses": {
+          "200": {
+            "description": "쿠폰 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IssuedCouponResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "인증되지 않은 사용자",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coupons/me/valid": {
+      "get": {
+        "tags": [
+          "Coupon"
+        ],
+        "summary": "내 유효한 쿠폰 조회",
+        "description": "로그인한 사용자의 발급된 유효 쿠폰만 조회합니다.",
+        "operationId": "getMyValidCoupons",
+        "responses": {
+          "200": {
+            "description": "쿠폰 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IssuedCouponResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "인증되지 않은 사용자",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/check": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "인증 상태 확인",
+        "description": "사용자의 인증 상태와 결제 상태를 확인합니다.",
+        "operationId": "getAuthStatus",
+        "responses": {
+          "200": {
+            "description": "인증 상태 확인 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthCheckResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "인증되지 않은 사용자",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "학생 정보를 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AcquisitionType": {
+        "type": "string",
+        "enum": [
+          "OFFLINE_EVENT",
+          "INSTAGRAM",
+          "EVERYTIME",
+          "FRIEND",
+          "CLUB_FAIR",
+          "ETC"
+        ]
+      },
+      "ApplicantStudyApplicationDetail": {
+        "required": [
+          "applicationReason",
+          "status",
+          "studyApplicationId",
+          "studyDescription",
+          "studyTitle"
+        ],
+        "type": "object",
+        "properties": {
+          "studyApplicationId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "status": {
+            "$ref": "#/components/schemas/StudyApplicationStatus"
+          },
+          "applicationReason": {
+            "type": "string",
+            "nullable": true
+          },
+          "studyTitle": {
+            "type": "string"
+          },
+          "studyDescription": {
+            "type": "string"
+          }
+        }
+      },
+      "ApplicantStudyApplicationStatus": {
+        "required": [
+          "status",
+          "studyApplicationId"
+        ],
+        "type": "object",
+        "properties": {
+          "studyApplicationId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/StudyApplicationStatus"
+          }
+        }
+      },
+      "AttendanceCodeIssueResponse": {
+        "required": [
+          "code",
+          "sessionId"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "sessionId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "AttendanceMarkRequest": {
+        "required": [
+          "code"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "minLength": 1,
+            "pattern": "^[0-9]{4}$",
+            "type": "string"
+          }
+        }
+      },
+      "AttendanceMarkResponse": {
+        "required": [
+          "attendanceId",
+          "sessionId"
+        ],
+        "type": "object",
+        "properties": {
+          "attendanceId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "sessionId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "AttendanceMatrixResponse": {
+        "required": [
+          "members",
+          "sessions"
+        ],
+        "type": "object",
+        "properties": {
+          "sessions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttendanceSessionHeader"
+            }
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttendanceMemberRow"
+            }
+          }
+        }
+      },
+      "AttendanceMemberRow": {
+        "required": [
+          "attendance",
+          "memberId",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "memberId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "attendance": {
+            "type": "array",
+            "items": {
+              "type": "boolean"
+            }
+          }
+        }
+      },
+      "AttendanceSessionHeader": {
+        "required": [
+          "date",
+          "sessionId"
+        ],
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "AuthCheckResponse": {
+        "required": [
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/PaymentStatus"
+          }
+        }
+      },
+      "CouponCodeResponse": {
+        "required": [
+          "code",
+          "codeCouponId",
+          "couponId",
+          "couponName",
+          "isValid"
+        ],
+        "type": "object",
+        "properties": {
+          "codeCouponId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "couponId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "couponName": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "isValid": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CouponCodeUseRequest": {
+        "required": [
+          "code"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "minLength": 1,
+            "type": "string"
+          }
+        }
+      },
+      "Department": {
+        "type": "string",
+        "enum": [
+          "SW융합대학_소프트웨어학과",
+          "SW융합대학_컴퓨터공학과",
+          "SW융합대학_사이버보안학과",
+          "SW융합대학_인공지능학과",
+          "SW융합대학_통계데이터사이언스학과",
+          "SW융합대학_SW융합학부",
+          "프리무스국제대학_모바일시스템공학과",
+          "퇴계혁신칼리지_SW융합계열광역",
+          "퇴계혁신칼리지_광역",
+          "퇴계혁신칼리지_공학계열광역",
+          "퇴계혁신칼리지_인문계열광역",
+          "퇴계혁신칼리지_사회계열광역",
+          "공과대학_전자전기공학과",
+          "공과대학_융합반도체공학과",
+          "공과대학_고분자시스템공학부_고분자공학전공",
+          "공과대학_고분자시스템공학부_파이버융합소재공학전공",
+          "공과대학_토목환경공학과",
+          "공과대학_기계공학과",
+          "공과대학_화학공학과",
+          "공과대학_건축학부_건축학전공_5년제",
+          "공과대학_건축학부_건축공학전공",
+          "문과대학_국어국문학과",
+          "문과대학_사학과",
+          "문과대학_철학과",
+          "문과대학_영미인문학과",
+          "법과대학_법학과",
+          "사회과학대학_정치외교학과",
+          "사회과학대학_행정학과",
+          "사회과학대학_도시계획부동산학부",
+          "사회과학대학_미디어커뮤니케이션학부",
+          "사회과학대학_상담학과",
+          "경영경제대학_무역학과",
+          "경영경제대학_경영학부_경영학전공",
+          "경영경제대학_경영학부_회계학전공",
+          "경영경제대학_글로벌경영학과",
+          "경영경제대학_산업경영학과_야",
+          "경영경제대학_경제학과",
+          "사범대학_한문교육과",
+          "사범대학_특수교육과",
+          "사범대학_수학교육과",
+          "사범대학_과학교육과",
+          "사범대학_체육교육과",
+          "프리무스국제대학_국제경영학과",
+          "프리무스국제대학_바이오소재융합공학과",
+          "프리무스국제대학_한국학과",
+          "프리무스국제대학_연기영상예술학과",
+          "프리무스국제대학_글로벌기초교육학부",
+          "음악예술대학_공연영화학부_영화전공",
+          "음악예술대학_공연영화학부_연극전공",
+          "음악예술대학_공연영화학부_뮤지컬전공",
+          "음악예술대학_도예과",
+          "음악예술대학_디자인학부_커뮤니케이션디자인전공",
+          "음악예술대학_디자인학부_패션산업디자인전공",
+          "음악예술대학_무용과",
+          "음악예술대학_음악학부_피아노전공",
+          "음악예술대학_음악학부_관현악전공",
+          "음악예술대학_음악학부_성악전공",
+          "음악예술대학_음악학부_작곡전공",
+          "음악예술대학_음악학부_국악전공",
+          "율곡혁신칼리지_광역",
+          "율곡혁신칼리지_인문사회계열광역",
+          "율곡혁신칼리지_자연공학계열광역",
+          "외국어대학_아시아중동학부_중국학전공",
+          "외국어대학_아시아중동학부_일본학전공",
+          "외국어대학_아시아중동학부_몽골학전공",
+          "외국어대학_아시아중동학부_중동학전공",
+          "외국어대학_아시아중동학부_베트남학전공",
+          "외국어대학_유럽중남미학부_독일학전공",
+          "외국어대학_유럽중남미학부_프랑스학전공",
+          "외국어대학_유럽중남미학부_스페인중남미학전공",
+          "외국어대학_유럽중남미학부_러시아학전공",
+          "외국어대학_유럽중남미학부_포르투갈브라질학전공",
+          "외국어대학_영어과",
+          "외국어대학_글로벌한국어과",
+          "공공인재대학_공공정책학과",
+          "공공인재대학_공공정책학과_야",
+          "공공인재대학_해병대군사학과",
+          "공공인재대학_식품자원경제학과",
+          "공공인재대학_사회복지학과",
+          "보건과학대학_보건행정학과",
+          "과학기술대학_수학과",
+          "과학기술대학_물리학과",
+          "과학기술대학_화학과",
+          "과학기술대학_식품영양학과",
+          "과학기술대학_신소재공학과",
+          "과학기술대학_에너지공학과",
+          "과학기술대학_경영공학과",
+          "과학기술대학_제약공학과",
+          "간호대학_간호학과",
+          "바이오융합대학_생명자원학부_식량생명공학전공",
+          "바이오융합대학_생명자원학부_동물생명공학전공",
+          "바이오융합대학_생명자원학부_환경원예학전공",
+          "바이오융합대학_생명자원학부_녹지조경학전공",
+          "바이오융합대학_의생명과학부_의생명시스템학전공",
+          "바이오융합대학_의생명과학부_생명과학전공",
+          "바이오융합대학_의생명과학부_미생물학전공",
+          "바이오융합대학_식품공학과",
+          "바이오융합대학_코스메디컬소재학과",
+          "보건과학대학_임상병리학과",
+          "보건과학대학_물리치료학과",
+          "보건과학대학_치위생학과",
+          "보건과학대학_심리치료학과",
+          "예술대학_미술학부_공예금속섬유전공",
+          "예술대학_미술학부_동양화전공",
+          "예술대학_미술학부_서양화전공",
+          "예술대학_미술학부_조소전공",
+          "예술대학_문예창작과",
+          "예술대학_뉴뮤직학부",
+          "스포츠과학대학_생활체육학과",
+          "스포츠과학대학_스포츠경영학과",
+          "스포츠과학대학_국제스포츠학부_국제스포츠전공",
+          "스포츠과학대학_국제스포츠학부_태권도전공",
+          "스포츠과학대학_국제스포츠학부_운동처방재활전공",
+          "스포츠과학대학_국제스포츠학부_골프전공",
+          "의과대학_의예과",
+          "치과대학_치의예과",
+          "약학대학_약학과"
+        ]
+      },
+      "ErrorCode": {
+        "type": "string",
+        "enum": [
+          "BAD_REQUEST",
+          "UNAUTHORIZED",
+          "FORBIDDEN",
+          "INTERNAL_SERVER_ERROR",
+          "INVALID_ENUM",
+          "INVALID_JSON",
+          "ALREADY_EXISTS",
+          "NOT_DKU_EMAIL",
+          "MEMBER_SIGNUP_CLOSED",
+          "STUDY_CREATION_CLOSED",
+          "STUDY_ENROLLMENT_CLOSED",
+          "MEMBER_NOT_FOUND",
+          "STUDENT_NOT_FOUND",
+          "INVALID_INTEREST",
+          "ETC_INTEREST_NOT_FOUND",
+          "SURVEY_NOT_FOUND",
+          "DISCORD_CANNOT_ISSUE_VERIFICATION_CODE",
+          "DISCORD_GUILD_NOT_FOUND",
+          "DISCORD_CHANNEL_NOT_FOUND",
+          "DISCORD_ROLE_NOT_FOUND",
+          "COUPON_DISCOUNT_AMOUNT_NOT_POSITIVE",
+          "COUPON_NOT_FOUND",
+          "COUPON_ALREADY_EXISTS",
+          "COUPON_ALREADY_USED",
+          "COUPON_ISSUED_COUPON_EXISTS",
+          "ISSUED_COUPON_NOT_FOUND",
+          "ISSUED_COUPON_ALREADY_USED",
+          "INVALID_ISSUED_COUPON_INCLUDED",
+          "COUPON_CODE_NOT_FOUND",
+          "COUPON_CODE_ALREADY_USED",
+          "COUPON_CODE_ALREADY_USED_CANNOT_DELETE",
+          "COUPON_CODE_CANNOT_ISSUE_CODE",
+          "PAYMENT_NOT_FOUND",
+          "PAYMENT_ALREADY_EXISTS",
+          "PAYMENT_ALREADY_COMPLETED",
+          "PAYMENT_ACCESS_DENIED",
+          "ACTIVITY_NOT_FOUND",
+          "ACTIVITY_NAME_ALREADY_EXISTS",
+          "ACTIVITY_PARTICIPATION_ALREADY_EXISTS",
+          "ACTIVITY_HAS_ASSOCIATED_ENTITIES",
+          "POINT_ACCOUNT_NOT_FOUND",
+          "POINT_INSUFFICIENT_BALANCE",
+          "POINT_ACTION_AMOUNT_NOT_POSITIVE",
+          "POINT_TRANSACTION_NOT_FOUND",
+          "QR_CODE_GENERATION_FAILED",
+          "QR_CODE_NOT_FOUND",
+          "STUDY_NOT_FOUND",
+          "STUDY_MEMBER_NOT_INSTRUCTOR",
+          "STUDY_INSTRUCTOR_NOT_FOUND",
+          "STUDY_APPLICATION_NOT_FOUND",
+          "STUDY_APPLICATION_ALREADY_EXISTS",
+          "STUDY_APPLICATION_ALREADY_APPROVED",
+          "STUDY_APPLICATION_ACCESS_DENIED",
+          "STUDY_APPLICATION_STATUS_NOT_SUPPORTED",
+          "STUDY_APPLICATION_REASON_REQUIRED",
+          "STUDY_FULL",
+          "STUDY_ATTENDANCE_CODE_CANNOT_ISSUE",
+          "STUDY_SESSION_NOT_FOUND",
+          "STUDY_MEMBER_NOT_PARTICIPANT",
+          "STUDY_ATTENDANCE_ALREADY_MARKED",
+          "STUDY_ATTENDANCE_CODE_INVALID"
+        ]
+      },
+      "ErrorResponse": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/ErrorCode"
+          }
+        }
+      },
+      "FeaturePolicyResponse": {
+        "required": [
+          "signupAllowed",
+          "studyCreationAllowed",
+          "studyEnrollmentAllowed",
+          "studyEnrollmentCloseAt",
+          "studyEnrollmentOpenAt"
+        ],
+        "type": "object",
+        "properties": {
+          "signupAllowed": {
+            "type": "boolean"
+          },
+          "studyCreationAllowed": {
+            "type": "boolean"
+          },
+          "studyEnrollmentAllowed": {
+            "type": "boolean"
+          },
+          "studyEnrollmentOpenAt": {
+            "type": "string",
+            "description": "스터디 신청 시작 일시. 신청 기간이 설정되지 않았으면 null",
+            "format": "date-time",
+            "nullable": true
+          },
+          "studyEnrollmentCloseAt": {
+            "type": "string",
+            "description": "스터디 신청 종료 일시. 신청 기간이 설정되지 않았으면 null",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "Gender": {
+        "type": "string",
+        "enum": [
+          "MALE",
+          "FEMALE"
+        ]
+      },
+      "GeneralStudyDetail": {
+        "required": [
+          "category",
+          "curricula",
+          "description",
+          "id",
+          "instructor",
+          "level",
+          "maxParticipants",
+          "participantCount",
+          "qualifications",
+          "recruitmentMethod",
+          "schedule",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "category": {
+            "$ref": "#/components/schemas/StudyCategory"
+          },
+          "level": {
+            "$ref": "#/components/schemas/StudyLevel"
+          },
+          "description": {
+            "type": "string"
+          },
+          "recruitmentMethod": {
+            "$ref": "#/components/schemas/StudyRecruitmentMethod"
+          },
+          "participantCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "maxParticipants": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "schedule": {
+            "type": "string",
+            "nullable": true
+          },
+          "curricula": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "qualifications": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "instructor": {
+            "type": "string"
+          }
+        }
+      },
+      "GeneralStudyRolesIdsResponse": {
+        "required": [
+          "appliedStudyIds",
+          "instructorStudyIds",
+          "participantStudyIds"
+        ],
+        "type": "object",
+        "properties": {
+          "instructorStudyIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          "participantStudyIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          "appliedStudyIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        }
+      },
+      "GeneralStudySummary": {
+        "required": [
+          "category",
+          "id",
+          "instructor",
+          "level",
+          "maxParticipants",
+          "participantCount",
+          "schedule",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "category": {
+            "$ref": "#/components/schemas/StudyCategory"
+          },
+          "level": {
+            "$ref": "#/components/schemas/StudyLevel"
+          },
+          "participantCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "maxParticipants": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "schedule": {
+            "type": "string",
+            "nullable": true
+          },
+          "instructor": {
+            "type": "string"
+          }
+        }
+      },
+      "Grade": {
+        "type": "string",
+        "enum": [
+          "ONE",
+          "TWO",
+          "THREE",
+          "FOUR",
+          "FIVE",
+          "SIX"
+        ]
+      },
+      "InstructorStudyApplicationReason": {
+        "required": [
+          "applicationReason"
+        ],
+        "type": "object",
+        "properties": {
+          "applicationReason": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "InstructorStudyApplicationSummary": {
+        "required": [
+          "createdAt",
+          "name",
+          "phoneNumber",
+          "status",
+          "studentId",
+          "studyApplicationId",
+          "updatedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "studyApplicationId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "studentId": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/StudyApplicationStatus"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "InstructorStudyMemberResponse": {
+        "required": [
+          "name",
+          "phoneNumber",
+          "studentId"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "studentId": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IssuedCouponResponse": {
+        "required": [
+          "couponName",
+          "createdAt",
+          "discountAmount",
+          "isValid",
+          "issuedCouponId",
+          "memberId"
+        ],
+        "type": "object",
+        "properties": {
+          "issuedCouponId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "memberId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "couponName": {
+            "type": "string"
+          },
+          "discountAmount": {
+            "type": "number"
+          },
+          "isValid": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "MypageResponse": {
+        "required": [
+          "name",
+          "pointBalance",
+          "profileIcon"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "profileIcon": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProfileIcon"
+              }
+            ]
+          },
+          "pointBalance": {
+            "type": "number"
+          }
+        }
+      },
+      "PaymentCheckStatus": {
+        "type": "string",
+        "enum": [
+          "NOT_CREATED",
+          "PENDING",
+          "COMPLETED"
+        ]
+      },
+      "PaymentRequest": {
+        "required": [
+          "issuedCouponIds"
+        ],
+        "type": "object",
+        "properties": {
+          "issuedCouponIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        }
+      },
+      "PaymentResponse": {
+        "required": [
+          "finalPrice",
+          "id",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "status": {
+            "$ref": "#/components/schemas/PaymentStatus"
+          },
+          "finalPrice": {
+            "type": "number"
+          }
+        }
+      },
+      "PaymentStatus": {
+        "type": "string",
+        "enum": [
+          "PENDING",
+          "COMPLETED"
+        ]
+      },
+      "PaymentStatusResponse": {
+        "required": [
+          "finalPrice",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/PaymentCheckStatus"
+          },
+          "finalPrice": {
+            "type": "number"
+          }
+        }
+      },
+      "PersonalInfoResponse": {
+        "required": [
+          "birthDate",
+          "department",
+          "gender",
+          "grade",
+          "name",
+          "phoneNumber",
+          "profileIcon",
+          "role",
+          "studentId"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "studentId": {
+            "type": "string",
+            "nullable": true
+          },
+          "department": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Department"
+              }
+            ]
+          },
+          "grade": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Grade"
+              }
+            ]
+          },
+          "birthDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "gender": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Gender"
+              }
+            ]
+          },
+          "profileIcon": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProfileIcon"
+              }
+            ]
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          }
+        }
+      },
+      "PersonalInfoUpdateRequest": {
+        "required": [
+          "birthDate",
+          "department",
+          "gender",
+          "grade",
+          "phoneNumber",
+          "studentId"
+        ],
+        "type": "object",
+        "properties": {
+          "phoneNumber": {
+            "minLength": 1,
+            "pattern": "^010-[0-9]{4}-[0-9]{4}$",
+            "type": "string"
+          },
+          "studentId": {
+            "minLength": 1,
+            "pattern": "^32\\d{6}$",
+            "type": "string"
+          },
+          "department": {
+            "$ref": "#/components/schemas/Department"
+          },
+          "grade": {
+            "$ref": "#/components/schemas/Grade"
+          },
+          "birthDate": {
+            "minLength": 1,
+            "pattern": "^[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])$",
+            "type": "string"
+          },
+          "gender": {
+            "$ref": "#/components/schemas/Gender"
+          }
+        }
+      },
+      "PointRankingListResponse": {
+        "required": [
+          "me",
+          "memberCount",
+          "top10"
+        ],
+        "type": "object",
+        "properties": {
+          "memberCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "top10": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PointRankingResponse"
+            }
+          },
+          "me": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PointRankingResponse"
+              }
+            ]
+          }
+        }
+      },
+      "PointRankingResponse": {
+        "required": [
+          "name",
+          "profileIcon",
+          "rank",
+          "totalEarnedPoints"
+        ],
+        "type": "object",
+        "properties": {
+          "rank": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "totalEarnedPoints": {
+            "type": "number"
+          },
+          "profileIcon": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProfileIcon"
+              }
+            ]
+          }
+        }
+      },
+      "PointShopDrawHistoryResponse": {
+        "required": [
+          "createdAt",
+          "drawHistoryId",
+          "item",
+          "transactionId"
+        ],
+        "type": "object",
+        "properties": {
+          "drawHistoryId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "item": {
+            "$ref": "#/components/schemas/PointShopItem"
+          },
+          "transactionId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PointShopDrawResponse": {
+        "required": [
+          "drawHistoryId",
+          "item",
+          "remainingBalance",
+          "transactionId"
+        ],
+        "type": "object",
+        "properties": {
+          "item": {
+            "$ref": "#/components/schemas/PointShopItem"
+          },
+          "remainingBalance": {
+            "type": "number"
+          },
+          "transactionId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "drawHistoryId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "PointShopItem": {
+        "type": "string",
+        "enum": [
+          "ENERGY_DRINK",
+          "COFFEE_LOW",
+          "CLUB_DUES_DISCOUNT_COUPON",
+          "COFFEE_HIGH",
+          "CHICKEN"
+        ]
+      },
+      "PointSummaryResponse": {
+        "required": [
+          "balance",
+          "history"
+        ],
+        "type": "object",
+        "properties": {
+          "balance": {
+            "type": "number"
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PointTransactionResponse"
+            }
+          }
+        }
+      },
+      "PointTransactionResponse": {
+        "required": [
+          "amount",
+          "createdAt",
+          "pointTransactionId",
+          "reason",
+          "transactionType"
+        ],
+        "type": "object",
+        "properties": {
+          "pointTransactionId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "transactionType": {
+            "$ref": "#/components/schemas/PointTransactionType"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PointTransactionType": {
+        "type": "string",
+        "enum": [
+          "EARN",
+          "SPEND"
+        ]
+      },
+      "ProfileIcon": {
+        "type": "string",
+        "enum": [
+          "NONE",
+          "C",
+          "CPP",
+          "CSHARP",
+          "DART",
+          "GOLANG",
+          "JAVA",
+          "JS",
+          "KOTLIN",
+          "PHP",
+          "PYTHON",
+          "RUBY",
+          "RUST",
+          "SWIFT"
+        ]
+      },
+      "ProfileIconUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "profileIcon": {
+            "$ref": "#/components/schemas/ProfileIcon"
+          }
+        }
+      },
+      "Role": {
+        "type": "string",
+        "enum": [
+          "GUEST",
+          "USER",
+          "STAFF",
+          "ADMIN"
+        ]
+      },
+      "StudyApplicationStatus": {
+        "type": "string",
+        "enum": [
+          "PENDING",
+          "APPROVED",
+          "REJECTED",
+          "NONE"
+        ]
+      },
+      "StudyCategory": {
+        "type": "string",
+        "enum": [
+          "LANGUAGE",
+          "WEB",
+          "APPLICATION",
+          "GAME",
+          "SECURITY",
+          "COMPUTER_SCIENCE",
+          "ARTIFICIAL_INTELLIGENCE",
+          "DATA_SCIENCE",
+          "ETC"
+        ]
+      },
+      "StudyCreateUpdateRequest": {
+        "required": [
+          "category",
+          "curricula",
+          "description",
+          "level",
+          "qualifications",
+          "recruitmentMethod",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string"
+          },
+          "category": {
+            "$ref": "#/components/schemas/StudyCategory"
+          },
+          "level": {
+            "$ref": "#/components/schemas/StudyLevel"
+          },
+          "description": {
+            "maxLength": 1000,
+            "minLength": 0,
+            "type": "string"
+          },
+          "recruitmentMethod": {
+            "$ref": "#/components/schemas/StudyRecruitmentMethod"
+          },
+          "maxParticipants": {
+            "maximum": 100,
+            "minimum": 0,
+            "type": "integer",
+            "description": "스터디 정원 (0=무제한), 최대 100",
+            "format": "int32"
+          },
+          "schedule": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "curricula": {
+            "type": "array",
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "qualifications": {
+            "type": "array",
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            }
+          }
+        }
+      },
+      "StudyEnrollRequest": {
+        "type": "object",
+        "properties": {
+          "applicationReason": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "description": "지원 이유. 지원서 방식 스터디에서만 필요하며 선착순 스터디는 null을 보냅니다.",
+            "nullable": true
+          }
+        }
+      },
+      "StudyLevel": {
+        "type": "string",
+        "enum": [
+          "BASIC",
+          "EASY",
+          "INTERMEDIATE",
+          "ADVANCED"
+        ]
+      },
+      "StudyRecruitmentMethod": {
+        "type": "string",
+        "enum": [
+          "FCFS",
+          "APPLICATION"
+        ]
+      },
+      "SurveyCommon": {
+        "required": [
+          "acquisitionType",
+          "joinReason"
+        ],
+        "type": "object",
+        "properties": {
+          "acquisitionType": {
+            "$ref": "#/components/schemas/AcquisitionType"
+          },
+          "joinReason": {
+            "maxLength": 1000,
+            "minLength": 5,
+            "type": "string",
+            "nullable": true
+          }
+        }
+      }
+    }
+  }
+}

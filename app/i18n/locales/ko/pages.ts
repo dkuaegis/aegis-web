@@ -1,4 +1,11 @@
 export const pages = {
+  login: {
+    metaTitle: "로그인",
+    eyebrow: "Google 로그인",
+    redirecting: "Google 로그인 화면으로 이동하고 있습니다.",
+    manual: "이동하지 않으면 여기를 누르세요",
+  },
+
   authContinue: {
     checking: "로그인 정보를 확인하고 있습니다.",
     failed: "로그인 상태를 확인하지 못했습니다.",
@@ -16,10 +23,12 @@ export const pages = {
   },
 
   browserRedirect: {
-    title: "{{browser}} 브라우저에서 접속 중",
-    iosHint: "Safari에서 열어주세요",
-    genericHint: "원활한 이용을 위해 외부 브라우저를 사용해주세요",
-    support: "문제가 지속되면 동아리 운영진에게 문의해 주세요",
+    title: "{{browser}} 안에서 열려 있습니다",
+    copyLink: "주소 복사",
+    iosHint: "로그인과 결제가 막힐 수 있어 Safari에서 열어야 합니다.",
+    genericHint:
+      "로그인과 결제가 막힐 수 있어 기본 브라우저에서 열어야 합니다.",
+    support: "계속 열리지 않으면 동아리 운영진에게 알려 주세요.",
     names: {
       inApp: "인앱 브라우저",
       kakaotalk: "카카오톡",

@@ -1,6 +1,6 @@
 import { en } from "./locales/en";
 import { ko } from "./locales/ko";
-import { type TranslationVars, translate } from "./resolve";
+import { hasTranslation, type TranslationVars, translate } from "./resolve";
 import {
   DEFAULT_LANGUAGE,
   type Dictionary,
@@ -92,4 +92,9 @@ export function subscribeToLanguage(listener: () => void): () => void {
  */
 export function t(key: string, vars?: TranslationVars): string {
   return translate(getDictionary(), ko, key, vars);
+}
+
+/** Whether `key` exists, for optional copy such as per-error-code messages. */
+export function hasKey(key: string): boolean {
+  return hasTranslation(getDictionary(), ko, key);
 }

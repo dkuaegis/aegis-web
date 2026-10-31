@@ -1,4 +1,11 @@
 export const pages = {
+  login: {
+    metaTitle: "Log in",
+    eyebrow: "Google sign-in",
+    redirecting: "Taking you to Google sign-in.",
+    manual: "Click here if nothing happens",
+  },
+
   authContinue: {
     checking: "Checking your sign-in details...",
     failed: "We could not confirm whether you are signed in.",
@@ -16,10 +23,12 @@ export const pages = {
   },
 
   browserRedirect: {
-    title: "You are browsing inside {{browser}}",
-    iosHint: "Please open this page in Safari",
-    genericHint: "For everything to work properly, open this in a real browser",
-    support: "If the problem continues, please contact the club organizers",
+    title: "This page is open inside {{browser}}",
+    copyLink: "Copy link",
+    iosHint: "Sign-in and payment may not work here. Open the page in Safari.",
+    genericHint:
+      "Sign-in and payment may not work here. Open the page in your default browser.",
+    support: "If it still will not open, let the club organizers know.",
     names: {
       inApp: "an in-app browser",
       kakaotalk: "KakaoTalk",
