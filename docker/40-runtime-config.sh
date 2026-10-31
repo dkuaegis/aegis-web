@@ -5,14 +5,19 @@ set -eu
 : "${VITE_ADMIN_ACCOUNT_HOLDER_KO:?VITE_ADMIN_ACCOUNT_HOLDER_KO is required}"
 : "${VITE_ADMIN_ACCOUNT_HOLDER_EN:?VITE_ADMIN_ACCOUNT_HOLDER_EN is required}"
 
+HTML_ROOT=/usr/share/nginx/html
+
+# Only the VITE_ variables the client code reads (listed by the build) are
+# published; anything else in the container environment stays private.
 # Escape "<" so a value can never close the inline script tag.
-RUNTIME_CONFIG=$(jq -rn 'env | with_entries(select(.key | startswith("VITE_"))) | tojson | gsub("<"; "\\u003c")')
+RUNTIME_CONFIG=$(jq -rn --slurpfile keys "$HTML_ROOT/runtime-env-keys.json" \
+  'env | with_entries(select(.key as $key | $keys[0] | index($key))) | tojson | gsub("<"; "\\u003c")')
 export RUNTIME_CONFIG
 
 # Rewrite the body of <script id="runtime-config"> in every HTML document.
 # Replacing the body rather than a placeholder keeps container restarts idempotent.
 injected=0
-for html in $(find /usr/share/nginx/html -name '*.html'); do
+for html in $(find "$HTML_ROOT" -name '*.html'); do
   grep -q '<script id="runtime-config">' "$html" || continue
   awk '
     BEGIN { open_tag = "<script id=\"runtime-config\">"; close_tag = "</script>" }

@@ -44,7 +44,7 @@ Open the local URL printed by Vite. The `VITE_DEV_BYPASS_AUTH=true` option can b
 
 ## Environment variables
 
-The example values are in [`.env.example`](.env.example). Production containers inline the `VITE_` environment variables into the HTML documents at startup, allowing the same image to be configured per environment.
+The example values are in [`.env.example`](.env.example). Production containers inline the `VITE_` environment variables the client code reads into the HTML documents at startup, allowing the same image to be configured per environment. Other variables in the container environment are not published.
 
 The following variables are required when starting the production container:
 
@@ -64,7 +64,7 @@ Other values in `.env.example` configure payment contact details, Kakao chat lin
 | --- | --- |
 | `pnpm dev` | Start the local development server |
 | `pnpm build` | Type-check and create the production build in `build/client` |
-| `pnpm preview` | Preview the production build locally (run `pnpm build` first) |
+| `pnpm preview` | Preview the production build locally with the `.env` values (run `pnpm build` first) |
 | `pnpm check:ci` | Run Biome checks without modifying files |
 | `pnpm lint` | Run Biome lint checks |
 | `pnpm format` | Format files in place |
