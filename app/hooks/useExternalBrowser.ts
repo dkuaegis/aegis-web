@@ -10,10 +10,12 @@ const IN_APP_BROWSER_PATTERNS = [
   { pattern: "kakaotalk", key: "kakaotalk" },
   { pattern: "instagram", key: "instagram" },
   { pattern: "everytimeapp", key: "everytime" },
-  { pattern: "naver", key: "naver" },
+  // Naver's in-app token; a bare "naver" would also match its Yeti crawler.
+  { pattern: "naver(inapp", key: "naver" },
   { pattern: "fban", key: "facebook" },
   { pattern: "fbav", key: "facebook" },
-  { pattern: "line", key: "line" },
+  // LINE's app token; a bare "line" matches unrelated user agents.
+  { pattern: " line/", key: "line" },
   { pattern: "snapchat", key: "snapchat" },
   { pattern: "tiktok", key: "tiktok" },
   { pattern: "whatsapp", key: "whatsapp" },
