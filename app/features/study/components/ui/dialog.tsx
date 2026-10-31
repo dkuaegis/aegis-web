@@ -1,5 +1,5 @@
+import { cn } from "@app/lib/utils";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { cn } from "@study/lib/utils";
 import { XIcon } from "lucide-react";
 import type * as React from "react";
 

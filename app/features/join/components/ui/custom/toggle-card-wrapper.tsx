@@ -1,4 +1,4 @@
-import { cn } from "@join/lib/utils";
+import { cn } from "@app/lib/utils";
 import type React from "react";
 
 interface ToggleCardWrapperProps

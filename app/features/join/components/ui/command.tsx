@@ -1,5 +1,5 @@
+import { cn } from "@app/lib/utils";
 import { Dialog, DialogContent } from "@join/components/ui/dialog";
-import { cn } from "@join/lib/utils";
 import type { DialogProps } from "@radix-ui/react-dialog";
 import { Command as CommandPrimitive } from "cmdk";
 import { Search } from "lucide-react";

@@ -2,10 +2,9 @@ import { useI18n } from "@app/i18n";
 import { ErrorMessage } from "@join/components/ui/custom/error-message";
 import { Input } from "@join/components/ui/input";
 import { Label } from "@join/components/ui/label";
-import { forwardRef } from "react";
 import { useControllerField } from "../PersonalInfo.ControlledField";
 
-const StudentResidentNumber = forwardRef<HTMLDivElement>((props, ref) => {
+const StudentResidentNumber = () => {
   const { t } = useI18n();
   const {
     field: birthDateField,
@@ -20,7 +19,7 @@ const StudentResidentNumber = forwardRef<HTMLDivElement>((props, ref) => {
   } = useControllerField({ name: "residentNumber_back" });
 
   return (
-    <div className="space-y-2" ref={ref} {...props}>
+    <div className="space-y-2">
       <Label htmlFor="registrationNumber">
         {t("join.personalInfo.residentNumberLabel")}
       </Label>
@@ -63,8 +62,6 @@ const StudentResidentNumber = forwardRef<HTMLDivElement>((props, ref) => {
       />
     </div>
   );
-});
-
-StudentResidentNumber.displayName = "StudentResidentNumber";
+};
 
 export default StudentResidentNumber;

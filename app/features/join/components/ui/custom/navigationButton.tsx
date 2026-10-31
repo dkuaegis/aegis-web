@@ -1,6 +1,6 @@
 import { useI18n } from "@app/i18n";
+import { cn } from "@app/lib/utils";
 import { Button } from "@join/components/ui/button";
-import { cn } from "@join/lib/utils";
 import { Loader2 } from "lucide-react"; // 로딩 아이콘
 
 interface NavigationButtonsProps {

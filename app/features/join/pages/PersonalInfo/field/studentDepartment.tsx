@@ -1,4 +1,5 @@
 import { useI18n } from "@app/i18n";
+import { cn } from "@app/lib/utils";
 import { Button } from "@join/components/ui/button";
 import {
   Command,
@@ -19,20 +20,18 @@ import {
   DEPARTMENT_VALUES,
   departmentLabel,
 } from "@join/constants/departments";
-import { cn } from "@join/lib/utils";
-import type { Department } from "@join/types/api/member";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { forwardRef, useState } from "react";
+import { useState } from "react";
 import { useControllerField } from "../PersonalInfo.ControlledField";
 
 interface StudentDepartmentProps {
   name: string;
 }
 
-export const StudentDepartment = forwardRef<
-  HTMLDivElement,
-  StudentDepartmentProps
->(({ name, ...props }, ref) => {
+export const StudentDepartment = ({
+  name,
+  ...props
+}: StudentDepartmentProps) => {
   const { t, language } = useI18n();
   const [open, setOpen] = useState(false);
   const { field, error, isValid } = useControllerField({ name });
@@ -42,7 +41,7 @@ export const StudentDepartment = forwardRef<
     : t("join.personalInfo.departmentPlaceholder");
 
   return (
-    <div className="space-y-2" {...props} ref={ref}>
+    <div className="space-y-2" {...props}>
       <Label htmlFor="department">
         {t("join.personalInfo.departmentLabel")}
       </Label>
@@ -92,7 +91,7 @@ export const StudentDepartment = forwardRef<
                       value={label}
                       keywords={[departmentValue]}
                       onSelect={() => {
-                        field.onChange(departmentValue as Department);
+                        field.onChange(departmentValue);
                         setOpen(false);
                       }}
                       className="items-start"
@@ -120,6 +119,4 @@ export const StudentDepartment = forwardRef<
       />
     </div>
   );
-});
-
-StudentDepartment.displayName = "StudentDepartment";
+};

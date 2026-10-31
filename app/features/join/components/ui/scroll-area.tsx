@@ -1,4 +1,4 @@
-import { cn } from "@join/lib/utils";
+import { cn } from "@app/lib/utils";
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 import type * as React from "react";
 

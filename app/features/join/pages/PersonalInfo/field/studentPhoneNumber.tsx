@@ -3,7 +3,7 @@ import { ErrorMessage } from "@join/components/ui/custom/error-message";
 import { Input } from "@join/components/ui/input";
 import { Label } from "@join/components/ui/label";
 import { formatPhoneNumber } from "@join/pages/PersonalInfo/PersonalInfo.helper";
-import { forwardRef, useCallback } from "react";
+import { useCallback } from "react";
 import { useControllerField } from "../PersonalInfo.ControlledField";
 
 interface StudentPhoneNumberProps
@@ -11,10 +11,10 @@ interface StudentPhoneNumberProps
   name: string; // name prop 추가
 }
 
-export const StudentPhoneNumber = forwardRef<
-  HTMLInputElement,
-  StudentPhoneNumberProps
->(({ name, ...props }, ref) => {
+export const StudentPhoneNumber = ({
+  name,
+  ...props
+}: StudentPhoneNumberProps) => {
   const { t } = useI18n();
   const { field, error, isValid } = useControllerField({ name });
 
@@ -35,7 +35,6 @@ export const StudentPhoneNumber = forwardRef<
         type="tel"
         id="phoneNumber"
         placeholder={t("join.personalInfo.phonePlaceholder")}
-        ref={ref}
         aria-invalid={!isValid}
         value={field.value || ""}
         onChange={handleInputChange}
@@ -48,6 +47,4 @@ export const StudentPhoneNumber = forwardRef<
       />
     </div>
   );
-});
-
-StudentPhoneNumber.displayName = "StudentPhoneNumber";
+};

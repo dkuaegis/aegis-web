@@ -1,5 +1,6 @@
 import { t } from "@app/i18n/store";
-import { Department, Grade } from "@join/types/api/member";
+import { DEPARTMENT_VALUES } from "@join/constants/departments";
+import { GRADE_VALUES } from "@join/constants/grades";
 import * as z from "zod/mini";
 import { isValidBirthDate } from "./PersonalInfo.helper";
 
@@ -42,10 +43,10 @@ export const personalInfoSchema = z.object({
       { error: () => t("join.personalInfo.validation.phoneFormat") }
     )
   ),
-  department: z.enum(Object.values(Department) as [string, ...string[]], {
+  department: z.enum(DEPARTMENT_VALUES, {
     error: () => t("join.personalInfo.validation.departmentRequired"),
   }),
-  grade: z.enum(Object.values(Grade) as [string, ...string[]], {
+  grade: z.enum(GRADE_VALUES, {
     error: () => t("join.personalInfo.validation.gradeRequired"),
   }),
 });

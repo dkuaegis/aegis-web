@@ -1,5 +1,5 @@
+import { cn } from "@app/lib/utils";
 import { Slot } from "@radix-ui/react-slot";
-import { cn } from "@study/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 import type * as React from "react";
 
