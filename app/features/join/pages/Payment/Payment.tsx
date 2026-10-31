@@ -16,7 +16,7 @@ import { usePaymentPolling } from "./usePaymentPolling";
 
 const Payment = () => {
   const { t } = useI18n();
-  const { isValid, finalPrice, status, refreshFinalPrice } =
+  const { isValid, finalPrice, status, refreshFinalPrice, retry } =
     usePaymentPolling();
   const [currentView, setCurrentView] = useState<"coupon" | "payment">(
     "payment"
@@ -80,7 +80,14 @@ const Payment = () => {
   if (status === "error") {
     return (
       <div className="text-center text-red-500">
-        <p className="my-7">{t("join.payment.loadError")}</p>
+        <p className="mt-7 mb-3">{t("join.payment.loadError")}</p>
+        <button
+          type="button"
+          className="mb-7 underline underline-offset-4"
+          onClick={retry}
+        >
+          {t("common.retry")}
+        </button>
         <AdminInfoDrawer />
       </div>
     );
