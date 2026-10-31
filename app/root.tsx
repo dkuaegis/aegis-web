@@ -20,9 +20,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
-        {/* docker/40-runtime-config.sh fills this in at container start. */}
+        {/* docker/40-runtime-config.sh fills this in at container start.
+            React leaves dangerouslySetInnerHTML content alone when hydrating,
+            so the injected body does not count as a mismatch. */}
         {import.meta.env.PROD && (
-          <script id="runtime-config" suppressHydrationWarning />
+          <script
+            id="runtime-config"
+            suppressHydrationWarning
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: Empty placeholder; the container start script writes the body.
+            dangerouslySetInnerHTML={{ __html: "" }}
+          />
         )}
       </head>
       <body>
