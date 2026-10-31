@@ -157,7 +157,7 @@ function Machine3D({
     });
   };
 
-  const RingBalls = () => (
+  const ringBalls = (
     <group ref={groupRef}>
       {items.map((it, i) => {
         const a = baseAngles[i];
@@ -216,7 +216,7 @@ function Machine3D({
       </mesh>
 
       {/* 링 & 드랍 */}
-      <RingBalls />
+      {ringBalls}
       <mesh ref={chosenRef} visible={dropping}>
         <sphereGeometry args={[0.18, 32, 32]} />
         <meshStandardMaterial color="#FFD54F" />

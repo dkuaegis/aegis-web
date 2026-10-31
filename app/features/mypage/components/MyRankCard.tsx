@@ -1,5 +1,5 @@
 import { useI18n } from "@app/i18n";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import type { MyRankCardProps } from "../model/Ranking";
 import "../style/MyRankCard.css";
 

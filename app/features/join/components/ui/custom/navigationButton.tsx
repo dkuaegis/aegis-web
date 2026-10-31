@@ -1,8 +1,8 @@
 import { useI18n } from "@app/i18n";
 import { Button } from "@join/components/ui/button";
 import { cn } from "@join/lib/utils";
-import { AnimatePresence, motion } from "framer-motion";
 import { Loader2 } from "lucide-react"; // 로딩 아이콘
+import { AnimatePresence, motion } from "motion/react";
 
 // 기능 개선을 위해 Props 인터페이스 확장
 interface NavigationButtonsProps {

@@ -1,5 +1,5 @@
 import { cn } from "@join/lib/utils";
-import { type HTMLMotionProps, motion, type Variants } from "framer-motion";
+import { type HTMLMotionProps, motion, type Variants } from "motion/react";
 import type React from "react";
 
 interface ToggleCardWrapperProps

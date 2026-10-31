@@ -1,6 +1,6 @@
 import { useI18n } from "@app/i18n";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router";
 import { getCoupons } from "../api/Coupons";
 import Card from "../components/Card";
 import EmptyState from "../components/EmptyState";

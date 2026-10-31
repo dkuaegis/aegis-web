@@ -1,6 +1,6 @@
 import { useI18n } from "@app/i18n";
 import type { MouseEvent } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router";
 
 export function HomeFooter() {
   const { t } = useI18n();

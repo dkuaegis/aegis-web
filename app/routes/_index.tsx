@@ -2,7 +2,7 @@ import { useI18n } from "@app/i18n";
 import { t as translate } from "@app/i18n/store";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { type MouseEvent, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 import { type AuthUser, checkAuth } from "../api/auth";
 import { HomeFooter } from "../features/home/HomeFooter";

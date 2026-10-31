@@ -1,7 +1,7 @@
 import { cn } from "@join/lib/utils";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import type * as React from "react";
 
 const buttonVariants = cva(

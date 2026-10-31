@@ -1,6 +1,6 @@
 import { JOIN_STEPS } from "@join/constants/joinSteps";
 import { Analytics } from "@join/service/analytics";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router";
 
 const steps = JOIN_STEPS;
 const JOIN_BASE_PATH = "/join";

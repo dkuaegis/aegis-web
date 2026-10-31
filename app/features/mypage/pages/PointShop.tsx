@@ -7,6 +7,7 @@ import Header from "../components/Header";
 import type { GachaItem } from "../model/Gacha";
 
 const GachaMachine3D = lazy(() => import("../components/GachaMachine3D"));
+
 import "../style/PointShop.css";
 
 /** `label` holds the API prize code; the displayed name comes from the

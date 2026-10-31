@@ -1,6 +1,6 @@
 import { useI18n } from "@app/i18n";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { getMyPage } from "../api/Mypage";
 import { issueQRCode } from "../api/QRCode";
 import pointImg from "../assets/point.svg";

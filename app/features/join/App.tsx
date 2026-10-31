@@ -6,7 +6,7 @@ import PersonalInfo from "@join/pages/PersonalInfo/PersonalInfo";
 import Survey from "@join/pages/Survey/Survey";
 import { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
-import { Outlet, Route, Routes, useLocation } from "react-router-dom";
+import { Outlet, Route, Routes, useLocation } from "react-router";
 import Authentication from "./components/auth/authentication";
 import Title from "./components/ui/custom/title";
 import useFunnel from "./hooks/useFunnel";

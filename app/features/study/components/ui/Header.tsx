@@ -1,7 +1,7 @@
 import { LanguageToggle, useI18n } from "@app/i18n";
 import { Menu, X } from "lucide-react";
 import { memo, useEffect, useId, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router";
 
 const Header = () => {
   const { t, language } = useI18n();

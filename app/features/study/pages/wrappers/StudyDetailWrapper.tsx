@@ -1,5 +1,5 @@
 import { useI18n } from "@app/i18n";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 import StudyDetailPage from "../StudyDetailPage";
 
 export default function StudyDetailWrapper() {

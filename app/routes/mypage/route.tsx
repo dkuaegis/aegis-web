@@ -2,7 +2,7 @@ import { LanguageToggle, useI18n } from "@app/i18n";
 import MypageApp from "@mypage/App";
 import { initGoogleAnalytics } from "@mypage/utils/analytics";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import "@mypage/index.css";
 
 initGoogleAnalytics();

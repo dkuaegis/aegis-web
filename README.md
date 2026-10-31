@@ -12,7 +12,7 @@ The web frontend for AEGIS, providing public club information, study pages, memb
 
 ## Technology
 
-- React 19, TypeScript, and React Router 7
+- React 19, TypeScript 7, and React Router 8
 - Vite 8 and Tailwind CSS 4
 - Biome for formatting and linting
 - TanStack Query and Zustand for client-side state and data
@@ -21,8 +21,8 @@ React Router is configured as a client-rendered SPA (`ssr: false`). Production b
 
 ## Requirements
 
-- Node.js 24.x (the Docker build uses Node.js 24.21.0)
-- pnpm 11.5.1, as declared in `package.json`
+- Node.js 26.x (the Docker build uses Node.js 26.13.0)
+- pnpm 12.16.1, as declared in `package.json`
 - Access to the backend API for features that make API requests
 
 ## Local development

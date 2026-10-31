@@ -1,6 +1,6 @@
 import { useI18n } from "@app/i18n";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router";
 import { issueQRCode } from "../api/QRCode";
 import Button from "../components/Button";
 import QRModal from "../components/QRModal";

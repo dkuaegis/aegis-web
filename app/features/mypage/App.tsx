@@ -1,5 +1,5 @@
 import { Toaster } from "react-hot-toast";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router";
 import { AuthProvider } from "./contexts/AuthContext";
 import Coupons from "./pages/Coupons";
 import History from "./pages/History";

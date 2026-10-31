@@ -1,19 +1,24 @@
-import ts from "typescript";
-import type { Plugin } from "vite";
+import { type ESTree, type Plugin, parseSync, Visitor } from "vite";
 
 const runtimeConfigName = "__RUNTIME_CONFIG__";
 
-function isViteEnvironmentAccess(node: ts.PropertyAccessExpression): boolean {
-  if (!node.name.text.startsWith("VITE_")) return false;
-  const environment = node.expression;
-  if (!ts.isPropertyAccessExpression(environment) || environment.name.text !== "env") {
+function isViteEnvironmentAccess(
+  node: ESTree.MemberExpression,
+): node is ESTree.StaticMemberExpression {
+  if (node.computed || !node.property.name.startsWith("VITE_")) return false;
+  const environment = node.object;
+  if (
+    environment.type !== "MemberExpression" ||
+    environment.computed ||
+    environment.property.name !== "env"
+  ) {
     return false;
   }
-  const meta = environment.expression;
+  const meta = environment.object;
   return (
-    ts.isMetaProperty(meta) &&
-    meta.keywordToken === ts.SyntaxKind.ImportKeyword &&
-    meta.name.text === "meta"
+    meta.type === "MetaProperty" &&
+    meta.meta.name === "import" &&
+    meta.property.name === "meta"
   );
 }
 
@@ -28,32 +33,23 @@ export function runtimeEnvPlugin(): Plugin {
         return;
       }
 
-      const source = ts.createSourceFile(
-        fileName,
-        code,
-        ts.ScriptTarget.Latest,
-        true,
-        fileName.endsWith("x") ? ts.ScriptKind.TSX : ts.ScriptKind.TS,
-      );
+      const { program } = parseSync(fileName, code);
       const replacements: Array<{ start: number; end: number; value: string }> = [];
 
-      function visit(node: ts.Node): void {
-        if (ts.isPropertyAccessExpression(node) && isViteEnvironmentAccess(node)) {
+      new Visitor({
+        MemberExpression(node) {
+          if (!isViteEnvironmentAccess(node)) return;
           replacements.push({
-            start: node.getStart(source),
-            end: node.getEnd(),
-            value: `(typeof window === "undefined" ? undefined : window.${runtimeConfigName}.${node.name.text})`,
+            start: node.start,
+            end: node.end,
+            value: `(typeof window === "undefined" ? undefined : window.${runtimeConfigName}.${node.property.name})`,
           });
-          return;
-        }
-        ts.forEachChild(node, visit);
-      }
-
-      visit(source);
+        },
+      }).visit(program);
       if (replacements.length === 0) return;
 
       let transformed = code;
-      for (const replacement of replacements.reverse()) {
+      for (const replacement of replacements.sort((a, b) => b.start - a.start)) {
         transformed =
           transformed.slice(0, replacement.start) +
           replacement.value +

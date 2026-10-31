@@ -4,7 +4,7 @@ import useFunnel from "@join/hooks/useFunnel";
 import { Analytics } from "@join/service/analytics";
 import { useAuthStore } from "@join/stores/authStore";
 import type React from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation } from "react-router";
 
 const JOIN_BASE_PATH = "/join";
 

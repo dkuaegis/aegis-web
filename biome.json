@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.4.16/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.6.4/schema.json",
   "assist": {
     "actions": {
       "source": {
@@ -29,6 +29,7 @@
       "!src/assets",
       "!app/assets",
       "!app/features/**/assets",
+      "!**/*.svg",
       "!package-lock.json",
       "!pnpm-lock.yaml"
     ]
@@ -36,14 +37,14 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "preset": "recommended",
       "correctness": {
         "noUnusedImports": "error",
         "useHookAtTopLevel": "error",
         "useExhaustiveDependencies": "error"
       },
       "nursery": {
-        "useSortedClasses": "off"
+        "useTailwindSortedClasses": "off"
       },
       "suspicious": {
         "noArrayIndexKey": "warn",

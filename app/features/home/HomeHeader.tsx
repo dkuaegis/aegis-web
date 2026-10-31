@@ -1,7 +1,7 @@
 import { LanguageToggle, useI18n } from "@app/i18n";
 import { Menu, X } from "lucide-react";
 import { useEffect, useId, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import type { AuthUser } from "../../api/auth";
 import { googleLoginUrl } from "../../lib/api";
 

@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import type { HeaderProps } from "../model/Header";
 import "../style/Header.css";
 

@@ -1,8 +1,8 @@
-FROM node:24.21.0-bookworm-slim AS builder
+FROM node:26.13.0-trixie-slim AS builder
 
 WORKDIR /app
 
-RUN corepack enable
+RUN npm install --global corepack@latest && corepack enable
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
@@ -12,7 +12,7 @@ COPY . .
 
 RUN pnpm build
 
-FROM nginx:1.30.5-alpine-slim
+FROM nginx:1.30.6-alpine-slim
 
 RUN apk add --no-cache jq
 

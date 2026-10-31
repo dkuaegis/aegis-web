@@ -6,7 +6,7 @@ import {
   Routes,
   useLocation,
   useNavigate,
-} from "react-router-dom";
+} from "react-router";
 import StudyLayout, { StudyLoading } from "./components/ui/StudyLayout";
 import useAuth from "./hooks/useAuth";
 import { useGoogleAnalytics } from "./hooks/useGoogleAnalytics";

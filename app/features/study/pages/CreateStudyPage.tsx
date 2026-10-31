@@ -3,7 +3,7 @@ import StudyFormContent from "@study/components/study/StudyFormContent";
 import StudyLayout, { useStudyUiText } from "@study/components/ui/StudyLayout";
 import { useToast } from "@study/components/ui/useToast";
 import { StudyFormProvider } from "@study/hooks/useStudyForm";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 const CreateStudyPage = () => {
   const { t } = useI18n();

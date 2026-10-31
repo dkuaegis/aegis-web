@@ -4,7 +4,7 @@ import { reactRouter } from "@react-router/dev/vite";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, loadEnv } from "vite";
 import svgr from "vite-plugin-svgr";
-import { runtimeEnvPlugin } from "./scripts/runtimeEnvPlugin";
+import { runtimeEnvPlugin } from "./scripts/runtimeEnvPlugin.ts";
 
 const appRoot = path.dirname(fileURLToPath(import.meta.url));
 const apiProxyPaths = [
@@ -49,7 +49,7 @@ export default defineConfig(({ mode }) => {
         "@mypage": path.resolve(appRoot, "app/features/mypage"),
         "@app": path.resolve(appRoot, "app"),
       },
-      dedupe: ["react", "react-dom", "react-router", "react-router-dom"],
+      dedupe: ["react", "react-dom", "react-router"],
     },
     server: apiProxyTarget
       ? {

@@ -1,7 +1,7 @@
 import { useI18n } from "@app/i18n";
 import { ApiError, api, googleLoginUrl } from "@app/lib/api";
 import { useEffect, useState } from "react";
-import { Navigate, useSearchParams } from "react-router-dom";
+import { Navigate, useSearchParams } from "react-router";
 import type { AuthCheckResponse } from "../api/auth";
 import {
   getLoginDestination,

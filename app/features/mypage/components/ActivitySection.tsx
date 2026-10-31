@@ -1,5 +1,5 @@
 import { useI18n } from "@app/i18n";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import pointshopImg from "../assets/pointShop.webp";
 import rankingImg from "../assets/ranking.webp";
 import Button from "../components/Button";

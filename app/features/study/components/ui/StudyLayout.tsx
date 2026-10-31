@@ -1,7 +1,7 @@
 import { useI18n } from "@app/i18n";
 import { ArrowLeft } from "lucide-react";
 import type { ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import Header from "./Header";
 
 export function useStudyUiText() {
