@@ -5,6 +5,16 @@ export const pages = {
     retry: "다시 시도",
   },
 
+  notFound: {
+    title: "페이지를 찾을 수 없습니다.",
+    home: "홈으로 가기",
+  },
+
+  appError: {
+    title: "페이지를 표시하는 중 문제가 발생했습니다.",
+    reload: "새로고침",
+  },
+
   browserRedirect: {
     title: "{{browser}} 브라우저에서 접속 중",
     iosHint: "Safari에서 열어주세요",

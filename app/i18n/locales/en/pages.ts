@@ -5,6 +5,16 @@ export const pages = {
     retry: "Try again",
   },
 
+  notFound: {
+    title: "We couldn't find that page.",
+    home: "Go to the home page",
+  },
+
+  appError: {
+    title: "Something went wrong while showing this page.",
+    reload: "Reload",
+  },
+
   browserRedirect: {
     title: "You are browsing inside {{browser}}",
     iosHint: "Please open this page in Safari",

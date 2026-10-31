@@ -6,4 +6,5 @@ export default [
   route("study/*", "routes/study/route.tsx"),
   route("join/*", "routes/join/route.tsx"),
   route("mypage/*", "routes/mypage/route.tsx"),
+  route("*", "routes/not-found.tsx"),
 ] satisfies RouteConfig;

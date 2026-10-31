@@ -1,9 +1,18 @@
 import type { LinksFunction } from "react-router";
-import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
+import {
+  isRouteErrorResponse,
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  useRouteError,
+} from "react-router";
 import { AuthIntentRedirect } from "./components/AuthIntentRedirect";
 import BrowserRedirectPage from "./components/BrowserRedirectPage";
 import { useExternalBrowser } from "./hooks/useExternalBrowser";
 import { I18nProvider } from "./i18n";
+import { t } from "./i18n/store";
 import "./index.css";
 
 export const links: LinksFunction = () => [
@@ -55,6 +64,34 @@ export default function App() {
         </>
       )}
     </I18nProvider>
+  );
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+  const notFound = isRouteErrorResponse(error) && error.status === 404;
+  if (!notFound) console.error(error);
+
+  // Rendered in place of App, so the I18nProvider is not available here.
+  return (
+    <main className="auth-continue-page">
+      <p role="alert">
+        {t(notFound ? "pages.notFound.title" : "pages.appError.title")}
+      </p>
+      {notFound ? (
+        <a className="auth-continue-retry" href="/">
+          {t("pages.notFound.home")}
+        </a>
+      ) : (
+        <button
+          className="auth-continue-retry"
+          type="button"
+          onClick={() => window.location.reload()}
+        >
+          {t("pages.appError.reload")}
+        </button>
+      )}
+    </main>
   );
 }
 
