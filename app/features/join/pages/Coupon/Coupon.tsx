@@ -1,7 +1,11 @@
 import { useI18n } from "@app/i18n";
 import { type FormEvent, useState } from "react";
 import toast from "react-hot-toast";
-import { submitAndFetchCouponCode, submitCoupon } from "./Coupon.Api";
+import {
+  readAppliedCouponIds,
+  submitAndFetchCouponCode,
+  submitCoupon,
+} from "./Coupon.Api";
 import { CouponList } from "./Coupon.CouponList";
 import type { Coupon as CouponType } from "./Coupon.Types";
 
@@ -13,12 +17,17 @@ interface CouponProps {
 
 const Coupon = ({ onClose, coupons, onCouponsChange }: CouponProps) => {
   const { t } = useI18n();
-  const [selectedCoupons, setSelectedCoupons] = useState<number[]>([]);
+  const [appliedCoupons] = useState(() => {
+    const validIds = new Set(coupons.map((coupon) => coupon.issuedCouponId));
+    return readAppliedCouponIds().filter((id) => validIds.has(id));
+  });
+  const [selectedCoupons, setSelectedCoupons] = useState(appliedCoupons);
   const [couponCode, setCouponCode] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleApply = async () => {
-    if (selectedCoupons.length === 0) {
+    // 적용된 쿠폰을 모두 해제하는 경우에는 빈 선택도 보냅니다.
+    if (selectedCoupons.length === 0 && appliedCoupons.length === 0) {
       toast.error(t("join.coupon.selectRequired"));
       return;
     }
