@@ -17,6 +17,8 @@ export const common = {
     forbidden: "이 작업을 수행할 권한이 없습니다.",
     notFound: "요청한 정보를 찾을 수 없습니다.",
     conflict: "이미 처리된 요청입니다.",
+    network: "네트워크 연결을 확인한 뒤 다시 시도해 주세요.",
+    timeout: "응답이 늦어지고 있습니다. 잠시 후 다시 시도해 주세요.",
     unknown: "요청을 처리하지 못했습니다. 잠시 후 다시 시도해 주세요.",
   },
 } as const;

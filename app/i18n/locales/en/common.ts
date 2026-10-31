@@ -17,6 +17,9 @@ export const common = {
     forbidden: "You do not have permission to do that.",
     notFound: "We could not find what you asked for.",
     conflict: "That request has already been handled.",
+    network: "Check your network connection and try again.",
+    timeout:
+      "The server is taking too long to respond. Please try again in a moment.",
     unknown: "Something went wrong. Please try again in a moment.",
   },
 } as const;

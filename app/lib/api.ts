@@ -40,30 +40,35 @@ export class ApiError extends Error {
   }
 }
 
-export function getApiErrorMessage(error: unknown, fallback: string): string {
-  if (error instanceof ApiError) {
-    if (typeof error.details === "string" && error.details.trim()) {
-      return error.details;
-    }
-    return error.message.trim() ? error.message : fallback;
+/** The server's `ErrorCode` name, e.g. `STUDY_FULL`, when the body has one. */
+export function getApiErrorCode(error: unknown): string | undefined {
+  if (!(error instanceof ApiError)) return undefined;
+  const { details } = error;
+  if (details && typeof details === "object" && "name" in details) {
+    return typeof details.name === "string" ? details.name : undefined;
   }
-  return error instanceof Error ? error.message : fallback;
+  return undefined;
+}
+
+/** The translated status message, or `fallback` when it would only be the
+ *  generic "something went wrong" text (5xx and unknown failures). */
+export function getApiErrorMessage(error: unknown, fallback: string): string {
+  return error instanceof ApiError && error.status < 500
+    ? error.message
+    : fallback;
 }
 
 type ApiRequestOptions = Omit<RequestInit, "body"> & {
   body?: unknown;
 };
 
-const getErrorMessage = (status: number, body: unknown) => {
-  if (typeof body === "string" && body.trim()) return body;
-  if (body && typeof body === "object") {
-    const record = body as Record<string, unknown>;
-    const message = record.message ?? record.error;
-    if (typeof message === "string" && message.trim()) return message;
-  }
+const REQUEST_TIMEOUT_MS = 15_000;
 
-  // Read at call time so the message matches the language in effect when the
-  // request actually failed, not whichever one was active at module load.
+// The server only sends an `ErrorCode` name, and proxies in front of it can
+// answer with an HTML page, so the message always comes from the status.
+// Read at call time so the message matches the language in effect when the
+// request actually failed, not whichever one was active at module load.
+const getErrorMessage = (status: number) => {
   if (status === 400) return t("common.error.badRequest");
   if (status === 401) return t("common.error.unauthorized");
   if (status === 403) return t("common.error.forbidden");
@@ -71,6 +76,15 @@ const getErrorMessage = (status: number, body: unknown) => {
   if (status === 409) return t("common.error.conflict");
   return t("common.error.unknown");
 };
+
+function withTimeout(signal: AbortSignal | null | undefined) {
+  const timeout = AbortSignal.timeout(REQUEST_TIMEOUT_MS);
+  if (!signal) return timeout;
+  // AbortSignal.any is missing before Safari 17.4; keep the caller's signal there.
+  return typeof AbortSignal.any === "function"
+    ? AbortSignal.any([signal, timeout])
+    : signal;
+}
 
 export async function apiRequest<T>(
   path: string,
@@ -92,19 +106,34 @@ export async function apiRequest<T>(
   const contentType = headers.get("Content-Type");
   const requestPath = path.startsWith("/") ? path : `/${path}`;
 
-  const response = await fetch(`${API_BASE_URL}${requestPath}`, {
-    ...options,
-    body:
-      options.body instanceof FormData
-        ? options.body
-        : typeof options.body === "string" && contentType?.startsWith("text/")
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE_URL}${requestPath}`, {
+      ...options,
+      body:
+        options.body instanceof FormData
           ? options.body
-          : hasBody
-            ? JSON.stringify(options.body)
-            : undefined,
-    credentials: "include",
-    headers,
-  });
+          : typeof options.body === "string" && contentType?.startsWith("text/")
+            ? options.body
+            : hasBody
+              ? JSON.stringify(options.body)
+              : undefined,
+      credentials: "include",
+      headers,
+      signal: withTimeout(options.signal),
+    });
+  } catch (error) {
+    // A caller that aborted on purpose (e.g. React Query cancelling) still
+    // gets its AbortError; everything else becomes a translated ApiError.
+    if (options.signal?.aborted) throw error;
+    const timedOut =
+      error instanceof DOMException && error.name === "TimeoutError";
+    throw new ApiError(
+      0,
+      t(timedOut ? "common.error.timeout" : "common.error.network"),
+      error
+    );
+  }
 
   const text = await response.text();
   let body: unknown = null;
@@ -117,11 +146,7 @@ export async function apiRequest<T>(
   }
 
   if (!response.ok) {
-    throw new ApiError(
-      response.status,
-      getErrorMessage(response.status, body),
-      body
-    );
+    throw new ApiError(response.status, getErrorMessage(response.status), body);
   }
 
   return body as T;
