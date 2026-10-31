@@ -114,6 +114,12 @@
   animation: auth-continue-spin 700ms linear infinite;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .auth-continue-spinner {
+    animation: none;
+  }
+}
+
 .auth-continue-retry {
   padding: 0.7rem 1.25rem;
   border: 0;

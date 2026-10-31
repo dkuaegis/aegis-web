@@ -184,6 +184,12 @@
   .animate-aurora {
     animation: aurora 5s linear infinite alternate;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-aurora {
+      animation: none;
+    }
+  }
 }
 
 /* aegis-next join UI migration */

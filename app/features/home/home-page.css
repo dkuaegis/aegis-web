@@ -705,28 +705,30 @@
   color: #95aeff;
 }
 
-.home-orb-sphere {
-  animation: home-orb-float 8s ease-in-out infinite alternate;
-}
+@media (prefers-reduced-motion: no-preference) {
+  .home-orb-sphere {
+    animation: home-orb-float 8s ease-in-out infinite alternate;
+  }
 
-.home-orb-color.is-blue {
-  animation: home-orb-drift-blue 12s ease-in-out infinite alternate;
-}
+  .home-orb-color.is-blue {
+    animation: home-orb-drift-blue 12s ease-in-out infinite alternate;
+  }
 
-.home-orb-color.is-coral {
-  animation: home-orb-drift-coral 14s ease-in-out infinite alternate;
-}
+  .home-orb-color.is-coral {
+    animation: home-orb-drift-coral 14s ease-in-out infinite alternate;
+  }
 
-.home-orb-color.is-green {
-  animation: home-orb-drift-green 10s ease-in-out infinite alternate;
-}
+  .home-orb-color.is-green {
+    animation: home-orb-drift-green 10s ease-in-out infinite alternate;
+  }
 
-.home-orb-refraction {
-  animation: home-orb-refraction 11s ease-in-out infinite alternate;
-}
+  .home-orb-refraction {
+    animation: home-orb-refraction 11s ease-in-out infinite alternate;
+  }
 
-.home-hero-orb::before {
-  animation: home-orb-halo 10s ease-in-out infinite alternate;
+  .home-hero-orb::before {
+    animation: home-orb-halo 10s ease-in-out infinite alternate;
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
