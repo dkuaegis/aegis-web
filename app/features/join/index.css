@@ -416,6 +416,76 @@
   }
 }
 
+.join-success__circle {
+  fill: #3bbd5e;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: join-success-pop 550ms ease-out both;
+}
+
+.join-success__check {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 24;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: join-success-draw 350ms 480ms ease-out forwards;
+}
+
+.join-success__burst {
+  stroke: #3bbd5e;
+  stroke-width: 12;
+  stroke-linecap: round;
+  opacity: 0;
+  animation: join-success-burst 650ms 180ms ease-out;
+}
+
+@keyframes join-success-pop {
+  0% {
+    transform: scale(0);
+  }
+  45% {
+    transform: scale(1);
+  }
+  70% {
+    transform: scale(0.93);
+  }
+}
+
+@keyframes join-success-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes join-success-burst {
+  0% {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .join-success__circle,
+  .join-success__check,
+  .join-success__burst {
+    animation: none;
+  }
+
+  .join-success__check {
+    stroke-dashoffset: 0;
+  }
+}
+
 .join-navigation-inner {
   display: flex;
   width: min(100%, 680px);

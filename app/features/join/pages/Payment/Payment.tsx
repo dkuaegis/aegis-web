@@ -1,9 +1,10 @@
 import { useI18n } from "@app/i18n";
 import "./Payment.css";
+import Complete from "@join/components/ui/custom/complete";
 import NavigationButtons from "@join/components/ui/custom/navigationButton";
 import { useAuthStore } from "@join/stores/authStore";
 import { ChevronRight } from "lucide-react";
-import React, { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Coupon from "../Coupon/Coupon";
 import { fetchCoupon } from "../Coupon/Coupon.Api";
 import type { Coupon as CouponType } from "../Coupon/Coupon.Types";
@@ -12,10 +13,6 @@ import PaymentAmount from "./Payment.Amount";
 import PaymentDialog from "./Payment.Dialog";
 import Information from "./Payment.Information";
 import { usePaymentPolling } from "./usePaymentPolling";
-
-const Complete = React.lazy(
-  () => import("@join/components/ui/custom/complete")
-);
 
 const Payment = () => {
   const { t } = useI18n();
@@ -120,7 +117,7 @@ const Payment = () => {
             </div>
           </div>
         ) : (
-          <Suspense>
+          <>
             <Complete message={t("join.payment.completeMessage")} />
             <NavigationButtons
               disabled={!isValid}
@@ -128,7 +125,7 @@ const Payment = () => {
                 completeRegistration();
               }}
             />
-          </Suspense>
+          </>
         )}
       </div>
       <PaymentDialog
