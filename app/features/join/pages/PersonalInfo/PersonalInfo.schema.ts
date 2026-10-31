@@ -35,13 +35,10 @@ export const personalInfoSchema = z.object({
     z.minLength(1, {
       error: () => t("join.personalInfo.validation.phoneRequired"),
     }),
-    z.refine(
-      (val) => {
-        const phoneRegex = /^(01[016789])-?[0-9]{3,4}-?[0-9]{4}$/;
-        return phoneRegex.test(val);
-      },
-      { error: () => t("join.personalInfo.validation.phoneFormat") }
-    )
+    // 서버의 PersonalInfoUpdateRequest와 같은 형식만 허용합니다.
+    z.regex(/^010-\d{4}-\d{4}$/, {
+      error: () => t("join.personalInfo.validation.phoneFormat"),
+    })
   ),
   department: z.enum(DEPARTMENT_VALUES, {
     error: () => t("join.personalInfo.validation.departmentRequired"),

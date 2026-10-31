@@ -22,7 +22,7 @@ const JoinReason = () => {
         className="join-reason-textarea"
         rows={8}
         placeholder={t("join.survey.joinReasonPlaceholder")}
-        maxLength={510}
+        maxLength={511}
         {...register("joinReason")}
       />
       <ErrorMessage
