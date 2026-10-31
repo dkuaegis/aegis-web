@@ -27,6 +27,12 @@ import ForbiddenPage from "@study/pages/ForbiddenPage";
 import { Check, Copy, Send } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+// 서버의 LocalDate("2026-10-31")를 UTC가 아닌 현지 날짜로 해석합니다.
+function parseLocalDate(value: string) {
+  const [year, month, day] = value.split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
+
 interface AttendanceProps {
   studyId: number;
   onBack: (id: number) => void;
@@ -48,6 +54,7 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
     useState<AttendanceInstructorResponse | null>(null);
   const [isLoadingAttendance, setIsLoadingAttendance] = useState(false);
   const [attendanceError, setAttendanceError] = useState<string | null>(null);
+  const [reloadKey, setReloadKey] = useState(0);
   const toast = useToast();
   const inFlight = useRef(false);
 
@@ -88,7 +95,7 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
       cancelled = true;
       controller.abort();
     };
-  }, [studyId, isOwner, isRoleLoading, toast]);
+  }, [studyId, isOwner, isRoleLoading, toast, reloadKey]);
 
   if (isRoleLoading)
     return (
@@ -122,7 +129,10 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
   if (attendanceError)
     return (
       <StudyLayout onBack={() => onBack(studyId)}>
-        <StudyError message={attendanceError} />
+        <StudyError
+          message={attendanceError}
+          onRetry={() => setReloadKey((key) => key + 1)}
+        />
       </StudyLayout>
     );
   if (!attendanceData)
@@ -140,6 +150,10 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
     try {
       const res: AttendanceCodeResponse = await fetchAttendanceCode(studyId);
       setAttendanceCode(res.code);
+      // 코드를 발급하면 오늘 세션이 생기므로 표를 조용히 다시 불러옵니다.
+      fetchAttendanceInstructor(studyId)
+        .then(setAttendanceData)
+        .catch(() => undefined);
     } catch (err: unknown) {
       const message =
         err instanceof Error ? err.message : t("study.attendance.codeError");
@@ -202,7 +216,7 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
                       })}
                     </span>
                     <small>
-                      {new Date(session.date).toLocaleDateString(
+                      {parseLocalDate(session.date).toLocaleDateString(
                         language === "en" ? "en-US" : "ko-KR",
                         { month: "numeric", day: "numeric" }
                       )}
