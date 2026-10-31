@@ -1,5 +1,5 @@
 import { useI18n } from "@app/i18n";
-import { Environment, Html, OrbitControls } from "@react-three/drei";
+import { Html, OrbitControls } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useMemo, useRef, useState } from "react";
 import * as THREE from "three";
@@ -27,11 +27,13 @@ function Machine3D({
   onResult,
   onShowResult,
   isOverlayOpen,
+  overlayContainer,
 }: {
   items: GachaItem[];
   onResult?: (item: GachaItem) => void;
   onShowResult: (item: GachaItem | null) => void;
   isOverlayOpen: boolean;
+  overlayContainer: React.RefObject<HTMLElement>;
 }) {
   const { t } = useI18n();
   const groupRef = useRef<THREE.Group | null>(null);
@@ -223,15 +225,17 @@ function Machine3D({
       </mesh>
 
       {/* 조명 */}
+      <ambientLight intensity={2.6} />
       <hemisphereLight intensity={0.6} groundColor={new THREE.Color("#bcd")} />
       <directionalLight position={[2, 3, 2]} intensity={1.1} />
-      <Environment preset="city" />
 
       <OrbitControls enableZoom={false} enablePan={false} />
 
       {/* 뽑기 버튼 */}
+      {/* Html re-targets once R3F connects its events and the button would
+          disappear, so the container is fixed from the first render. */}
       {!isOverlayOpen && (
-        <Html position={[0, -1.4, 0]} center>
+        <Html position={[0, -1.4, 0]} center portal={overlayContainer}>
           <button
             type="button"
             onClick={handleSpin}
@@ -287,9 +291,14 @@ export default function GachaMachine3D({
         ];
 
   const [resultItem, setResultItem] = useState<GachaItem | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div style={{ width, height, position: "relative" }} className={className}>
+    <div
+      ref={containerRef}
+      style={{ width, height, position: "relative" }}
+      className={className}
+    >
       <Canvas
         dpr={deviceRatio}
         camera={{ position: [0.6, 0.6, 2.2], fov: 45 }}
@@ -301,6 +310,7 @@ export default function GachaMachine3D({
             onResult={onResult}
             onShowResult={setResultItem}
             isOverlayOpen={!!resultItem}
+            overlayContainer={containerRef as React.RefObject<HTMLElement>}
           />
         </group>
       </Canvas>
