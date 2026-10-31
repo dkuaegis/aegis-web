@@ -30,6 +30,14 @@ import {
   AlertDialogTrigger,
 } from "@app/components/ui/alert-dialog";
 import { Button } from "@app/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@app/components/ui/dialog";
 import { Field, FieldError, FieldLabel } from "@app/components/ui/field";
 import { CodeField } from "@app/components/ui/otp-field";
 import { Spinner } from "@app/components/ui/spinner";
@@ -43,11 +51,12 @@ import {
   ArrowRightIcon,
   CheckIcon,
   ClipboardListIcon,
+  KeyRoundIcon,
   LinkIcon,
   PencilLineIcon,
   UsersIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link, useFetcher } from "react-router";
 import type { Route } from "./+types/detail";
 import { useStudyContext } from "./layout";
@@ -393,7 +402,7 @@ function JoinPanel({
     );
   }
 
-  if (!enrollment.open) {
+  if (enrollment.status !== "open") {
     return (
       <Panel heading={heading}>
         <PanelStatus
@@ -496,16 +505,46 @@ function FcfsJoin() {
 
 function AttendancePanel() {
   const { t } = useI18n();
+  return (
+    <Panel heading={t("study.labels.roles.participant")}>
+      <div className="grid gap-2">
+        <p className="m-0 text-[1.25rem] leading-snug font-[800] tracking-[-0.035em]">
+          {t("study.attendance.heading")}
+        </p>
+        <p className="m-0 text-[0.9375rem] leading-relaxed text-ink-muted">
+          {t("study.attendance.prompt")}
+        </p>
+      </div>
+      <AttendanceDialog />
+    </Panel>
+  );
+}
+
+/**
+ * The code is typed in a dialog: digit boxes have a natural size, and the
+ * side panel's width changes with the screen.
+ */
+function AttendanceDialog() {
+  const { t } = useI18n();
   const fetcher = useFetcher<typeof clientAction>({ key: "attend" });
+  const [open, setOpen] = useState(false);
   const [code, setCode] = useState("");
   const [touched, setTouched] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
   const busy = fetcher.state !== "idle";
   const valid = /^\d{4}$/.test(code);
 
   useFetcherResult(fetcher, (result) => {
-    if (!result.ok) return;
+    if (result.ok) {
+      setOpen(false);
+      return;
+    }
+    // The boxes were disabled while sending; clear them and put the caret
+    // back so the next try can be typed straight away.
     setCode("");
-    setTouched(false);
+    requestAnimationFrame(() =>
+      formRef.current?.querySelector("input")?.focus()
+    );
   });
 
   const submit = (value: string) => {
@@ -515,52 +554,79 @@ function AttendancePanel() {
   };
 
   const serverError =
-    fetcher.data?.ok === false && !busy ? fetcher.data.message : null;
-  const error = touched && !valid ? t("study.attendance.invalid") : serverError;
+    fetcher.data?.ok === false && !busy && !code ? fetcher.data.message : null;
+  const error =
+    touched && !valid && code ? t("study.attendance.invalid") : serverError;
 
   return (
-    <Panel heading={t("study.labels.roles.participant")}>
-      <div className="grid gap-2">
-        <p className="m-0 text-[1.25rem] leading-snug font-[800] tracking-[-0.035em]">
-          {t("study.attendance.heading")}
-        </p>
-        <p className="m-0 text-[0.9375rem] leading-relaxed text-ink-muted">
-          {t("study.attendance.description")}
-        </p>
-      </div>
-      <form
-        noValidate
-        className="grid gap-3"
-        onSubmit={(event) => {
-          event.preventDefault();
-          submit(code);
-        }}
+    <Dialog
+      open={open}
+      onOpenChange={(next) => {
+        if (busy) return;
+        if (next) {
+          setCode("");
+          setTouched(false);
+        }
+        setOpen(next);
+      }}
+    >
+      <DialogTrigger
+        render={
+          <Button size="lg" variant="ink" className="w-full">
+            <KeyRoundIcon aria-hidden="true" />
+            {t("study.attendance.open")}
+          </Button>
+        }
+      />
+      <DialogContent
+        className="max-w-sm text-center"
+        // Straight to the first box, so phones raise the number pad.
+        initialFocus={() => formRef.current?.querySelector("input") ?? true}
       >
-        <Field invalid={Boolean(error)}>
-          <FieldLabel className="sr-only">
-            {t("study.attendance.label")}
-          </FieldLabel>
-          <CodeField
-            length={4}
-            value={code}
-            onValueChange={(value) => {
-              setCode(value);
-              if (touched) setTouched(false);
-            }}
-            onValueComplete={submit}
-            disabled={busy}
-            slotLabel={(index) =>
-              t("study.attendance.slot", { index: index + 1, length: 4 })
-            }
-          />
-          {error && <FieldError>{error}</FieldError>}
-        </Field>
-        <Button type="submit" size="lg" variant="ink" disabled={busy}>
-          {busy && <Spinner />}
-          {t("study.attendance.submit")}
-        </Button>
-      </form>
-    </Panel>
+        <form
+          ref={formRef}
+          noValidate
+          className="grid gap-6"
+          onSubmit={(event) => {
+            event.preventDefault();
+            submit(code);
+          }}
+        >
+          <DialogHeader className="px-0 text-balance">
+            <DialogTitle>{t("study.attendance.dialogTitle")}</DialogTitle>
+            <DialogDescription>
+              {t("study.attendance.description")}
+            </DialogDescription>
+          </DialogHeader>
+          <Field invalid={Boolean(error)}>
+            <FieldLabel className="sr-only">
+              {t("study.attendance.label")}
+            </FieldLabel>
+            <CodeField
+              length={4}
+              className="justify-center"
+              value={code}
+              onValueChange={(value) => {
+                setCode(value);
+                if (touched) setTouched(false);
+              }}
+              onValueComplete={submit}
+              disabled={busy}
+              slotLabel={(index) =>
+                t("study.attendance.slot", { index: index + 1, length: 4 })
+              }
+            />
+            {error && (
+              <FieldError className="justify-center">{error}</FieldError>
+            )}
+          </Field>
+          <Button type="submit" size="lg" variant="ink" disabled={busy}>
+            {busy && <Spinner />}
+            {t("study.attendance.submit")}
+          </Button>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }
 

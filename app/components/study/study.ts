@@ -61,9 +61,11 @@ export function roleOf(
   return null;
 }
 
-export type EnrollmentWindow =
-  | { open: true; message: string }
-  | { open: false; message: string };
+/** `upcoming` means a window is set and has not started yet. */
+export interface EnrollmentWindow {
+  status: "open" | "upcoming" | "closed";
+  message: string;
+}
 
 /** Sentence describing the sign-up window from the public feature policy. */
 export function enrollmentWindow(
@@ -76,7 +78,7 @@ export function enrollmentWindow(
   } = policy;
   if (studyEnrollmentAllowed) {
     return {
-      open: true,
+      status: "open",
       message: studyEnrollmentCloseAt
         ? t("study.enrollment.openUntil", {
             date: formatDateTime(studyEnrollmentCloseAt),
@@ -90,7 +92,7 @@ export function enrollmentWindow(
     parseServerDate(studyEnrollmentOpenAt).getTime() > now
   ) {
     return {
-      open: false,
+      status: "upcoming",
       message: t("study.enrollment.opensAt", {
         date: formatDateTime(studyEnrollmentOpenAt),
       }),
@@ -101,13 +103,13 @@ export function enrollmentWindow(
     parseServerDate(studyEnrollmentCloseAt).getTime() <= now
   ) {
     return {
-      open: false,
+      status: "closed",
       message: t("study.enrollment.ended", {
         date: formatDateTime(studyEnrollmentCloseAt),
       }),
     };
   }
-  return { open: false, message: t("study.enrollment.closedNoDate") };
+  return { status: "closed", message: t("study.enrollment.closedNoDate") };
 }
 
 /** Route params are strings; anything that is not a positive id is a 404. */

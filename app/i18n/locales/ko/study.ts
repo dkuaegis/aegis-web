@@ -36,8 +36,7 @@ export const study = {
       REJECTED: "거절",
       NONE: "지원 전",
     },
-    recruiting: "모집 중",
-    closed: "모집 마감",
+    full: "정원 마감",
     unlimited: "인원 제한 없음",
     participants: "{{count}}명 참여",
     participantsOf: "{{count}} / {{max}}명",
@@ -46,18 +45,16 @@ export const study = {
 
   list: {
     metaTitle: "스터디",
-    eyebrow: "Study",
     title: "스터디",
     description:
       "함께 공부할 사람을 찾거나, 직접 스터디를 열어 아는 것을 나눠 보세요.",
     create: "스터디 개설",
     creationClosed: "지금은 스터디 개설 기간이 아닙니다.",
     mine: "내 스터디",
-    all: "이번 학기 스터디",
+    all: "스터디 목록",
     filterLabel: "카테고리",
     filterAll: "전체",
     recruitingOnly: "모집 중만 보기",
-    count: "{{count}}개",
     empty: "아직 개설된 스터디가 없습니다",
     emptyDescription: "이번 학기 첫 스터디를 열어 보세요.",
     emptyFiltered: "조건에 맞는 스터디가 없습니다",
@@ -70,7 +67,7 @@ export const study = {
     open: "신청 기간",
     openUntil: "{{date}}까지 신청할 수 있습니다.",
     openAlways: "지금 신청할 수 있습니다.",
-    closed: "신청 기간이 아닙니다",
+    upcoming: "신청 예정",
     opensAt: "{{date}}부터 신청할 수 있습니다.",
     ended: "{{date}}에 신청이 마감되었습니다.",
     closedNoDate: "신청이 열리면 이 페이지에서 바로 신청할 수 있습니다.",
@@ -131,6 +128,9 @@ export const study = {
 
   attendance: {
     heading: "출석",
+    prompt: "스터디 시간에 스터디장이 알려 주는 코드로 출석합니다.",
+    open: "출석 코드 입력",
+    dialogTitle: "출석 코드 입력",
     description: "스터디장이 알려 준 4자리 코드를 입력하세요.",
     label: "출석 코드",
     submit: "출석하기",

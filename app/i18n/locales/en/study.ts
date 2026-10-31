@@ -36,8 +36,7 @@ export const study = {
       REJECTED: "Declined",
       NONE: "Not applied",
     },
-    recruiting: "Open",
-    closed: "Full",
+    full: "Full",
     unlimited: "No limit",
     participants: "{{count}} joined",
     participantsOf: "{{count}} / {{max}}",
@@ -46,18 +45,16 @@ export const study = {
 
   list: {
     metaTitle: "Studies",
-    eyebrow: "Study",
     title: "Studies",
     description:
       "Find people to learn with, or start a study and share what you know.",
     create: "Start a study",
     creationClosed: "Studies cannot be started right now.",
     mine: "My studies",
-    all: "This semester",
+    all: "All studies",
     filterLabel: "Category",
     filterAll: "All",
     recruitingOnly: "Open only",
-    count: "{{count}}",
     empty: "No studies yet",
     emptyDescription: "Start the first study of the semester.",
     emptyFiltered: "No studies match",
@@ -70,7 +67,7 @@ export const study = {
     open: "Sign-up open",
     openUntil: "You can sign up until {{date}}.",
     openAlways: "You can sign up now.",
-    closed: "Sign-up is closed",
+    upcoming: "Sign-up opens soon",
     opensAt: "Sign-up opens {{date}}.",
     ended: "Sign-up closed {{date}}.",
     closedNoDate: "Once sign-up opens you can join from this page.",
@@ -132,6 +129,10 @@ export const study = {
 
   attendance: {
     heading: "Attendance",
+    prompt:
+      "Check in with the code your study leader gives out in each session.",
+    open: "Enter code",
+    dialogTitle: "Enter attendance code",
     description: "Enter the 4-digit code from your study leader.",
     label: "Attendance code",
     submit: "Check in",
