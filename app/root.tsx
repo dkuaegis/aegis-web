@@ -1,3 +1,4 @@
+import { RotateCwIcon } from "lucide-react";
 import type { LinksFunction, MetaFunction } from "react-router";
 import {
   isRouteErrorResponse,
@@ -9,6 +10,9 @@ import {
   useRouteError,
 } from "react-router";
 import BrowserRedirectPage from "./components/BrowserRedirectPage";
+import { StateMessage } from "./components/page/States";
+import { Wordmark } from "./components/site/Wordmark";
+import { buttonVariants } from "./components/ui/button";
 import { Toaster } from "./components/ui/toast";
 import { useExternalBrowser } from "./hooks/useExternalBrowser";
 import { I18nProvider } from "./i18n";
@@ -86,31 +90,60 @@ export function ErrorBoundary() {
   const notFound = isRouteErrorResponse(error) && error.status === 404;
   if (!notFound) console.error(error);
 
+  // Rendered without the providers (they may be what failed), so it reads
+  // translations from the store and uses plain links that reload the app.
   return (
-    <main className="grid min-h-dvh place-content-center justify-items-start gap-5 bg-paper p-8 text-ink">
-      <p className="m-0 font-wordmark text-[1.6rem] font-bold">AEGIS</p>
-      <p role="alert" className="m-0 text-[1.375rem] font-[800]">
-        {t(
-          notFound ? "common.states.notFoundTitle" : "common.states.errorTitle"
+    <div className="flex min-h-dvh flex-col bg-paper text-ink">
+      <header className="border-b border-white/18 bg-ink text-paper">
+        <div className="frame-x flex min-h-(--header-height) items-center">
+          <a
+            href="/"
+            aria-label={t("common.site.brandHome")}
+            className="flex h-full items-center px-4 min-[821px]:px-[clamp(1.25rem,3vw,2.6rem)]"
+          >
+            <Wordmark />
+          </a>
+        </div>
+      </header>
+      <main className="flex-1">
+        {notFound ? (
+          <StateMessage
+            size="page"
+            eyebrow="404"
+            title={t("common.states.notFoundTitle")}
+            description={t("common.states.notFoundDescription")}
+            action={
+              <a href="/" className={buttonVariants({ variant: "ink" })}>
+                {t("common.states.goHome")}
+              </a>
+            }
+          />
+        ) : (
+          <StateMessage
+            size="page"
+            role="alert"
+            eyebrow={t("common.states.errorEyebrow")}
+            title={t("common.states.errorTitle")}
+            description={t("common.states.crashDescription")}
+            action={
+              <>
+                <button
+                  type="button"
+                  onClick={() => window.location.reload()}
+                  className={buttonVariants({ variant: "ink" })}
+                >
+                  <RotateCwIcon aria-hidden="true" />
+                  {t("common.states.reload")}
+                </button>
+                <a href="/" className={buttonVariants({ variant: "outline" })}>
+                  {t("common.states.goHome")}
+                </a>
+              </>
+            }
+          />
         )}
-      </p>
-      {notFound ? (
-        <a
-          className="font-[750] text-blue underline-offset-4 hover:underline"
-          href="/"
-        >
-          {t("common.states.goHome")}
-        </a>
-      ) : (
-        <button
-          type="button"
-          className="cursor-pointer font-[750] text-blue underline-offset-4 hover:underline"
-          onClick={() => window.location.reload()}
-        >
-          {t("common.states.reload")}
-        </button>
-      )}
-    </main>
+      </main>
+    </div>
   );
 }
 
