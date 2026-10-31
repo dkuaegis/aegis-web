@@ -17,6 +17,7 @@ import { Toaster } from "./components/ui/toast";
 import { useExternalBrowser } from "./hooks/useExternalBrowser";
 import { I18nProvider } from "./i18n";
 import { t } from "./i18n/store";
+import { SITE_NAME } from "./lib/title";
 import "./index.css";
 
 export const links: LinksFunction = () => [
@@ -33,7 +34,7 @@ export const meta: MetaFunction = () => {
     { name: "description", content: description },
     { name: "theme-color", content: "#18181b" },
     { property: "og:type", content: "website" },
-    { property: "og:site_name", content: "Aegis" },
+    { property: "og:site_name", content: SITE_NAME },
     { property: "og:title", content: title },
     { property: "og:description", content: description },
     { name: "twitter:card", content: "summary" },

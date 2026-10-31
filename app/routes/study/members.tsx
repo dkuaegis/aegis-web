@@ -13,11 +13,12 @@ import {
 import { toast } from "@app/components/ui/toast";
 import { useI18n } from "@app/i18n";
 import { t as translate } from "@app/i18n/store";
+import { pageTitle } from "@app/lib/title";
 import { CopyIcon } from "lucide-react";
 import type { Route } from "./+types/members";
 
 export function meta() {
-  return [{ title: `${translate("study.members.metaTitle")} | AEGIS` }];
+  return [{ title: pageTitle(translate("study.members.metaTitle")) }];
 }
 
 export async function clientLoader({

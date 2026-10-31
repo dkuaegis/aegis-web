@@ -3,12 +3,13 @@ import { useI18n } from "@app/i18n";
 import { t as translate } from "@app/i18n/store";
 import { safeReturnTo, startGoogleLogin } from "@app/lib/auth";
 import { invalidateSession, loadSession } from "@app/lib/session";
+import { pageTitle } from "@app/lib/title";
 import { useEffect } from "react";
 import { redirect } from "react-router";
 import type { Route } from "./+types/login";
 
 export function meta() {
-  return [{ title: translate("pages.login.metaTitle") }];
+  return [{ title: pageTitle(translate("pages.login.metaTitle")) }];
 }
 
 /**

@@ -8,12 +8,13 @@ import { useI18n } from "@app/i18n";
 import { t as translate } from "@app/i18n/store";
 import { jsonBody } from "@app/lib/actions";
 import { errorMessage } from "@app/lib/errors";
+import { pageTitle } from "@app/lib/title";
 import { redirect, useNavigation, useSubmit } from "react-router";
 import type { Route } from "./+types/new";
 import { useStudyContext } from "./layout";
 
 export function meta() {
-  return [{ title: `${translate("study.form.createMetaTitle")} | AEGIS` }];
+  return [{ title: pageTitle(translate("study.form.createMetaTitle")) }];
 }
 
 export async function clientAction({ request }: Route.ClientActionArgs) {

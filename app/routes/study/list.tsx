@@ -13,6 +13,7 @@ import { buttonVariants } from "@app/components/ui/button";
 import { Checkbox } from "@app/components/ui/checkbox";
 import { useI18n } from "@app/i18n";
 import { t as translate } from "@app/i18n/store";
+import { pageTitle } from "@app/lib/title";
 import { cn } from "@app/lib/utils";
 import { ArrowRightIcon, PlusIcon } from "lucide-react";
 import { useEffect, useId, useRef } from "react";
@@ -21,7 +22,7 @@ import type { Route } from "./+types/list";
 import { useStudyContext } from "./layout";
 
 export function meta() {
-  return [{ title: `${translate("study.list.metaTitle")} | AEGIS` }];
+  return [{ title: pageTitle(translate("study.list.metaTitle")) }];
 }
 
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {

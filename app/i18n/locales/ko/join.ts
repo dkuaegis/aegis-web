@@ -1,4 +1,5 @@
 export const join = {
+  metaTitle: "동아리 가입",
   steps: {
     progressLabel: "가입 진행 단계",
     agreement: "회칙 동의",

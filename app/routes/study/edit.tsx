@@ -9,12 +9,13 @@ import { useI18n } from "@app/i18n";
 import { t as translate } from "@app/i18n/store";
 import { jsonBody } from "@app/lib/actions";
 import { errorMessage } from "@app/lib/errors";
+import { pageTitle } from "@app/lib/title";
 import { redirect, useNavigation, useSubmit } from "react-router";
 import type { Route } from "./+types/edit";
 import { useStudyContext } from "./layout";
 
 export function meta() {
-  return [{ title: `${translate("study.form.editMetaTitle")} | AEGIS` }];
+  return [{ title: pageTitle(translate("study.form.editMetaTitle")) }];
 }
 
 export async function clientLoader({

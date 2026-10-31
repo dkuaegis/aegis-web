@@ -1,6 +1,6 @@
-# AEGIS Web
+# Aegis Web
 
-The web frontend for AEGIS, providing public club information, study pages, membership onboarding, and member services.
+The web frontend for Aegis, providing public club information, study pages, membership onboarding, and member services.
 
 ## Features
 

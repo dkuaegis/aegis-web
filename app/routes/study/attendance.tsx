@@ -20,13 +20,14 @@ import { useI18n } from "@app/i18n";
 import { t as translate } from "@app/i18n/store";
 import { errorMessage } from "@app/lib/errors";
 import { formatDate } from "@app/lib/format";
+import { pageTitle } from "@app/lib/title";
 import { cn } from "@app/lib/utils";
 import { KeyRoundIcon } from "lucide-react";
 import { useFetcher } from "react-router";
 import type { Route } from "./+types/attendance";
 
 export function meta() {
-  return [{ title: `${translate("study.attendanceAdmin.metaTitle")} | AEGIS` }];
+  return [{ title: pageTitle(translate("study.attendanceAdmin.metaTitle")) }];
 }
 
 export async function clientLoader({

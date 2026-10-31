@@ -21,7 +21,7 @@ export const common = {
   mobileMainMenu: "모바일 주요 메뉴",
 
   site: {
-    brandHome: "AEGIS 홈",
+    brandHome: "Aegis 홈",
     skipLink: "본문으로 바로가기",
     footerLinks: "소셜 및 문의 링크",
     nav: {

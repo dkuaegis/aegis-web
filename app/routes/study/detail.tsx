@@ -46,6 +46,7 @@ import { useI18n } from "@app/i18n";
 import { t as translate } from "@app/i18n/store";
 import { runAction, useFetcherResult } from "@app/lib/actions";
 import { hasErrorCode } from "@app/lib/errors";
+import { pageTitle } from "@app/lib/title";
 import { cn } from "@app/lib/utils";
 import {
   ArrowRightIcon,
@@ -62,7 +63,13 @@ import type { Route } from "./+types/detail";
 import { useStudyContext } from "./layout";
 
 export function meta({ loaderData }: Route.MetaArgs) {
-  return [{ title: `${loaderData?.study.title ?? ""} | AEGIS` }];
+  return [
+    {
+      title: pageTitle(
+        loaderData?.study.title ?? translate("study.list.metaTitle")
+      ),
+    },
+  ];
 }
 
 export async function clientLoader({

@@ -21,7 +21,7 @@ export const common = {
   mobileMainMenu: "Mobile main menu",
 
   site: {
-    brandHome: "AEGIS home",
+    brandHome: "Aegis home",
     skipLink: "Skip to content",
     footerLinks: "Social and contact links",
     nav: {

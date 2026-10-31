@@ -1,4 +1,5 @@
 export const join = {
+  metaTitle: "Join the club",
   steps: {
     progressLabel: "Sign-up progress",
     agreement: "Club rules",

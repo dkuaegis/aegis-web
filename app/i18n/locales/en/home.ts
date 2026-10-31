@@ -1,6 +1,6 @@
 export const home = {
   meta: {
-    title: "Aegis — Dankook University Development & Security Club",
+    title: "Aegis | Dankook University Development & Security Club",
     description:
       "Dankook University's leading development and security club, open to everyone who wants to grow.",
   },
@@ -10,7 +10,7 @@ export const home = {
     join: "Join",
     study: "Studies",
     mypage: "My page",
-    brandHome: "AEGIS home",
+    brandHome: "Aegis home",
   },
 
   skipLink: "Skip to main content",

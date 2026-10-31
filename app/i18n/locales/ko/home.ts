@@ -1,6 +1,6 @@
 export const home = {
   meta: {
-    title: "Aegis - 단국대학교 개발·보안 동아리",
+    title: "Aegis | 단국대학교 개발·보안 동아리",
     description:
       "성장을 원하는 모두에게 열려있는 단국대학교 최고의 개발·보안 중앙동아리",
   },
@@ -10,7 +10,7 @@ export const home = {
     join: "가입하기",
     study: "스터디",
     mypage: "마이페이지",
-    brandHome: "AEGIS 홈",
+    brandHome: "Aegis 홈",
   },
 
   skipLink: "본문으로 바로가기",

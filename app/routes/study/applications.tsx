@@ -13,6 +13,7 @@ import {
 import { useI18n } from "@app/i18n";
 import { t as translate } from "@app/i18n/store";
 import { formatDate } from "@app/lib/format";
+import { pageTitle } from "@app/lib/title";
 import { cn } from "@app/lib/utils";
 import { ArrowRightIcon } from "lucide-react";
 import { Link, Outlet, useSearchParams } from "react-router";
@@ -22,7 +23,7 @@ const FILTERS = ["ALL", "PENDING", "APPROVED", "REJECTED"] as const;
 type Filter = (typeof FILTERS)[number];
 
 export function meta() {
-  return [{ title: `${translate("study.applications.metaTitle")} | AEGIS` }];
+  return [{ title: pageTitle(translate("study.applications.metaTitle")) }];
 }
 
 export async function clientLoader({
