@@ -4,7 +4,7 @@ The web frontend for AEGIS, providing public club information, study pages, memb
 
 ## Features
 
-- Public home, FAQ, recruitment, and contact pages
+- Public home page with activities and FAQ
 - Study pages and member services
 - Multi-step membership onboarding, including personal information, surveys, coupons, and payment guidance
 - Korean and English interface
@@ -51,9 +51,6 @@ The following variables are required when starting the production container:
 | Variable | Purpose |
 | --- | --- |
 | `VITE_API_URL` | Backend API base URL |
-| `VITE_PRESIDENT_NAME_KO` | Contact name displayed in Korean |
-| `VITE_PRESIDENT_NAME_EN` | Contact name displayed in English |
-| `VITE_PRESIDENT_PHONE` | Contact phone number |
 | `VITE_ADMIN_ACCOUNT_HOLDER_KO` | Payment account holder displayed in Korean |
 | `VITE_ADMIN_ACCOUNT_HOLDER_EN` | Payment account holder displayed in English |
 
@@ -77,7 +74,7 @@ Other values in `.env.example` configure payment contact details, Kakao chat lin
 
 | Path | Contents |
 | --- | --- |
-| `app/routes/` | Top-level routes: home, study, join, mypage, FAQ, recruitment, contact, and auth continuation |
+| `app/routes/` | Top-level routes: home, study, join, mypage, and auth continuation |
 | `app/features/home/` | Public home page and shared home layout |
 | `app/features/study/` | Study experience |
 | `app/features/join/` | Membership onboarding flow |
@@ -95,9 +92,6 @@ The top-level routes are declared in [`app/routes.ts`](app/routes.ts):
 | `/study/*` | Study pages |
 | `/join/*` | Membership onboarding |
 | `/mypage/*` | Member services |
-| `/faq` | Frequently asked questions |
-| `/recruit` | Recruitment information |
-| `/contact` | Contact information |
 | `/auth/continue` | Continue an authentication intent |
 
 ## Production and deployment

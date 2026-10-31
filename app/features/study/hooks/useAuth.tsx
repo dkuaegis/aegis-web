@@ -5,7 +5,7 @@ import { AuthStatus, useAuthStore } from "@study/stores/useAuthStore";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 
-export const useAuth = () => {
+const useAuth = () => {
   const {
     status,
     setAuthenticated,

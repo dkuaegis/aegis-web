@@ -5,7 +5,7 @@ import {
   studyRecruitmentMethodLabelKey,
 } from "@study/types/study";
 
-export const StudyInfo = ({ study }: { study: StudyDetail }) => {
+const StudyInfo = ({ study }: { study: StudyDetail }) => {
   const { t } = useI18n();
   const ui = useStudyUiText();
   return (

@@ -1,6 +1,6 @@
 import { en } from "./locales/en";
 import { ko } from "./locales/ko";
-import { translate, translateList, type TranslationVars } from "./resolve";
+import { translate, type TranslationVars } from "./resolve";
 import {
   DEFAULT_LANGUAGE,
   isLanguage,
@@ -90,8 +90,4 @@ export function subscribeToLanguage(listener: () => void): () => void {
  */
 export function t(key: string, vars?: TranslationVars): string {
   return translate(getDictionary(), ko, key, vars);
-}
-
-export function tList(key: string, vars?: TranslationVars): string[] {
-  return translateList(getDictionary(), ko, key, vars);
 }

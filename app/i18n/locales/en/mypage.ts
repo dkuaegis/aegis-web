@@ -32,7 +32,6 @@ export const mypage = {
     iconAlt: "Points icon",
     coinAlt: "Coin",
     tabs: { all: "All", earned: "Earned", spent: "Spent" },
-    typeLabels: { EARN: "Earned", SPEND: "Spent" },
     dateFormat: "{{day}}/{{month}}/{{year}}",
   },
 

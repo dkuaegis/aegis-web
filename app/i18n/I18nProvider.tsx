@@ -67,8 +67,3 @@ export function useI18n(): I18nContextValue {
 
   return context;
 }
-
-/** Shorthand for the common case of only needing `t`. */
-export function useT() {
-  return useI18n().t;
-}

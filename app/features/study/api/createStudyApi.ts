@@ -7,7 +7,7 @@ import type {
 } from "@study/types/study";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export interface CreateStudyPayload {
+interface CreateStudyPayload {
   title: string;
   category: StudyCategory;
   level: StudyLevel;
@@ -19,9 +19,7 @@ export interface CreateStudyPayload {
   qualifications: string[];
 }
 
-export async function createStudy(
-  payload: CreateStudyPayload
-): Promise<unknown> {
+async function createStudy(payload: CreateStudyPayload): Promise<unknown> {
   return api.post(API_ENDPOINTS.STUDIES, payload);
 }
 

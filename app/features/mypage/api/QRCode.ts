@@ -1,10 +1,6 @@
 import { t } from "@app/i18n/store";
 import { apiRequest, getApiErrorMessage } from "@app/lib/api";
 
-export interface QRIssueRes {
-  base64: string;
-}
-
 export async function issueQRCode(): Promise<string> {
   try {
     const data = await apiRequest<string>("/qrcode/issue", {

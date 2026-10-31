@@ -1,5 +1,4 @@
 export const study = {
-  nav: { back: "뒤로가기" },
 
   loading: {
     general: "로딩 중...",
@@ -12,14 +11,6 @@ export const study = {
     applicationShort: "불러오는 중...",
   },
 
-  login: {
-    title: "환영합니다",
-    subtitle: [
-      "Aegis는 단국대학교 학생들을 위해",
-      "개발에 쉽게 입문할 수 있는 기회를 제공해요.",
-    ],
-    button: "단국대 Gmail로 로그인",
-  },
 
   forbidden: {
     default: "권한이 없습니다.",
@@ -53,25 +44,11 @@ export const study = {
       FCFS: "선착순",
       APPLICATION: "지원서",
     },
-    recruitmentMethodsLong: {
-      FCFS: "선착순 모집",
-      APPLICATION: "지원서 심사",
-    },
-    applicationStatus: {
-      PENDING: "심사중",
-      APPROVED: "승인됨",
-      REJECTED: "거절됨",
-    },
   },
 
   list: {
-    createStudy: "스터디 개설하기",
-    recruiting: "모집중",
-    closed: "모집완료",
-    noLimit: "제한 없음",
     participants: "{{current}}/{{max}}명",
     loadError: "스터디 목록을 불러오는데 실패했습니다.",
-    empty: "개설된 스터디가 없습니다.",
   },
 
   detail: {
@@ -80,21 +57,13 @@ export const study = {
     about: "스터디 소개",
     curriculum: "커리큘럼",
     qualifications: "지원 자격",
-    info: "스터디 정보",
     instructor: "스터디장",
-    recruitmentMethod: "모집 방법",
-    participantLimit: "제한 인원",
     schedule: "일정",
     ownerActions: {
-      edit: "스터디 수정",
-      applications: "스터디 지원현황",
-      members: "스터디원 관리",
       attendance: "출석 관리",
     },
     badges: {
       participating: "참여 중",
-      pending: "신청 대기 중",
-      rejected: "신청 거절됨",
     },
     attendance: {
       label: "출석코드",
@@ -108,13 +77,6 @@ export const study = {
   },
 
   application: {
-    sectionTitle: {
-      pending: "신청 현황",
-      approved: "참여 현황",
-      rejected: "신청 결과",
-      applyFcfs: "지원하기",
-      applyForm: "지원서 작성",
-    },
     statusMessage: {
       approved: "스터디에 참여 중입니다!",
       rejected: "신청이 거절되었습니다.",
@@ -122,15 +84,12 @@ export const study = {
       pending: "스터디 신청이 검토 중입니다.",
     },
     form: {
-      hint: "지원 동기 및 각오를 작성해주세요",
-      openButton: "지원서 작성하기",
       processing: "처리 중...",
       dialogTitle: "지원서 작성",
       dialogDescription: "지원 동기 및 각오를 작성해주세요.",
       placeholder:
         "스터디에 지원하는 이유와 목표, 각오 등을 자유롭게 작성해주세요.",
       submit: "제출",
-      editButton: "지원서 수정하기",
       editDialogTitle: "지원서 수정",
       editDialogDescription:
         "기존 지원서 내용이 불러와졌습니다. 지원 동기 및 각오를 수정해주세요.",
@@ -138,12 +97,9 @@ export const study = {
       editSubmitting: "수정 중...",
     },
     fcfs: {
-      applyButton: "지원하기",
       confirmTitle: "스터디 신청 확인",
       confirmDescription: "정말로 신청하시겠습니까?",
       confirmSubmit: "신청",
-      recruitingHint: "선착순으로 모집되며, 정원이 마감되면 자동으로 마감됩니다.",
-      closedHint: "모집이 마감되었습니다.",
     },
     toast: {
       appliedFcfs: "지원이 완료되었습니다! 스터디에 참여하게 되었습니다.",
@@ -157,9 +113,7 @@ export const study = {
   },
 
   form: {
-    basicInfo: "기본 정보",
     titleLabel: "스터디명",
-    titlePlaceholder: "스터디명을 입력하세요",
     titleRequired: "스터디명을 입력하세요.",
     titleMaxLength: "스터디명은 {{max}}자 이내로 입력해주세요.",
     categoryLabel: "카테고리",
@@ -168,36 +122,20 @@ export const study = {
     difficultyLabel: "난이도",
     difficultyPlaceholder: "난이도를 선택하세요",
     difficultyRequired: "난이도를 선택하세요.",
-    introductionLabel: "스터디 소개",
-    introductionPlaceholder: "스터디에 대한 자세한 소개를 작성해주세요",
     introductionRequired: "스터디 소개를 입력하세요.",
     introductionMaxLength: "스터디 소개는 {{max}}자 이내로 입력해주세요.",
 
-    recruitmentSettings: "모집 설정",
-    recruitmentMethodLabel: "모집 방법",
-    participantsLabel: "모집 인원",
-    unlimited: "제한 없음",
-    limited: "제한 있음",
-    maxParticipantsPlaceholder: "최대 인원수",
-    peopleUnit: "명",
     participantsRange: "1~50명 사이로 입력하세요.",
 
-    scheduleSection: "일정 정보",
-    scheduleLabel: "스터디 일정",
-    schedulePlaceholder: "예: 모집후 결정, 매주 화 19시",
     scheduleMaxLength: "스터디 일정은 {{max}}자 이내로 입력해주세요",
 
     curriculumSection: "커리큘럼",
-    curriculumPlaceholder: "학습할 내용을 나열해주세요.",
     curriculumRequired: "커리큘럼 내용을 입력하세요.",
     curriculumAtLeastOne: "커리큘럼을 1개 이상 입력하세요.",
     requirementsSection: "지원 자격",
-    requirementsPlaceholder: "지원 자격 조건을 입력하세요",
     requirementsRequired: "지원 자격 조건을 입력하세요.",
     requirementsAtLeastOne: "지원 자격을 1개 이상 입력하세요.",
-    addItem: "추가",
 
-    createSubmit: "스터디 개설하기",
     createSubmitting: "개설 중...",
     createConfirmTitle: "스터디 개설 확인",
     createConfirmDescription: "정말로 개설하시겠습니까?",
@@ -215,10 +153,6 @@ export const study = {
   },
 
   members: {
-    title: "스터디원 목록",
-    empty: "스터디원이 없습니다.",
-    studentIdLabel: "학번",
-    copyPhone: "전화번호 복사",
     phoneCopied: "전화번호가 복사되었습니다!",
     loadError: "스터디원 정보를 불러오지 못했습니다.",
   },
@@ -227,10 +161,6 @@ export const study = {
     fcfsTitle: "선착순 모집 스터디입니다.",
     fcfsSubtitle: "지원 현황이 없습니다.",
     noApplicants: "해당 스터디의 지원자가 아직 없습니다.",
-    noneMatchFilter: "해당하는 지원자가 없습니다.",
-    filterTitle: "지원자 필터",
-    applicantsTitle: "지원자",
-    applicantsCount: "{{count}}명",
     filters: {
       all: "전체",
       pending: "검토 중",
@@ -242,12 +172,9 @@ export const study = {
       statusApproved: "승인",
       statusRejected: "거절",
       statusUnknown: "알 수 없음",
-      studentIdLabel: "학번",
       viewApplication: "지원서 보기",
       dialogTitle: "{{name}}님의 지원서",
-      applicantLabel: "지원자",
       loadFailed: "지원서를 불러오는 데 실패했습니다.",
-      loadingPlaceholder: "지원서 내용을 불러오는 중...",
       approve: "승인",
       reject: "거절",
       approveError: "지원서 승인 중 오류가 발생했습니다.",
@@ -259,22 +186,14 @@ export const study = {
   },
 
   attendance: {
-    statusTitle: "출석 현황",
-    statusDescription: "스터디의 출석 현황을 확인할 수 있습니다.",
-    nameColumn: "이름",
     sessionColumn: "{{index}}회차",
-    rateColumn: "출석률",
     noData: "출석 데이터가 없습니다.",
     loadError: "출석 데이터를 불러오는데 실패했습니다.",
-    codeSectionTitle: "출석 코드 관리",
-    codeSectionDescription: "출석 코드를 생성합니다.",
-    generate: "출석 코드 생성",
     generating: "생성 중...",
     generateShort: "생성",
     generateConfirmTitle: "출석 코드 생성 확인",
     generateConfirmDescription:
       "정말로 생성하시겠습니까? 생성된 출석 코드는 생성한 당일에만 유효합니다.",
-    codeLabel: "출석 코드",
     codeError: "출석 코드 발급에 실패했습니다.",
   },
 

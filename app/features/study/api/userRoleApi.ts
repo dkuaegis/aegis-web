@@ -5,7 +5,7 @@ import type { UseQueryResult } from "@tanstack/react-query";
 import { useQuery } from "@tanstack/react-query";
 import { QUERY_OPTIONS_SLOW } from "./queryOptions";
 
-export const USER_ROLES_QUERY_KEY = ["userRoles"] as const;
+const USER_ROLES_QUERY_KEY = ["userRoles"] as const;
 
 async function fetchUserStudyRoles(
   signal?: AbortSignal

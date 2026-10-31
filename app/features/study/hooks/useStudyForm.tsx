@@ -16,10 +16,10 @@ import type {
 } from "react-hook-form";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 
-export interface CurriculumItem {
+interface CurriculumItem {
   value: string;
 }
-export interface RequirementItem {
+interface RequirementItem {
   value: string;
 }
 export interface FormValues extends FieldValues {
@@ -59,7 +59,7 @@ export const useStudyFormContext = () => {
   return ctx;
 };
 
-export const useStudyForm = (
+const useStudyForm = (
   initialValues?: Partial<FormValues>,
   onComplete?: (args: {
     mode: "create" | "edit";

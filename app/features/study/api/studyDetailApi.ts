@@ -13,7 +13,7 @@ type StudyDetailError = ApiError | DOMException | TypeError;
 export const STUDY_DETAIL_QUERY_KEY = (studyId: number) =>
   ["studyDetail", studyId] as const;
 
-export async function fetchStudyDetail(
+async function fetchStudyDetail(
   studyId: number,
   signal?: AbortSignal
 ): Promise<StudyDetail> {

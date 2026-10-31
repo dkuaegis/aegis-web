@@ -41,7 +41,7 @@ export interface StudyFormData {
   requirements: RequirementItem[];
 }
 
-export function getEditStudyErrorMessage(statusCode: number): string {
+function getEditStudyErrorMessage(statusCode: number): string {
   switch (statusCode) {
     case 400:
       return t("study.errors.badRequestData");
@@ -54,7 +54,7 @@ export function getEditStudyErrorMessage(statusCode: number): string {
   }
 }
 
-export async function updateStudy(
+async function updateStudy(
   studyId: number,
   data: StudyFormData,
   signal?: AbortSignal

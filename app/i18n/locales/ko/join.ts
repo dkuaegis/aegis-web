@@ -228,7 +228,6 @@ export const join = {
   payment: {
     amountLabel: "납부 금액",
     amountWithUnit: "{{amount}}원",
-    currencyUnit: " 원",
     couponDialogTitle: "할인 쿠폰",
     couponCount: "{{count}}장",
     couponFetching: "불러오는 중",
@@ -255,13 +254,7 @@ export const join = {
   coupon: {
     codeInputLabel: "쿠폰 코드",
     codeInputPlaceholder: "쿠폰 코드 입력",
-    codeInputPrompt: "쿠폰 코드를 입력하세요",
     register: "등록",
-    registerLong: "등록하기",
-    registerTitle: "쿠폰 등록",
-    registerDescription: "보유하신 쿠폰 코드를 입력해주세요.",
-    openRegister: "쿠폰 등록하기",
-    openRegisterWithCode: "코드로 쿠폰 등록하기",
     empty: "사용 가능한 쿠폰이 없습니다.",
     listLegend: "사용 가능한 쿠폰",
     applySelected: "선택한 쿠폰 적용",

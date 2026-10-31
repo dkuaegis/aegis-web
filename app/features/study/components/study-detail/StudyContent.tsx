@@ -45,7 +45,7 @@ function DetailSection({
     </section>
   );
 }
-export const StudyContent = ({ study }: { study: StudyDetail }) => {
+const StudyContent = ({ study }: { study: StudyDetail }) => {
   const { t } = useI18n();
   return (
     <div className="study-detail-content">

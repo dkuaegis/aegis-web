@@ -232,7 +232,6 @@ export const join = {
   payment: {
     amountLabel: "Amount due",
     amountWithUnit: "{{amount}} KRW",
-    currencyUnit: " KRW",
     couponDialogTitle: "Discount coupons",
     couponCount: "{{count}} available",
     couponFetching: "Loading",
@@ -260,13 +259,7 @@ export const join = {
   coupon: {
     codeInputLabel: "Coupon code",
     codeInputPlaceholder: "Enter a coupon code",
-    codeInputPrompt: "Enter your coupon code",
     register: "Add",
-    registerLong: "Add coupon",
-    registerTitle: "Add a coupon",
-    registerDescription: "Enter the coupon code you have.",
-    openRegister: "Add a coupon",
-    openRegisterWithCode: "Add a coupon by code",
     empty: "You have no coupons available.",
     listLegend: "Available coupons",
     applySelected: "Apply selected coupons",

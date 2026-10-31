@@ -5,8 +5,3 @@ export interface DrawHistoryItem {
   transactionId: number;
   createdAt: string;
 }
-
-// 포인트샵 뽑기 이력 배열
-export interface DrawHistoryProps {
-  items: DrawHistoryItem[];
-}

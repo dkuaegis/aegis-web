@@ -1,5 +1,5 @@
 // 포인트 카드용 props
-export interface PointCardProps {
+interface PointCardProps {
   type: "point";
   title: string;
   date: string;

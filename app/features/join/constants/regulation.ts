@@ -23,5 +23,5 @@ const chapters: readonly Chapter[] = [
   { id: "privacy", articles: [16] },
 ] as const;
 
-export type { Chapter, ConsentState };
+export type { ConsentState };
 export { chapters };

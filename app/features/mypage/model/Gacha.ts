@@ -15,13 +15,6 @@ export interface GachaMachine3DProps {
   modelScale?: number;
 }
 
-export interface Machine3DProps {
-  items: GachaItem[];
-  onResult?: (item: GachaItem) => void;
-  onShowResult: (item: GachaItem | null) => void;
-  isOverlayOpen: boolean;
-}
-
 export type GachaResultCardProps = {
   item: {
     label: string;

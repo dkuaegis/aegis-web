@@ -1,5 +1,4 @@
 export const study = {
-  nav: { back: "Back" },
 
   loading: {
     general: "Loading...",
@@ -12,14 +11,6 @@ export const study = {
     applicationShort: "Loading...",
   },
 
-  login: {
-    title: "Welcome",
-    subtitle: [
-      "Aegis gives Dankook University students",
-      "an easy way into software development.",
-    ],
-    button: "Sign in with your Dankook Gmail",
-  },
 
   forbidden: {
     default: "You do not have permission to view this.",
@@ -53,25 +44,11 @@ export const study = {
       FCFS: "First come",
       APPLICATION: "Application",
     },
-    recruitmentMethodsLong: {
-      FCFS: "First come, first served",
-      APPLICATION: "Reviewed application",
-    },
-    applicationStatus: {
-      PENDING: "Under review",
-      APPROVED: "Approved",
-      REJECTED: "Rejected",
-    },
   },
 
   list: {
-    createStudy: "Start a study",
-    recruiting: "Open",
-    closed: "Full",
-    noLimit: "No limit",
     participants: "{{current}}/{{max}}",
     loadError: "We could not load the list of studies.",
-    empty: "No studies have been created yet.",
   },
 
   detail: {
@@ -80,21 +57,13 @@ export const study = {
     about: "About this study",
     curriculum: "Curriculum",
     qualifications: "Who can join",
-    info: "Details",
     instructor: "Leader",
-    recruitmentMethod: "How members are chosen",
-    participantLimit: "Capacity",
     schedule: "Schedule",
     ownerActions: {
-      edit: "Edit study",
-      applications: "Applications",
-      members: "Manage members",
       attendance: "Attendance",
     },
     badges: {
       participating: "Joined",
-      pending: "Awaiting review",
-      rejected: "Not accepted",
     },
     attendance: {
       label: "Attendance code",
@@ -108,13 +77,6 @@ export const study = {
   },
 
   application: {
-    sectionTitle: {
-      pending: "Your application",
-      approved: "Your membership",
-      rejected: "Application result",
-      applyFcfs: "Join this study",
-      applyForm: "Apply",
-    },
     statusMessage: {
       approved: "You're part of this study!",
       rejected: "Your application was not accepted.",
@@ -122,15 +84,12 @@ export const study = {
       pending: "Your application is being reviewed.",
     },
     form: {
-      hint: "Tell the leader why you want to join",
-      openButton: "Write an application",
       processing: "Working...",
       dialogTitle: "Your application",
       dialogDescription: "Tell the leader why you want to join.",
       placeholder:
         "Why do you want to join this study, and what do you hope to get out of it? Write freely.",
       submit: "Submit",
-      editButton: "Edit your application",
       editDialogTitle: "Edit your application",
       editDialogDescription:
         "Your current application is loaded below — edit it as you like.",
@@ -138,13 +97,9 @@ export const study = {
       editSubmitting: "Saving...",
     },
     fcfs: {
-      applyButton: "Join",
       confirmTitle: "Confirm your request",
       confirmDescription: "Are you sure you want to join?",
       confirmSubmit: "Join",
-      recruitingHint:
-        "Places are first come, first served, and close automatically once the study is full.",
-      closedHint: "This study is no longer taking members.",
     },
     toast: {
       appliedFcfs: "You're in — welcome to the study!",
@@ -160,9 +115,7 @@ export const study = {
   },
 
   form: {
-    basicInfo: "Basics",
     titleLabel: "Study name",
-    titlePlaceholder: "Name your study",
     titleRequired: "Please name your study.",
     titleMaxLength: "Keep the name to {{max}} characters or fewer.",
     categoryLabel: "Category",
@@ -171,37 +124,21 @@ export const study = {
     difficultyLabel: "Level",
     difficultyPlaceholder: "Pick a level",
     difficultyRequired: "Please pick a level.",
-    introductionLabel: "Description",
-    introductionPlaceholder: "Describe the study in as much detail as you like",
     introductionRequired: "Please describe your study.",
     introductionMaxLength:
       "Keep the description to {{max}} characters or fewer.",
 
-    recruitmentSettings: "Recruitment",
-    recruitmentMethodLabel: "How members are chosen",
-    participantsLabel: "Capacity",
-    unlimited: "No limit",
-    limited: "Limited",
-    maxParticipantsPlaceholder: "Max",
-    peopleUnit: "people",
     participantsRange: "Enter a number between 1 and 50.",
 
-    scheduleSection: "Schedule",
-    scheduleLabel: "When it meets",
-    schedulePlaceholder: "e.g. decided after recruiting, Tuesdays at 19:00",
     scheduleMaxLength: "Keep the schedule to {{max}} characters or fewer",
 
     curriculumSection: "Curriculum",
-    curriculumPlaceholder: "List what the study will cover.",
     curriculumRequired: "Please fill in this curriculum item.",
     curriculumAtLeastOne: "Add at least one curriculum item.",
     requirementsSection: "Who can join",
-    requirementsPlaceholder: "Enter a requirement",
     requirementsRequired: "Please fill in this requirement.",
     requirementsAtLeastOne: "Add at least one requirement.",
-    addItem: "Add",
 
-    createSubmit: "Create study",
     createSubmitting: "Creating...",
     createConfirmTitle: "Create this study?",
     createConfirmDescription: "Are you sure you want to create it?",
@@ -219,10 +156,6 @@ export const study = {
   },
 
   members: {
-    title: "Members",
-    empty: "No members yet.",
-    studentIdLabel: "Student ID",
-    copyPhone: "Copy phone number",
     phoneCopied: "Phone number copied",
     loadError: "We could not load the member list.",
   },
@@ -231,10 +164,6 @@ export const study = {
     fcfsTitle: "This study is first come, first served.",
     fcfsSubtitle: "There are no applications to review.",
     noApplicants: "No one has applied to this study yet.",
-    noneMatchFilter: "No applicants match this filter.",
-    filterTitle: "Filter applicants",
-    applicantsTitle: "Applicants",
-    applicantsCount: "{{count}}",
     filters: {
       all: "All",
       pending: "Under review",
@@ -246,12 +175,9 @@ export const study = {
       statusApproved: "Approved",
       statusRejected: "Rejected",
       statusUnknown: "Unknown",
-      studentIdLabel: "Student ID",
       viewApplication: "Read application",
       dialogTitle: "{{name}}'s application",
-      applicantLabel: "Applicant",
       loadFailed: "We could not load this application.",
-      loadingPlaceholder: "Loading the application...",
       approve: "Approve",
       reject: "Reject",
       approveError: "Something went wrong while approving the application.",
@@ -264,22 +190,14 @@ export const study = {
   },
 
   attendance: {
-    statusTitle: "Attendance",
-    statusDescription: "See how attendance is going for this study.",
-    nameColumn: "Name",
     sessionColumn: "Session {{index}}",
-    rateColumn: "Rate",
     noData: "No attendance data yet.",
     loadError: "We could not load the attendance data.",
-    codeSectionTitle: "Attendance codes",
-    codeSectionDescription: "Generate a code for today's session.",
-    generate: "Generate code",
     generating: "Generating...",
     generateShort: "Generate",
     generateConfirmTitle: "Generate a code?",
     generateConfirmDescription:
       "Are you sure? A generated attendance code is only valid on the day it was created.",
-    codeLabel: "Attendance code",
     codeError: "We could not generate an attendance code.",
   },
 

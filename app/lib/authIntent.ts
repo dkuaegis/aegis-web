@@ -11,7 +11,7 @@ export function parseLoginIntent(value: string | null): LoginIntent | null {
     : null;
 }
 
-export function parseStudyReturnTo(value: string | null): string | null {
+function parseStudyReturnTo(value: string | null): string | null {
   if (!value?.startsWith("/") || value.startsWith("//")) return null;
 
   try {
@@ -80,7 +80,7 @@ export function consumeLoginIntent() {
   return intent;
 }
 
-export function readLoginReturnTo(): string | null {
+function readLoginReturnTo(): string | null {
   try {
     return parseStudyReturnTo(
       window.sessionStorage.getItem(LOGIN_RETURN_TO_STORAGE_KEY)

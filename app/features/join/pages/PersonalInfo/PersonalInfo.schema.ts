@@ -42,7 +42,7 @@ export const personalInfoSchema = z.object({
   }),
 });
 
-export const personalInfoApiSchema = personalInfoSchema
+const personalInfoApiSchema = personalInfoSchema
   .omit({ residentNumber_back: true })
   .extend({
     gender: z.enum(["MALE", "FEMALE"]),

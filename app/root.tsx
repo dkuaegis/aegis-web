@@ -1,6 +1,5 @@
 import type { LinksFunction } from "react-router";
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
-import { checkAuth } from "./api/auth";
 import { AuthIntentRedirect } from "./components/AuthIntentRedirect";
 import BrowserRedirectPage from "./components/BrowserRedirectPage";
 import { useExternalBrowser } from "./hooks/useExternalBrowser";
@@ -10,11 +9,6 @@ import "./index.css";
 export const links: LinksFunction = () => [
   { rel: "icon", href: "/aegis-logo.ico" },
 ];
-
-export async function loader() {
-  const user = await checkAuth();
-  return { user };
-}
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (

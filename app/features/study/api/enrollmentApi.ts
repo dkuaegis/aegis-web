@@ -64,7 +64,7 @@ const ERROR_MESSAGES = {
   },
 } as const;
 
-export const ENROLLMENT_QUERY_KEYS = {
+const ENROLLMENT_QUERY_KEYS = {
   studyStatus: (studyId: number) => ["studyStatus", studyId] as const,
   userApplication: (studyId: number) => ["userApplication", studyId] as const,
 } as const;
@@ -85,7 +85,7 @@ function invalidateStudyQueries(
 }
 
 // API Functions
-export async function enrollInStudy(
+async function enrollInStudy(
   studyId: number,
   payload: EnrollmentPayload,
   signal?: AbortSignal
@@ -107,7 +107,7 @@ export async function enrollInStudy(
   }
 }
 
-export async function getStudyStatus(
+async function getStudyStatus(
   studyId: number,
   signal?: AbortSignal
 ): Promise<StudyStatusResponse | null> {
@@ -127,18 +127,7 @@ export async function getStudyStatus(
   }
 }
 
-export async function cancelEnrollment(
-  studyId: number,
-  signal?: AbortSignal
-): Promise<void> {
-  try {
-    await api.delete(API_ENDPOINTS.STUDY_ENROLLMENT(studyId), signal);
-  } catch (error: unknown) {
-    handleHTTPError(error, ERROR_MESSAGES.cancel);
-  }
-}
-
-export async function getUserApplicationDetail(
+async function getUserApplicationDetail(
   studyId: number,
   signal?: AbortSignal
 ): Promise<UserApplicationDetail> {
@@ -152,7 +141,7 @@ export async function getUserApplicationDetail(
   }
 }
 
-export async function updateUserApplication(
+async function updateUserApplication(
   studyId: number,
   payload: UpdateApplicationPayload,
   signal?: AbortSignal
@@ -202,25 +191,6 @@ export const useEnrollInStudyMutation = (
     onSuccess: (data) => {
       invalidateStudyQueries(queryClient, studyId);
       onSuccess?.(data);
-    },
-    onError: (error: Error) => {
-      onError?.(error);
-    },
-  });
-};
-
-export const useCancelEnrollmentMutation = (
-  studyId: number,
-  onSuccess?: () => void,
-  onError?: (error: Error) => void
-): UseMutationResult<void, Error, void> => {
-  const queryClient = useQueryClient();
-
-  return useMutation<void, Error, void>({
-    mutationFn: () => cancelEnrollment(studyId),
-    onSuccess: () => {
-      invalidateStudyQueries(queryClient, studyId);
-      onSuccess?.();
     },
     onError: (error: Error) => {
       onError?.(error);

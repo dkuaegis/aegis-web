@@ -32,7 +32,6 @@ export const mypage = {
     iconAlt: "포인트 아이콘",
     coinAlt: "동전",
     tabs: { all: "전체", earned: "적립", spent: "사용" },
-    typeLabels: { EARN: "적립", SPEND: "사용" },
     dateFormat: "{{year}}년 {{month}}월 {{day}}일",
   },
 

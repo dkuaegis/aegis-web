@@ -16,6 +16,8 @@
 .activity-title {
   font-size: 20px;
   font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   text-align: left;
   margin-bottom: 16px;
   width: 100%;

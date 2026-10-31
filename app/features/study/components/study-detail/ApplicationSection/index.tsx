@@ -15,7 +15,7 @@ interface ApplicationSectionProps {
   applicationState: ApplicationState;
 }
 
-export const ApplicationSection = ({
+const ApplicationSection = ({
   study,
   isOwner = false,
   isMember = false,

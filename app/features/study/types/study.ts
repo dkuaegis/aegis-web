@@ -36,22 +36,12 @@ export const studyRecruitmentMethodLabelKey = (
   method: StudyRecruitmentMethod
 ) => `study.labels.recruitmentMethods.${method}`;
 
-/** 상세 화면에서 쓰는 더 긴 표현("선착순 모집" 등). */
-export const studyRecruitmentMethodLongLabelKey = (
-  method: StudyRecruitmentMethod
-) => `study.labels.recruitmentMethodsLong.${method}`;
-
 export enum ApplicationStatus {
   PENDING = "PENDING",
   APPROVED = "APPROVED",
   REJECTED = "REJECTED",
 }
 
-export const applicationStatusLabelKey = (status: ApplicationStatus) =>
-  `study.labels.applicationStatus.${status}`;
-
-// 편의를 위한 타입 유니온들
-export type ApplicationStatusType = ApplicationStatus;
 export type UserApplicationStatus = ApplicationStatus | null;
 
 export interface StudyListItem {

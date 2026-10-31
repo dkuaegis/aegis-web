@@ -16,6 +16,4 @@ export const PRIZE_ICONS: Record<string, string> = {
   CHICKEN: chickenIcon,
 };
 
-export const PRIZE_CODES = Object.keys(PRIZE_ICONS);
-
 export const prizeNameKey = (code: string) => `mypage.gacha.prizes.${code}`;

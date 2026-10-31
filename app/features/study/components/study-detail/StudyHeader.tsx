@@ -31,7 +31,7 @@ interface StudyHeaderProps {
   onManageAttendance?: (studyId: number) => void;
 }
 
-export const StudyHeader = ({
+const StudyHeader = ({
   study,
   isOwner = false,
   isMember = false,

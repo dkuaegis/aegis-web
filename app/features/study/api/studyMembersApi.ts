@@ -8,7 +8,7 @@ export interface StudyMemberApiResponse {
   phoneNumber: string;
 }
 
-export function getStudyMembersErrorMessage(statusCode: number): string {
+function getStudyMembersErrorMessage(statusCode: number): string {
   switch (statusCode) {
     case 403:
       return t("study.errors.notInstructor");

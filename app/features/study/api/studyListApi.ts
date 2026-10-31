@@ -4,7 +4,7 @@ import type { StudyListItem } from "@study/types/study";
 import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 import { QUERY_OPTIONS_SLOW } from "./queryOptions";
 
-export const STUDIES_QUERY_KEY = ["studies"] as const;
+const STUDIES_QUERY_KEY = ["studies"] as const;
 
 async function fetchStudies(signal?: AbortSignal): Promise<StudyListItem[]> {
   return api.get<StudyListItem[]>(API_ENDPOINTS.STUDIES, signal);

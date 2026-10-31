@@ -11,7 +11,7 @@ export interface AttendanceSubmissionResponse {
   sessionId: number;
 }
 
-export function getAttendanceErrorMessage(statusCode: number): string {
+function getAttendanceErrorMessage(statusCode: number): string {
   switch (statusCode) {
     case 400:
       return t("study.errors.invalidAttendanceCode");
@@ -26,7 +26,7 @@ export function getAttendanceErrorMessage(statusCode: number): string {
   }
 }
 
-export function getAttendanceCodeErrorMessage(statusCode: number): string {
+function getAttendanceCodeErrorMessage(statusCode: number): string {
   switch (statusCode) {
     case 403:
       return t("study.errors.notInstructor");
@@ -37,9 +37,7 @@ export function getAttendanceCodeErrorMessage(statusCode: number): string {
   }
 }
 
-export function getAttendanceInstructorErrorMessage(
-  statusCode: number
-): string {
+function getAttendanceInstructorErrorMessage(statusCode: number): string {
   switch (statusCode) {
     case 403:
       return t("study.errors.notInstructor");
@@ -86,12 +84,12 @@ export async function submitAttendanceCode(
   }
 }
 
-export interface AttendanceSession {
+interface AttendanceSession {
   sessionId: number;
   date: string;
 }
 
-export interface AttendanceMember {
+interface AttendanceMember {
   memberId: number;
   name: string;
   attendance: boolean[];

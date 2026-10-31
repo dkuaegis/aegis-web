@@ -10,7 +10,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { QUERY_OPTIONS_FAST, QUERY_OPTIONS_SLOW } from "./queryOptions";
+import { QUERY_OPTIONS_FAST } from "./queryOptions";
 
 // Types
 export interface ApplicationApiResponse {
@@ -27,7 +27,7 @@ export interface ApplicationTextResponse {
   applicationReason: string;
 }
 
-export interface UpdateApplicationStatusPayload {
+interface UpdateApplicationStatusPayload {
   status: "APPROVED" | "REJECTED";
 }
 
@@ -65,7 +65,7 @@ const ERROR_MESSAGES = {
 } as const;
 
 // Query Keys
-export const APPLICATION_QUERY_KEYS = {
+const APPLICATION_QUERY_KEYS = {
   studyApplications: (studyId: number) =>
     ["studyApplications", studyId] as const,
   applicationText: (studyId: number, applicationId: number) =>
@@ -73,7 +73,7 @@ export const APPLICATION_QUERY_KEYS = {
 } as const;
 
 // API Functions
-export async function fetchStudyApplications(
+async function fetchStudyApplications(
   studyId: number,
   signal?: AbortSignal
 ): Promise<ApplicationApiResponse[]> {
@@ -102,7 +102,7 @@ export async function fetchApplicationText(
   }
 }
 
-export async function updateApplicationStatus(
+async function updateApplicationStatus(
   studyId: number,
   applicationId: number,
   payload: UpdateApplicationStatusPayload,
@@ -119,7 +119,7 @@ export async function updateApplicationStatus(
   }
 }
 
-export async function approveApplication(
+async function approveApplication(
   studyId: number,
   applicationId: number,
   signal?: AbortSignal
@@ -135,7 +135,7 @@ export async function approveApplication(
   }
 }
 
-export async function rejectApplication(
+async function rejectApplication(
   studyId: number,
   applicationId: number,
   signal?: AbortSignal
@@ -179,20 +179,6 @@ export const useStudyApplicationsQuery = (
     enabled,
     ...QUERY_OPTIONS_FAST,
     ...rest,
-  });
-};
-
-export const useApplicationTextQuery = (
-  studyId: number,
-  applicationId: number,
-  enabled: boolean = true
-): UseQueryResult<ApplicationTextResponse, Error> => {
-  return useQuery<ApplicationTextResponse, Error>({
-    queryKey: APPLICATION_QUERY_KEYS.applicationText(studyId, applicationId),
-    queryFn: ({ signal }) =>
-      fetchApplicationText(studyId, applicationId, signal),
-    enabled: enabled && isValidId(studyId) && isValidId(applicationId),
-    ...QUERY_OPTIONS_SLOW,
   });
 };
 

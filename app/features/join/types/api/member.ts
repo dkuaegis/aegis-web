@@ -1,8 +1,3 @@
-export enum Gender {
-  MALE = "MALE",
-  FEMALE = "FEMALE",
-}
-
 export enum Department {
   SW융합대학_소프트웨어학과 = "SW융합대학_소프트웨어학과",
   SW융합대학_컴퓨터공학과 = "SW융합대학_컴퓨터공학과",
@@ -125,12 +120,6 @@ export enum Department {
   약학대학_약학과 = "약학대학_약학과",
 }
 
-export enum AcademicStatus {
-  ENROLLED = "ENROLLED",
-  LEAVE_OF_ABSENCE = "LEAVE_OF_ABSENCE",
-  GRADUATED = "GRADUATED",
-}
-
 export enum Grade {
   ONE = "ONE",
   TWO = "TWO",
@@ -138,37 +127,4 @@ export enum Grade {
   FOUR = "FOUR",
   FIVE = "FIVE",
   SIX = "SIX",
-}
-
-export enum Semester {
-  FIRST = "FIRST",
-  SECOND = "SECOND",
-}
-
-export enum Role {
-  ROLE_GUEST = "ROLE_GUEST",
-  ROLE_USER = "ROLE_USER",
-  ROLE_ADMIN = "ROLE_ADMIN",
-}
-
-export interface Member {
-  birth_date: string;
-  gender: Gender;
-  student_id: string;
-  phone_number: string;
-  department: Department;
-  academic_status: AcademicStatus;
-  grade: Grade;
-  semester: Semester;
-}
-
-export interface GetMemberResponse extends Member {
-  // GET /member
-  id: number;
-  email: string;
-  name: string;
-}
-
-export interface CreateMemberRequest extends Member {
-  // POST /member
 }
