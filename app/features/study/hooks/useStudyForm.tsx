@@ -41,7 +41,7 @@ interface StudyFormContextProps {
   requirementFieldArray: UseFieldArrayReturn<FormValues, "requirements">;
   categories: { value: string; label: string }[];
   difficulties: { value: string; label: string }[];
-  onSubmit: (data: FormValues) => void;
+  onSubmit: (data: FormValues) => Promise<void>;
   setError: UseFormReturn<FormValues>["setError"];
   isEditMode: boolean;
 }
@@ -65,7 +65,7 @@ const useStudyForm = (
     mode: "create" | "edit";
     formData: FormValues;
     response?: unknown;
-  }) => void,
+  }) => void | Promise<void>,
   isEditMode?: boolean
 ) => {
   const { t } = useI18n();
@@ -121,7 +121,8 @@ const useStudyForm = (
     }
   );
 
-  const onSubmit = (data: FormValues) => {
+  // 요청이 끝날 때까지 기다려야 isSubmitting이 유지되어 중복 제출을 막습니다.
+  const onSubmit = async (data: FormValues) => {
     const filteredCurriculum = data.curriculum
       .map((item) => item.value)
       .filter((v) => v.trim() !== "");
@@ -154,7 +155,7 @@ const useStudyForm = (
         });
         return;
       }
-      onComplete({
+      await onComplete({
         mode: "edit",
         formData: {
           ...data,
@@ -197,7 +198,8 @@ const useStudyForm = (
       qualifications: filteredRequirements,
     };
 
-    mutation.mutate(payload);
+    // 실패 안내는 mutation의 onError에서 처리합니다.
+    await mutation.mutateAsync(payload).catch(() => undefined);
   };
 
   return {
@@ -219,7 +221,7 @@ export const StudyFormProvider: React.FC<{
     mode: "create" | "edit";
     formData: FormValues;
     response?: unknown;
-  }) => void;
+  }) => void | Promise<void>;
   isEditMode?: boolean;
 }> = ({ children, initialValues, onComplete, isEditMode = false }) => {
   const value = useStudyForm(initialValues, onComplete, isEditMode);

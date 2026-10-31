@@ -56,8 +56,7 @@ function getEditStudyErrorMessage(statusCode: number): string {
 
 async function updateStudy(
   studyId: number,
-  data: StudyFormData,
-  signal?: AbortSignal
+  data: StudyFormData
 ): Promise<void> {
   const requestData: UpdateStudyRequest = {
     title: data.title,
@@ -76,22 +75,10 @@ async function updateStudy(
   };
 
   try {
-    await api.put(`${API_ENDPOINTS.STUDIES}/${studyId}`, requestData, signal);
+    await api.put(`${API_ENDPOINTS.STUDIES}/${studyId}`, requestData);
   } catch (err: unknown) {
-    const name =
-      typeof err === "object" && err !== null && "name" in err
-        ? (err as { name?: unknown }).name
-        : undefined;
-    if (
-      name === "AbortError" ||
-      name === "CanceledError" ||
-      name === "CancelledError"
-    ) {
-      throw err as Error;
-    }
     if (err instanceof ApiError) {
-      const message = getEditStudyErrorMessage(err.status);
-      throw new Error(message);
+      throw new Error(getEditStudyErrorMessage(err.status));
     }
     throw new Error(t("study.errors.studyUpdate"));
   }
@@ -105,10 +92,7 @@ export const useUpdateStudyMutation = (
   const queryClient = useQueryClient();
 
   return useMutation<void, unknown, StudyFormData>({
-    mutationFn: async (data: StudyFormData) => {
-      const controller = new AbortController();
-      return updateStudy(studyId, data, controller.signal);
-    },
+    mutationFn: (data: StudyFormData) => updateStudy(studyId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: STUDY_DETAIL_QUERY_KEY(studyId),

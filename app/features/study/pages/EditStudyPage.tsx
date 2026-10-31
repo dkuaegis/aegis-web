@@ -94,9 +94,10 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
     handleError
   );
 
-  const handleUpdate = (formValues: FormValues) => {
+  const handleUpdate = async (formValues: FormValues) => {
     const payload: StudyFormData = mapFormValuesToStudyData(formValues);
-    updateMutation.mutate(payload);
+    // 실패 안내는 mutation의 onError에서 처리합니다.
+    await updateMutation.mutateAsync(payload).catch(() => undefined);
   };
 
   if (isLoading) {
