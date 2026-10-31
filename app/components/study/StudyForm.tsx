@@ -5,6 +5,15 @@ import {
   StudyLevel,
   StudyRecruitmentMethod,
 } from "@app/api/generated/model";
+import {
+  AlertDialog,
+  AlertDialogClose,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@app/components/ui/alert-dialog";
 import { Button, buttonVariants } from "@app/components/ui/button";
 import { Checkbox } from "@app/components/ui/checkbox";
 import {
@@ -31,7 +40,7 @@ import { t } from "@app/i18n/store";
 import { cn } from "@app/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleAlertIcon, PlusIcon, Trash2Icon } from "lucide-react";
-import { useId } from "react";
+import { useEffect, useId } from "react";
 import {
   type Control,
   Controller,
@@ -40,7 +49,7 @@ import {
   useFieldArray,
   useForm,
 } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useBlocker } from "react-router";
 import { z } from "zod";
 
 export const LIMITS = {
@@ -373,25 +382,75 @@ export function StudyForm({
         />
       </FormSection>
 
-      <div className="sticky bottom-0 z-10 -mx-[var(--page-gutter)] mt-10 flex flex-wrap items-center justify-end gap-x-4 gap-y-3 border-t border-ink bg-paper/95 px-[var(--page-gutter)] py-4 backdrop-blur-md">
+      <div className="grid gap-3 border-t border-ink pt-6 sm:flex sm:flex-wrap sm:items-center sm:justify-end sm:gap-x-4">
         {(error || hasErrors) && (
           <p
             role="alert"
-            className="m-0 mr-auto flex items-center gap-2 text-[0.875rem] font-[650] text-danger"
+            className="m-0 flex items-center gap-2 text-[0.875rem] font-[650] text-danger sm:mr-auto"
           >
             <CircleAlertIcon aria-hidden="true" className="size-4 shrink-0" />
             {error ?? t("study.form.fixErrors")}
           </p>
         )}
-        <Link to={cancelTo} className={buttonVariants({ variant: "ghost" })}>
-          {t("study.form.cancel")}
-        </Link>
-        <Button type="submit" size="lg" disabled={submitting}>
+        <Button
+          type="submit"
+          size="lg"
+          disabled={submitting}
+          className="sm:order-last"
+        >
           {submitting && <Spinner />}
           {editing ? t("study.form.save") : t("study.form.create")}
         </Button>
+        <Link
+          to={cancelTo}
+          className={buttonVariants({ variant: "ghost", size: "lg" })}
+        >
+          {t("study.form.cancel")}
+        </Link>
       </div>
+
+      <LeaveGuard dirty={formState.isDirty && !submitting} />
     </form>
+  );
+}
+
+/** Asks before leaving with unsaved changes, in the app and on reload. */
+function LeaveGuard({ dirty }: { dirty: boolean }) {
+  const { t } = useI18n();
+  const blocker = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      dirty && currentLocation.pathname !== nextLocation.pathname
+  );
+
+  useEffect(() => {
+    if (!dirty) return;
+    const warn = (event: BeforeUnloadEvent) => event.preventDefault();
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [dirty]);
+
+  return (
+    <AlertDialog
+      open={blocker.state === "blocked"}
+      onOpenChange={(open) => !open && blocker.reset?.()}
+    >
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{t("study.form.leaveTitle")}</AlertDialogTitle>
+          <AlertDialogDescription>
+            {t("study.form.leaveDescription")}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogClose
+            render={<Button variant="outline">{t("study.form.stay")}</Button>}
+          />
+          <Button variant="destructive" onClick={() => blocker.proceed?.()}>
+            {t("study.form.leave")}
+          </Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
 
@@ -419,7 +478,7 @@ function FormSection({
         </span>
         {title}
       </h2>
-      <div className="grid max-w-3xl min-w-0 gap-7">{children}</div>
+      <div className="grid min-w-0 gap-7">{children}</div>
     </section>
   );
 }

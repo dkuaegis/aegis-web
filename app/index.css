@@ -228,6 +228,13 @@
   padding-inline: var(--page-gutter);
 }
 
+/* Widens the gutter of everything inside so long forms read as one centered
+   column instead of hugging the left edge. Percentages resolve against each
+   gutter-x element's containing block, the full page width here. */
+@utility form-frame {
+  --page-gutter: max(var(--page-pad), (100% - 62.5rem) / 2);
+}
+
 /* Caps a full-bleed block, like a tile grid, at the page frame. */
 @utility frame-x {
   padding-inline: var(--page-inset);

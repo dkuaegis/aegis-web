@@ -34,7 +34,7 @@ export default function NewStudy({ actionData }: Route.ComponentProps) {
   const navigation = useNavigation();
 
   return (
-    <>
+    <div className="form-frame">
       <PageHeader
         className="border-b-0"
         back={{ to: "/study", label: t("study.detail.back") }}
@@ -61,6 +61,6 @@ export default function NewStudy({ actionData }: Route.ComponentProps) {
           <StateMessage role="status" title={t("study.list.creationClosed")} />
         )}
       </PageBody>
-    </>
+    </div>
   );
 }

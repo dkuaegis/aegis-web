@@ -197,6 +197,10 @@ export const study = {
     created: "스터디를 개설했습니다.",
     saved: "스터디 정보를 수정했습니다.",
     fixErrors: "표시된 항목을 확인해 주세요.",
+    leaveTitle: "저장하지 않고 나갈까요?",
+    leaveDescription: "지금 나가면 작성한 내용이 사라집니다.",
+    stay: "계속 작성",
+    leave: "나가기",
   },
 
   manage: {

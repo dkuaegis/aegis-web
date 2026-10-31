@@ -200,6 +200,10 @@ export const study = {
     created: "Your study is live.",
     saved: "Study updated.",
     fixErrors: "Check the highlighted fields.",
+    leaveTitle: "Leave without saving?",
+    leaveDescription: "Your changes will be lost if you leave now.",
+    stay: "Keep editing",
+    leave: "Leave",
   },
 
   manage: {
