@@ -12,11 +12,7 @@ import { Input } from "@study/components/ui/input";
 import { Label } from "@study/components/ui/label";
 import { useStudyUiText } from "@study/components/ui/StudyLayout";
 import { useToast } from "@study/components/ui/useToast";
-import {
-  type StudyDetail,
-  StudyRecruitmentMethod,
-  type UserApplicationStatus,
-} from "@study/types/study";
+import { type StudyDetail, StudyRecruitmentMethod } from "@study/types/study";
 import { ClipboardCheck, ListChecks, Users } from "lucide-react";
 import { useRef, useState } from "react";
 
@@ -24,8 +20,6 @@ interface StudyHeaderProps {
   study: StudyDetail;
   isOwner?: boolean;
   isMember?: boolean;
-  userApplicationStatus?: UserApplicationStatus;
-  onEdit?: (studyId: number) => void;
   onViewApplications?: (studyId: number) => void;
   onViewMembers?: (studyId: number) => void;
   onManageAttendance?: (studyId: number) => void;

@@ -5,6 +5,7 @@ export interface ApplicationState {
   isApplying: boolean;
   isApplicationModalOpen: boolean;
   userApplicationStatus: UserApplicationStatus;
+  isStatusLoading: boolean;
   setApplicationText: (text: string) => void;
   setIsApplicationModalOpen: (open: boolean) => void;
   handleApply: () => Promise<void>;

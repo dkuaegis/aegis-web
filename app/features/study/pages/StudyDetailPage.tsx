@@ -56,6 +56,7 @@ const StudyDetailPage = ({
     isApplying,
     isApplicationModalOpen,
     userApplicationStatus,
+    isStatusLoading,
     setApplicationText,
     setIsApplicationModalOpen,
     handleApply,
@@ -133,7 +134,6 @@ const StudyDetailPage = ({
             study={study}
             isOwner={isOwner}
             isMember={isMember}
-            userApplicationStatus={userApplicationStatus}
             onViewApplications={onViewApplications}
             onViewMembers={onViewMembers}
             onManageAttendance={onManageAttendance}
@@ -148,6 +148,7 @@ const StudyDetailPage = ({
                 isApplying,
                 isApplicationModalOpen,
                 userApplicationStatus,
+                isStatusLoading,
                 setApplicationText,
                 setIsApplicationModalOpen,
                 handleApply,

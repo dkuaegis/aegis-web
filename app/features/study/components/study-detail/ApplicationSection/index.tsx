@@ -21,7 +21,8 @@ const ApplicationSection = ({
   isMember = false,
   applicationState,
 }: ApplicationSectionProps) => {
-  const { userApplicationStatus } = applicationState;
+  const { userApplicationStatus, isStatusLoading } = applicationState;
+  const { t } = useI18n();
   const ui = useStudyUiText();
 
   if (isOwner) {
@@ -48,6 +49,9 @@ const ApplicationSection = ({
   const renderContent = () => {
     if (isMember) {
       return <StatusMessage type="APPROVED" />;
+    }
+    if (isStatusLoading) {
+      return <p role="status">{t("study.loading.applicationShort")}</p>;
     }
     switch (userApplicationStatus) {
       case "PENDING":

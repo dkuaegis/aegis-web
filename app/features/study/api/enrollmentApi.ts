@@ -18,11 +18,6 @@ export interface EnrollmentPayload {
   applicationReason: string | null;
 }
 
-export interface EnrollmentResponse {
-  message: string;
-  status: "APPROVED" | "PENDING";
-}
-
 export interface StudyStatusResponse {
   studyApplicationId: number;
   status: "PENDING" | "APPROVED" | "REJECTED";
@@ -46,6 +41,7 @@ const ERROR_MESSAGES = {
     403: "study.errors.notRecruitmentPeriod",
     404: "study.errors.studyNotFound",
     409: "study.errors.alreadyApplied",
+    STUDY_FULL: "study.errors.studyFull",
     default: "study.errors.enrollmentApply",
   },
   cancel: {
@@ -89,19 +85,9 @@ async function enrollInStudy(
   studyId: number,
   payload: EnrollmentPayload,
   signal?: AbortSignal
-): Promise<EnrollmentResponse> {
+): Promise<void> {
   try {
-    const response = await api.post<EnrollmentResponse | null>(
-      API_ENDPOINTS.STUDY_ENROLLMENT(studyId),
-      payload,
-      signal
-    );
-
-    const fallback: EnrollmentResponse = {
-      message: t("study.errors.applySuccess"),
-      status: "PENDING",
-    };
-    return response ?? fallback;
+    await api.post(API_ENDPOINTS.STUDY_ENROLLMENT(studyId), payload, signal);
   } catch (error: unknown) {
     handleHTTPError(error, ERROR_MESSAGES.enrollment);
   }
@@ -123,7 +109,7 @@ async function getStudyStatus(
     if (error instanceof Error) {
       throw error;
     }
-    throw new Error(`${t("study.errors.statusLookup")}: ${String(error)}`);
+    throw new Error(t("study.errors.statusLookup"));
   }
 }
 
@@ -181,18 +167,20 @@ export const useUserApplicationDetailQuery = (
 // Mutation Hooks
 export const useEnrollInStudyMutation = (
   studyId: number,
-  onSuccess?: (data: EnrollmentResponse) => void,
+  onSuccess?: () => void,
   onError?: (error: Error) => void
-): UseMutationResult<EnrollmentResponse, Error, EnrollmentPayload> => {
+): UseMutationResult<void, Error, EnrollmentPayload> => {
   const queryClient = useQueryClient();
 
-  return useMutation<EnrollmentResponse, Error, EnrollmentPayload>({
+  return useMutation<void, Error, EnrollmentPayload>({
     mutationFn: (payload) => enrollInStudy(studyId, payload),
-    onSuccess: (data) => {
+    onSuccess: () => {
       invalidateStudyQueries(queryClient, studyId);
-      onSuccess?.(data);
+      onSuccess?.();
     },
     onError: (error: Error) => {
+      // 정원이 찼거나 이미 신청된 경우 화면의 모집 상태를 다시 맞춥니다.
+      invalidateStudyQueries(queryClient, studyId);
       onError?.(error);
     },
   });

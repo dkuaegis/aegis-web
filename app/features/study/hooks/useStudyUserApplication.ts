@@ -12,7 +12,7 @@ import {
   StudyRecruitmentMethod,
   type UserApplicationStatus,
 } from "@study/types/study";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 interface UseStudyApplicationProps {
   studyId: number;
@@ -26,16 +26,10 @@ export const useStudyApplication = ({
   const [applicationText, setApplicationText] = useState("");
   const [isApplying, setIsApplying] = useState(false);
   const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false);
-  const [userApplicationStatus, setUserApplicationStatus] =
-    useState<UserApplicationStatus>(null);
   const [shouldLoadApplicationDetail, setShouldLoadApplicationDetail] =
     useState(false);
 
   const [editingApplicationText, setEditingApplicationText] = useState("");
-
-  const lastKnownStatusRef = useRef<"APPROVED" | "PENDING" | "REJECTED" | null>(
-    null
-  );
 
   const toast = useToast();
 
@@ -47,7 +41,17 @@ export const useStudyApplication = ({
   const shouldFetchStatus = recruitmentMethod !== StudyRecruitmentMethod.FCFS;
 
   const statusQueryEnabled = shouldFetchStatus && !isRoleLoading;
-  const { data: statusData } = useStudyStatusQuery(studyId, statusQueryEnabled);
+  const { data: statusData, isLoading: isStatusQueryLoading } =
+    useStudyStatusQuery(studyId, statusQueryEnabled);
+
+  const isStatusLoading = isRoleLoading || isStatusQueryLoading;
+  let userApplicationStatus: UserApplicationStatus = null;
+  if (!shouldFetchStatus) {
+    userApplicationStatus =
+      !isRoleLoading && hasApplied(studyId) ? ApplicationStatus.APPROVED : null;
+  } else if (statusData) {
+    userApplicationStatus = statusData.status as ApplicationStatus;
+  }
 
   // 지원서 상세 조회 쿼리 (PENDING 상태이고 APPLICATION 방식일 때 자동 활성화)
   const shouldAutoLoadApplication =
@@ -62,51 +66,17 @@ export const useStudyApplication = ({
     shouldLoadApplicationDetail || shouldAutoLoadApplication
   );
 
-  // 상태 데이터가 변경되면 로컬 상태 업데이트
-  useEffect(() => {
-    // FCFS(선착순)인 경우에는 서버 status 대신 user role로 참여 여부 판단
-    if (recruitmentMethod === StudyRecruitmentMethod.FCFS) {
-      // role 정보가 아직 로드되지 않았다면 대기
-      if (isRoleLoading) return;
-      const applied = hasApplied(studyId);
-      const safeStatus = applied ? ApplicationStatus.APPROVED : null;
-      setUserApplicationStatus(safeStatus);
-      lastKnownStatusRef.current = safeStatus;
-      return;
-    }
-
-    const raw = statusData?.status;
-    if (typeof raw === "string") {
-      // API 상태를 로컬 상태 형식으로 안전하게 변환 (대문자 처리)
-      const normalized = raw.toUpperCase();
-      const allowed =
-        normalized === ApplicationStatus.APPROVED ||
-        normalized === ApplicationStatus.PENDING ||
-        normalized === ApplicationStatus.REJECTED;
-      const safeStatus = allowed ? (normalized as ApplicationStatus) : null;
-      setUserApplicationStatus(safeStatus);
-      lastKnownStatusRef.current = safeStatus;
-    } else {
-      // statusData가 null/undefined이거나 형태가 예상과 다름
-      setUserApplicationStatus(null);
-      lastKnownStatusRef.current = null;
-    }
-  }, [statusData, recruitmentMethod, isRoleLoading, hasApplied, studyId]);
-
   // API Mutations
   const enrollMutation = useEnrollInStudyMutation(
     studyId,
-    (data) => {
-      // 성공 콜백 - 상태는 쿼리에서 자동으로 업데이트됨
-      if (data.status === "APPROVED") {
-        toast({
-          description: t("study.application.toast.appliedFcfs"),
-        });
-      } else {
-        toast({
-          description: t("study.application.toast.appliedForm"),
-        });
-      }
+    () => {
+      // 등록 응답은 본문이 없으므로 모집 방식으로 결과를 안내합니다.
+      toast({
+        description:
+          recruitmentMethod === StudyRecruitmentMethod.FCFS
+            ? t("study.application.toast.appliedFcfs")
+            : t("study.application.toast.appliedForm"),
+      });
       setApplicationText("");
       setIsApplying(false);
       setIsApplicationModalOpen(false);
@@ -172,16 +142,16 @@ export const useStudyApplication = ({
 
   const handleEditApplication = async () => {
     setShouldLoadApplicationDetail(true);
-    try {
-      const result = await refetchApplicationDetail();
-      setEditingApplicationText(result.data?.applicationReason || "");
-      setIsApplicationModalOpen(true);
-    } catch (error) {
-      console.error("Failed to fetch application detail:", error);
+    const result = await refetchApplicationDetail();
+    if (result.isError) {
+      console.error("Failed to fetch application detail:", result.error);
       toast({
         description: t("study.application.toast.detailLoadFailed"),
       });
+      return;
     }
+    setEditingApplicationText(result.data?.applicationReason || "");
+    setIsApplicationModalOpen(true);
   };
 
   const handleUpdateApplication = async () => {
@@ -204,6 +174,7 @@ export const useStudyApplication = ({
     isApplying,
     isApplicationModalOpen,
     userApplicationStatus,
+    isStatusLoading,
     isLoadingApplicationDetail,
     editingApplicationText,
 
