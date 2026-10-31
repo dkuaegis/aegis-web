@@ -255,31 +255,6 @@
   box-sizing: border-box;
 }
 
-/* Toast 스타일 커스터마이징 */
-.Toastify__toast--error {
-  background-color: #ff4444;
-  color: #ffffff;
-  font-family: "Pretendard Variable", Pretendard, sans-serif;
-  font-weight: 500;
-  max-width: 300px;
-  justify-content: center;
-  text-align: center;
-}
-
-.Toastify__toast--success {
-  background-color: #00aa44;
-  color: #ffffff;
-  font-family: "Pretendard Variable", Pretendard, sans-serif;
-  font-weight: 500;
-  max-width: 300px;
-  justify-content: center;
-  text-align: center;
-}
-
-.Toastify__close-button {
-  color: #ffffff;
-}
-
 /* 모바일 반응형 */
 @media (max-width: 480px) {
   .mypage-body {

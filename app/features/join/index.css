@@ -43,29 +43,6 @@
   --color-chart-3: oklch(var(--chart-3));
   --color-chart-4: oklch(var(--chart-4));
   --color-chart-5: oklch(var(--chart-5));
-
-  --animate-emoji-rotate: emoji-rotate 3s ease-in-out infinite;
-  --animate-shimmer: shimmer 3s infinite linear;
-
-  @keyframes emoji-rotate {
-    0% {
-      transform: rotate(20deg);
-    }
-    50% {
-      transform: rotate(-20deg);
-    }
-    100% {
-      transform: rotate(20deg);
-    }
-  }
-  @keyframes shimmer {
-    0% {
-      background-position: 200% 0;
-    }
-    100% {
-      background-position: 0% 0;
-    }
-  }
 }
 
 @layer base {
@@ -134,11 +111,6 @@
 }
 
 @layer utilities {
-  .table-row {
-    height: 40px;
-    display: table-row;
-  }
-
   .line-breaks {
     word-break: keep-all;
     overflow-wrap: break-word;
@@ -146,30 +118,6 @@
 
   .text-input-base {
     @apply text-lg;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-  @keyframes fadeOut {
-    from {
-      opacity: 1;
-    }
-    to {
-      opacity: 0;
-    }
-  }
-
-  .fade-in {
-    animation: fadeIn 0.3s ease-in forwards;
-  }
-  .fade-out {
-    animation: fadeOut 0.3s ease-out forwards;
   }
 
   @keyframes aurora {
@@ -528,20 +476,9 @@
   max-height: clamp(300px, calc(100dvh - 31rem), 520px);
 }
 
-.join-content .rounded-2xl,
 .join-content .rounded-lg,
 .join-content .rounded-md {
   border-radius: 0;
-}
-
-.join-content .bg-slate-50 {
-  background: #eeeeec;
-}
-
-.join-content .text-5xl {
-  font-size: clamp(2.25rem, 7vw, 3rem);
-  font-weight: 760;
-  letter-spacing: -0.015em;
 }
 
 .join-content [role="alert"] {
@@ -552,31 +489,6 @@
 
 .join-content .bg-\[\#FEE500\] {
   border-radius: 0;
-}
-
-.join-login-page {
-  color: #18181b;
-  background:
-    radial-gradient(circle at 88% 7%, rgb(40 82 216 / 9%), transparent 26rem),
-    #f2f1ed;
-}
-
-.join-login-card {
-  max-width: 680px;
-  padding: clamp(2.25rem, 7vw, 5rem);
-  background: rgb(250 249 245 / 92%);
-  border-top: 4px solid #18181b;
-}
-
-.join-login-card img {
-  width: 6rem;
-  height: 6rem;
-}
-
-.join-login-card h1 {
-  font-size: clamp(2.25rem, 6vw, 4rem);
-  font-weight: 880;
-  letter-spacing: -0.05em;
 }
 
 .join-complete-page {

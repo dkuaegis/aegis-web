@@ -24,12 +24,6 @@
   max-width: 310px;
 }
 
-.activity-buttons {
-  display: flex;
-  gap: 18px;
-  justify-content: center;
-}
-
 .activity-btn-content {
   display: flex;
   flex-direction: column;

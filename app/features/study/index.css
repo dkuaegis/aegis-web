@@ -1,6 +1,5 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "./styles/components/application-card.css";
 @import "./styles/components/study-dialog.css";
 @import "./styles/study-ui.css";
 
