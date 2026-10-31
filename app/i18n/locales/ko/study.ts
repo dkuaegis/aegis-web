@@ -177,9 +177,6 @@ export const study = {
       reject: "거절",
       approveError: "지원서 승인 중 오류가 발생했습니다.",
       rejectError: "지원서 거절 중 오류가 발생했습니다.",
-      statusChangeError: "지원서 상태 변경 중 오류가 발생했습니다.",
-      listError: "지원자 목록을 불러오는 중 오류가 발생했습니다.",
-      studyLoadError: "스터디 정보를 불러오는 중 오류가 발생했습니다.",
     },
   },
 
@@ -204,7 +201,6 @@ export const study = {
     badRequest: "잘못된 요청입니다.",
     applicationsFetch: "지원자 목록을 불러오는 중 오류가 발생했습니다.",
     applicationFetch: "지원서를 불러오는 중 오류가 발생했습니다.",
-    applicationStatusUpdate: "지원서 상태 변경 중 오류가 발생했습니다.",
     applicationApprove: "지원서 승인 중 오류가 발생했습니다.",
     applicationReject: "지원서 거절 중 오류가 발생했습니다.",
     invalidAttendanceCode: "잘못된 출석 코드입니다.",

@@ -181,10 +181,6 @@ export const study = {
       reject: "Reject",
       approveError: "Something went wrong while approving the application.",
       rejectError: "Something went wrong while rejecting the application.",
-      statusChangeError:
-        "Something went wrong while changing the application status.",
-      listError: "Something went wrong while loading the applicants.",
-      studyLoadError: "Something went wrong while loading the study.",
     },
   },
 
@@ -209,8 +205,6 @@ export const study = {
     badRequest: "That request was not valid.",
     applicationsFetch: "Something went wrong while loading the applicants.",
     applicationFetch: "Something went wrong while loading the application.",
-    applicationStatusUpdate:
-      "Something went wrong while changing the application status.",
     applicationApprove: "Something went wrong while approving the application.",
     applicationReject: "Something went wrong while rejecting the application.",
     invalidAttendanceCode: "That attendance code is not correct.",

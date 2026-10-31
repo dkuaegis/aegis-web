@@ -33,7 +33,9 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
     stats,
     filteredApplications,
     loading,
+    isUpdating,
     error,
+    retry,
   } = useApplications(studyId);
 
   const isLoading = loading || isRoleLoading;
@@ -71,14 +73,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
   if (error)
     return (
       <StudyLayout onBack={onBack}>
-        <StudyError message={error} />
-        <button
-          className="button button-primary"
-          type="button"
-          onClick={() => window.location.reload()}
-        >
-          {t("common.retry")}
-        </button>
+        <StudyError message={error} onRetry={retry} />
       </StudyLayout>
     );
   if (!studyInfo)
@@ -158,6 +153,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
                   key={application.id}
                   application={application}
                   onStatusChange={handleStatusChange}
+                  isUpdating={isUpdating}
                   recruitmentMethod={studyInfo.recruitmentMethod}
                   studyId={studyId}
                 />

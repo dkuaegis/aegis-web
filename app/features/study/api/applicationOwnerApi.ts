@@ -3,6 +3,7 @@ import { API_ENDPOINTS } from "@study/lib/apiEndpoints";
 import { handleHTTPError } from "@study/lib/apiUtils";
 import { isValidId } from "@study/lib/utils";
 import {
+  type QueryClient,
   type UseMutationResult,
   type UseQueryOptions,
   type UseQueryResult,
@@ -11,6 +12,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { QUERY_OPTIONS_FAST } from "./queryOptions";
+import { STUDY_DETAIL_QUERY_KEY } from "./studyDetailApi";
 
 // Types
 export interface ApplicationApiResponse {
@@ -25,10 +27,6 @@ export interface ApplicationApiResponse {
 
 export interface ApplicationTextResponse {
   applicationReason: string;
-}
-
-interface UpdateApplicationStatusPayload {
-  status: "APPROVED" | "REJECTED";
 }
 
 // constants
@@ -47,14 +45,10 @@ const ERROR_MESSAGES = {
     404: "study.errors.applicationNotFound",
     default: "study.errors.applicationFetch",
   },
-  updateStatus: {
-    403: "study.errors.notInstructor",
-    404: "study.errors.applicationNotFound",
-    default: "study.errors.applicationStatusUpdate",
-  },
   approve: {
     403: "study.errors.notInstructor",
     404: "study.errors.applicationNotFound",
+    STUDY_FULL: "study.errors.studyFull",
     default: "study.errors.applicationApprove",
   },
   reject: {
@@ -99,23 +93,6 @@ export async function fetchApplicationText(
     );
   } catch (error: unknown) {
     handleHTTPError(error, ERROR_MESSAGES.fetchApplicationText);
-  }
-}
-
-async function updateApplicationStatus(
-  studyId: number,
-  applicationId: number,
-  payload: UpdateApplicationStatusPayload,
-  signal?: AbortSignal
-): Promise<void> {
-  try {
-    await api.patch(
-      API_ENDPOINTS.UPDATE_APPLICATION_STATUS(studyId, applicationId),
-      payload,
-      signal
-    );
-  } catch (error: unknown) {
-    handleHTTPError(error, ERROR_MESSAGES.updateStatus);
   }
 }
 
@@ -183,36 +160,15 @@ export const useStudyApplicationsQuery = (
 };
 
 // Mutation Hooks
-export const useUpdateApplicationStatusMutation = (
-  studyId: number,
-  onSuccess?: () => void,
-  onError?: (error: Error) => void
-): UseMutationResult<
-  void,
-  Error,
-  { applicationId: number; status: "APPROVED" | "REJECTED" }
-> => {
-  const queryClient = useQueryClient();
-
-  return useMutation<
-    void,
-    Error,
-    { applicationId: number; status: "APPROVED" | "REJECTED" }
-  >({
-    mutationFn: ({ applicationId, status }) =>
-      updateApplicationStatus(studyId, applicationId, { status }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: APPLICATION_QUERY_KEYS.studyApplications(studyId),
-      });
-      queryClient.invalidateQueries({ queryKey: ["userRoles"] });
-      onSuccess?.();
-    },
-    onError: (error: Error) => {
-      onError?.(error);
-    },
+// 승인하면 참여 인원이 바뀌므로 상세와 목록도 다시 불러옵니다.
+function invalidateAfterReview(queryClient: QueryClient, studyId: number) {
+  queryClient.invalidateQueries({
+    queryKey: APPLICATION_QUERY_KEYS.studyApplications(studyId),
   });
-};
+  queryClient.invalidateQueries({ queryKey: STUDY_DETAIL_QUERY_KEY(studyId) });
+  queryClient.invalidateQueries({ queryKey: ["studies"] });
+  queryClient.invalidateQueries({ queryKey: ["userRoles"] });
+}
 
 export const useApproveApplicationMutation = (
   studyId: number,
@@ -225,10 +181,7 @@ export const useApproveApplicationMutation = (
     mutationFn: (applicationId: number) =>
       approveApplication(studyId, applicationId),
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: APPLICATION_QUERY_KEYS.studyApplications(studyId),
-      });
-      queryClient.invalidateQueries({ queryKey: ["userRoles"] });
+      invalidateAfterReview(queryClient, studyId);
       onSuccess?.();
     },
     onError: (error: Error) => {
@@ -248,10 +201,7 @@ export const useRejectApplicationMutation = (
     mutationFn: (applicationId: number) =>
       rejectApplication(studyId, applicationId),
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: APPLICATION_QUERY_KEYS.studyApplications(studyId),
-      });
-      queryClient.invalidateQueries({ queryKey: ["userRoles"] });
+      invalidateAfterReview(queryClient, studyId);
       onSuccess?.();
     },
     onError: (error: Error) => {

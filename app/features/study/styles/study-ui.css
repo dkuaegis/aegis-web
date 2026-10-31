@@ -634,6 +634,7 @@
 .study .empty-state,
 .study .error-state {
   align-content: center;
+  gap: 1rem;
   background: rgb(250 249 245 / 65%);
   border: 1px dashed var(--line);
 }

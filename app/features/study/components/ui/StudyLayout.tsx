@@ -118,10 +118,26 @@ export function StudyEmpty({
   );
 }
 
-export function StudyError({ message }: { message: string }) {
+export function StudyError({
+  message,
+  onRetry,
+}: {
+  message: string;
+  onRetry?: () => void;
+}) {
+  const { t } = useI18n();
   return (
     <section className="error-state" role="alert">
       <strong>{message}</strong>
+      {onRetry && (
+        <button
+          className="button button-primary"
+          type="button"
+          onClick={onRetry}
+        >
+          {t("common.retry")}
+        </button>
+      )}
     </section>
   );
 }

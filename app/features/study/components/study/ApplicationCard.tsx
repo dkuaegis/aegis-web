@@ -23,6 +23,7 @@ type ApplicationCardProps = {
     id: number,
     status: ApplicationStatus.APPROVED | ApplicationStatus.REJECTED
   ) => void;
+  isUpdating: boolean;
   recruitmentMethod: StudyRecruitmentMethod;
   studyId: number;
 };
@@ -30,6 +31,7 @@ type ApplicationCardProps = {
 const ApplicationCard = ({
   application,
   onStatusChange,
+  isUpdating,
   recruitmentMethod,
   studyId,
 }: ApplicationCardProps) => {
@@ -132,6 +134,7 @@ const ApplicationCard = ({
                   <button
                     className="button button-danger"
                     type="button"
+                    disabled={isUpdating}
                     onClick={() =>
                       onStatusChange(application.id, ApplicationStatus.REJECTED)
                     }
@@ -142,6 +145,7 @@ const ApplicationCard = ({
                   <button
                     className="button button-primary"
                     type="button"
+                    disabled={isUpdating}
                     onClick={() =>
                       onStatusChange(application.id, ApplicationStatus.APPROVED)
                     }

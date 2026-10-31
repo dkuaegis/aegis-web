@@ -4,14 +4,13 @@ import {
   useApproveApplicationMutation,
   useRejectApplicationMutation,
   useStudyApplicationsQuery,
-  useUpdateApplicationStatusMutation,
 } from "@study/api/applicationOwnerApi";
 import { useStudyDetailQuery } from "@study/api/studyDetailApi";
 import { useToast } from "@study/components/ui/useToast";
 import { useUserRole } from "@study/hooks/useUserRole";
 import type { Application, StudyData } from "@study/types/study";
 import { ApplicationStatus } from "@study/types/study";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 function transformApiApplication(apiApp: ApplicationApiResponse): Application {
   return {
@@ -42,136 +41,40 @@ export function useApplications(studyId: number) {
     data: apiApplications,
     isLoading: applicationsLoading,
     error: applicationsError,
+    refetch: refetchApplications,
   } = useStudyApplicationsQuery(studyId, { enabled: canLoadStudyDetail });
 
   const {
     data: studyDetail,
     isLoading: studyLoading,
     error: studyError,
+    refetch: refetchStudyDetail,
   } = useStudyDetailQuery(studyId, { enabled: canLoadStudyDetail });
 
-  // 상태 업데이트 뮤테이션들
+  // 상태 변경 실패는 토스트로만 알리고 목록 화면은 유지합니다.
   const toast = useToast();
+  const showReviewError = (error: Error, fallbackKey: string) => {
+    toast({ description: error.message || t(fallbackKey) });
+  };
 
   const approveMutation = useApproveApplicationMutation(
     studyId,
     undefined,
-    (error) => {
-      const name =
-        typeof error === "object" && error !== null && "name" in error
-          ? (error as { name?: unknown }).name
-          : undefined;
-      if (
-        name === "AbortError" ||
-        name === "CanceledError" ||
-        name === "CancelledError"
-      ) {
-        return;
-      }
-      const message =
-        error instanceof Error
-          ? error.message
-          : t("study.applications.card.approveError");
-      toast({ description: message });
-    }
+    (error) => showReviewError(error, "study.applications.card.approveError")
   );
 
   const rejectMutation = useRejectApplicationMutation(
     studyId,
     undefined,
-    (error) => {
-      const name =
-        typeof error === "object" && error !== null && "name" in error
-          ? (error as { name?: unknown }).name
-          : undefined;
-      if (
-        name === "AbortError" ||
-        name === "CanceledError" ||
-        name === "CancelledError"
-      ) {
-        return;
-      }
-      const message =
-        error instanceof Error
-          ? error.message
-          : t("study.applications.card.rejectError");
-      toast({ description: message });
-    }
+    (error) => showReviewError(error, "study.applications.card.rejectError")
   );
 
-  const statusMutation = useUpdateApplicationStatusMutation(
-    studyId,
-    undefined,
-    (error) => {
-      const name =
-        typeof error === "object" && error !== null && "name" in error
-          ? (error as { name?: unknown }).name
-          : undefined;
-      if (
-        name === "AbortError" ||
-        name === "CanceledError" ||
-        name === "CancelledError"
-      ) {
-        return;
-      }
-      const message =
-        error instanceof Error
-          ? error.message
-          : t("study.applications.card.statusChangeError");
-      toast({ description: message });
-    }
-  );
+  const error = applicationsError?.message || studyError?.message || null;
 
-  // 에러 처리
-  const error =
-    applicationsError?.message ||
-    studyError?.message ||
-    statusMutation.error?.message ||
-    approveMutation.error?.message ||
-    rejectMutation.error?.message ||
-    null;
-
-  // 응답 에러(목록/스터디 정보 등)를 토스트로 표시
-  useEffect(() => {
-    if (applicationsError) {
-      const name =
-        typeof applicationsError === "object" &&
-        applicationsError !== null &&
-        "name" in applicationsError
-          ? (applicationsError as { name?: unknown }).name
-          : undefined;
-      if (
-        name !== "AbortError" &&
-        name !== "CanceledError" &&
-        name !== "CancelledError"
-      ) {
-        const message =
-          applicationsError instanceof Error
-            ? applicationsError.message
-            : t("study.applications.card.listError");
-        toast({ description: message });
-      }
-    }
-    if (studyError) {
-      const name =
-        typeof studyError === "object" &&
-        studyError !== null &&
-        "name" in studyError
-          ? (studyError as { name?: unknown }).name
-          : undefined;
-      if (
-        name !== "AbortError" &&
-        name !== "CanceledError" &&
-        name !== "CancelledError"
-      ) {
-        const message =
-          studyError instanceof Error
-            ? studyError.message
-            : t("study.applications.card.studyLoadError");
-        toast({ description: message });
-      }
-    }
-  }, [applicationsError, studyError, toast]);
+  const retry = () => {
+    void refetchApplications();
+    void refetchStudyDetail();
+  };
 
   // 데이터 변환
   const applications = useMemo(
@@ -210,6 +113,7 @@ export function useApplications(studyId: number) {
     applicationId: number,
     newStatus: ApplicationStatus.APPROVED | ApplicationStatus.REJECTED
   ) => {
+    if (approveMutation.isPending || rejectMutation.isPending) return;
     if (newStatus === ApplicationStatus.APPROVED) {
       approveMutation.mutate(applicationId);
     } else if (newStatus === ApplicationStatus.REJECTED) {
@@ -238,12 +142,9 @@ export function useApplications(studyId: number) {
     stats,
     handleStatusChange,
     studyInfo,
-    loading:
-      applicationsLoading ||
-      studyLoading ||
-      statusMutation.isPending ||
-      approveMutation.isPending ||
-      rejectMutation.isPending,
+    loading: applicationsLoading || studyLoading,
+    isUpdating: approveMutation.isPending || rejectMutation.isPending,
     error,
+    retry,
   };
 }
