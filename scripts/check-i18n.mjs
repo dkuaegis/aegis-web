@@ -8,8 +8,22 @@
  * Run with: node scripts/check-i18n.mjs
  */
 import { readdirSync, readFileSync, statSync } from "node:fs";
+import { registerHooks } from "node:module";
 import { join, relative } from "node:path";
 import { pathToFileURL } from "node:url";
+
+// The locale files import each other without extensions, as Vite allows.
+// Node strips the types itself but needs the `.ts` spelled out.
+registerHooks({
+  resolve(specifier, context, nextResolve) {
+    try {
+      return nextResolve(specifier, context);
+    } catch (error) {
+      if (!specifier.startsWith(".")) throw error;
+      return nextResolve(`${specifier}.ts`, context);
+    }
+  },
+});
 
 const APP_DIR = new URL("../app/", import.meta.url);
 const BASE_LOCALE = "ko";

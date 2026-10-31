@@ -24,7 +24,8 @@ delete document.security;
 delete document.components.securitySchemes;
 document.paths = Object.fromEntries(
   Object.entries(document.paths).filter(
-    ([path]) => !EXCLUDED_PATH_PREFIXES.some((prefix) => path.startsWith(prefix))
+    ([path]) =>
+      !EXCLUDED_PATH_PREFIXES.some((prefix) => path.startsWith(prefix))
   )
 );
 
