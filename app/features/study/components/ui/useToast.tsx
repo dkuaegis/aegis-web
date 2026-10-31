@@ -17,18 +17,24 @@ const ToastContext = React.createContext<ToastContextType | undefined>(
 export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
   const [toasts, setToasts] = React.useState<Toast[]>([]);
 
-  const toast = ({ description }: { description: string }) => {
-    const id = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    setToasts((prev) => [...prev, { id, description }]);
-    const timeoutId = setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 2500);
+  // Effects list `toast` as a dependency, so it must keep its identity across
+  // renders; otherwise showing a toast re-runs the effect that showed it.
+  const toast = React.useCallback(
+    ({ description }: { description: string }) => {
+      const id = `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
+      setToasts((prev) => [...prev, { id, description }]);
+      const timeoutId = setTimeout(() => {
+        setToasts((prev) => prev.filter((t) => t.id !== id));
+      }, 2500);
 
-    return () => clearTimeout(timeoutId);
-  };
+      return () => clearTimeout(timeoutId);
+    },
+    []
+  );
+  const value = React.useMemo(() => ({ toasts, toast }), [toasts, toast]);
 
   return (
-    <ToastContext.Provider value={{ toasts, toast }}>
+    <ToastContext.Provider value={value}>
       {children}
       <div className="study-notice-region" aria-live="polite">
         {toasts.map((t) => (
