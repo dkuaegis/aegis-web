@@ -137,6 +137,7 @@ export const mypage = {
   },
 
   errors: {
+    draw: "뽑기를 진행하지 못했습니다. 잠시 후 다시 시도해 주세요.",
     profileSave: "프로필 아이콘 저장에 실패했습니다.",
     qrIssue: "QR 코드 발급에 실패했습니다.",
     rankingFetch: "랭킹 정보를 불러오지 못했습니다.",

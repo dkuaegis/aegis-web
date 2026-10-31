@@ -6,6 +6,7 @@ import * as THREE from "three";
 import { drawPoint } from "../api/PointDraw";
 import { useValueAnimator } from "../hooks/useValueAnimator";
 import type { GachaItem, GachaMachine3DProps } from "../model/Gacha";
+import { showError } from "../utils/alert";
 import { easeInOutCubic, easeOutCubic } from "../utils/Easing";
 import GachaResultCard from "./GachaResultCard";
 
@@ -34,6 +35,7 @@ function Machine3D({
   const { t } = useI18n();
   const groupRef = useRef<THREE.Group | null>(null);
   const chosenRef = useRef<THREE.Mesh | null>(null);
+  const drawingRef = useRef(false);
 
   const [spinning, setSpinning] = useState(false);
   const [dropping, setDropping] = useState(false);
@@ -56,13 +58,16 @@ function Machine3D({
   });
 
   const handleSpin = async () => {
-    if (spinning || dropping || !groupRef.current) return;
+    // 버튼은 별도 React 루트(drei Html)에 있어 state 반영이 늦을 수 있으므로
+    // ref로 즉시 막아 포인트가 두 번 차감되지 않게 합니다.
+    if (drawingRef.current || spinning || dropping || !groupRef.current) return;
 
+    drawingRef.current = true;
     setSpinning(true);
 
     try {
-      // 잔액이 부족하면 서버가 400으로 응답하고 drawPoint가 안내합니다.
       const result = await drawPoint();
+      drawingRef.current = false;
 
       // API 호출이 성공하면 회전 애니메이션 시작
       const initialCurrent = groupRef.current.rotation.y;
@@ -96,9 +101,11 @@ function Machine3D({
         },
       });
     } catch (error) {
-      console.error("뽑기 실패:", error);
+      drawingRef.current = false;
       setSpinning(false);
-      // 에러 처리는 drawPoint 함수에서 처리
+      showError(
+        error instanceof Error ? error.message : t("mypage.errors.draw")
+      );
     }
   };
 
@@ -257,23 +264,6 @@ export default function GachaMachine3D({
   const deviceRatio =
     typeof window !== "undefined" ? Math.min(window.devicePixelRatio, 2) : 1.5;
 
-  const safeItems: GachaItem[] =
-    items.length > 0
-      ? items
-      : [
-          // Fallback wheel. `label` is the API prize code, as above.
-          { id: "1", label: "ENERGY_DRINK", weight: 61, color: "#74B8FF" },
-          { id: "2", label: "COFFEE_LOW", weight: 32, color: "#FF5975" },
-          {
-            id: "3",
-            label: "CLUB_DUES_DISCOUNT_COUPON",
-            weight: 5.5,
-            color: "#C2B5FB",
-          },
-          { id: "4", label: "COFFEE_HIGH", weight: 1.0, color: "#CEF286" },
-          { id: "5", label: "CHICKEN", weight: 0.5, color: "#FDF385" },
-        ];
-
   const [resultItem, setResultItem] = useState<GachaItem | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -290,7 +280,7 @@ export default function GachaMachine3D({
       >
         <group scale={[modelScale, modelScale, modelScale]}>
           <Machine3D
-            items={safeItems}
+            items={items}
             onShowResult={setResultItem}
             isOverlayOpen={!!resultItem}
             overlayContainer={containerRef as React.RefObject<HTMLElement>}

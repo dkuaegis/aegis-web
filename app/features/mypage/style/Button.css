@@ -27,6 +27,12 @@
   transform: translateY(0);
 }
 
+.Button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+  transform: none;
+}
+
 .Button:focus-visible {
   outline: 3px solid rgba(59, 130, 246, 0.24);
   outline-offset: 2px;

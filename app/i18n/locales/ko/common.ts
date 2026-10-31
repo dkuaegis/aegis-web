@@ -2,6 +2,7 @@ export const common = {
   languageToggleLabel: "언어 선택",
   address: "단국대학교 죽전캠퍼스 혜당관 530호",
 
+  loading: "불러오는 중...",
   retry: "다시 시도",
   close: "닫기",
   cancel: "취소",

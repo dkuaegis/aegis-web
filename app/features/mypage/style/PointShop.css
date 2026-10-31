@@ -35,6 +35,14 @@
   margin-top: -40px;
 }
 
+.gacha-loading {
+  display: grid;
+  width: 320px;
+  height: 385px;
+  place-items: center;
+  color: var(--mypage-muted);
+}
+
 .gacha-container canvas {
   width: 100%;
   height: 100%;

@@ -1,5 +1,5 @@
 import { useI18n } from "@app/i18n";
-import { lazy, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { getMyPage } from "../api/Mypage";
 import Button from "../components/Button";
 import GachaList from "../components/GachaList";
@@ -74,12 +74,20 @@ const PointShop: React.FC = () => {
           </>
         ) : (
           <div className="gacha-container">
-            <GachaMachine3D
-              items={items}
-              width={320}
-              height={385}
-              modelScale={0.7}
-            />
+            <Suspense
+              fallback={
+                <p className="gacha-loading" role="status">
+                  {t("common.loading")}
+                </p>
+              }
+            >
+              <GachaMachine3D
+                items={items}
+                width={320}
+                height={385}
+                modelScale={0.7}
+              />
+            </Suspense>
           </div>
         )}
       </div>

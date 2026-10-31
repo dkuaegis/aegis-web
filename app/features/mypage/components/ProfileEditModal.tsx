@@ -6,8 +6,7 @@ import type { ProfileEditModalProps } from "../model/ProfileEditModal";
 import Button from "./Button";
 import "../style/ProfileEditModal.css";
 import { ProfileEdit } from "../api/ProfileEdit";
-
-// import { toIconId } from "../utils/Icon";
+import { showError } from "../utils/alert";
 
 const IMAGES_PER_PAGE = 8;
 const PAGE_WIDTH = 400;
@@ -22,6 +21,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
   const { t } = useI18n();
   const [tempKey, setTempKey] = useState<IconKey>(selectedKey);
   const [currentPage, setCurrentPage] = useState(0);
+  const [isSaving, setIsSaving] = useState(false);
   const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -39,12 +39,18 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
   }));
 
   const handleSave = async () => {
+    if (isSaving) return;
+    setIsSaving(true);
     try {
       await ProfileEdit(tempKey);
       onSelectKey(tempKey);
       onClose();
     } catch (e) {
-      console.error("프로필 아이콘 저장 실패:", e);
+      showError(
+        e instanceof Error ? e.message : t("mypage.errors.profileSave")
+      );
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -135,6 +141,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
             text={t("mypage.profile.save")}
             type={"EDITSAVE"}
             onClick={handleSave}
+            disabled={isSaving}
           />
         </div>
       </div>

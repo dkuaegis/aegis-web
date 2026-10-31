@@ -2,6 +2,7 @@ export const common = {
   languageToggleLabel: "Language",
   address: "Room 530, Hyedang Hall, Dankook University (Jukjeon Campus)",
 
+  loading: "Loading...",
   retry: "Try again",
   close: "Close",
   cancel: "Cancel",

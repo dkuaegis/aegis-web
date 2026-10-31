@@ -139,6 +139,7 @@ export const mypage = {
   },
 
   errors: {
+    draw: "We couldn't complete the draw. Please try again in a moment.",
     profileSave: "We could not save your profile picture.",
     qrIssue: "We could not generate a QR code.",
     rankingFetch: "We could not load the ranking.",
