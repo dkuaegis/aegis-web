@@ -1,14 +1,8 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useRevalidator } from "react-router";
+import { I18nContext, type I18nContextValue } from "./context";
 import { ko } from "./locales/ko";
-import { type TranslationVars, translate, translateList } from "./resolve";
+import { translate, translateList } from "./resolve";
 import {
   getDictionary,
   getLanguage,
@@ -17,18 +11,6 @@ import {
   subscribeToLanguage,
 } from "./store";
 import { DEFAULT_LANGUAGE, type Language } from "./types";
-
-interface I18nContextValue {
-  language: Language;
-  setLanguage: (language: Language) => void;
-  toggleLanguage: () => void;
-  /** Translate a key to a string, with optional `{{var}}` interpolation. */
-  t: (key: string, vars?: TranslationVars) => string;
-  /** Translate a key that holds a list of strings (paragraphs, bullets). */
-  tList: (key: string, vars?: TranslationVars) => string[];
-}
-
-const I18nContext = createContext<I18nContextValue | null>(null);
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguageState] = useState<Language>(DEFAULT_LANGUAGE);
