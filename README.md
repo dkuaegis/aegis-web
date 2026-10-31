@@ -44,7 +44,7 @@ Open the local URL printed by Vite. The `VITE_DEV_BYPASS_AUTH=true` option can b
 
 ## Environment variables
 
-The example values are in [`.env.example`](.env.example). Production containers generate `/runtime-config.js` at startup from the `VITE_` environment variables, allowing the same image to be configured per environment.
+The example values are in [`.env.example`](.env.example). Production containers inline the `VITE_` environment variables into the HTML documents at startup, allowing the same image to be configured per environment.
 
 The following variables are required when starting the production container:
 
@@ -96,14 +96,14 @@ The top-level routes are declared in [`app/routes.ts`](app/routes.ts):
 
 ## Production and deployment
 
-The [`Dockerfile`](Dockerfile) builds the client bundle and serves it with Nginx. At container startup, `docker/40-runtime-config.sh` validates the required environment variables and writes `/runtime-config.js`. Configure those variables in the deployment environment; do not bake private credentials into the image.
+The [`Dockerfile`](Dockerfile) builds the client bundle and serves it with Nginx. At container startup, `docker/40-runtime-config.sh` validates the required environment variables and inlines them into `<script id="runtime-config">` in each HTML document. Configure those variables in the deployment environment; do not bake private credentials into the image.
 
 The GitHub Actions workflow builds and publishes a `linux/arm64` image to GitHub Container Registry and triggers deployment through Coolify for `dev` and `main`. A README-only change is excluded from the workflow's path filters and does not trigger a deployment.
 
 ## Troubleshooting a blank or persistent loading page
 
 1. Open the browser developer tools and check the Console and Network panels for JavaScript errors or failed requests.
-2. In production, confirm `/runtime-config.js` returns successfully. Check the container logs for missing required environment variables if the runtime configuration was not generated.
+2. In production, view the page source and confirm `<script id="runtime-config">` contains `window.__RUNTIME_CONFIG__`. Check the container logs for missing required environment variables if the runtime configuration was not inlined.
 3. Confirm the JavaScript and CSS files under `/assets/` load successfully. Nginx intentionally returns `404` for missing fingerprinted assets instead of serving the application shell for those requests.
 4. If the page renders but authentication or API-backed features do not work, verify `VITE_API_URL`, backend availability, and the browser's API request and cookie errors.
 

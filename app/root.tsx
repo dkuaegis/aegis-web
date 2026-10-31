@@ -20,7 +20,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
-        {import.meta.env.PROD && <script src="/runtime-config.js" />}
+        {/* docker/40-runtime-config.sh fills this in at container start. */}
+        {import.meta.env.PROD && (
+          <script id="runtime-config" suppressHydrationWarning />
+        )}
       </head>
       <body>
         {children}
