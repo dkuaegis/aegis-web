@@ -29,3 +29,7 @@ lerna-debug.log*
 # Local environment files
 .env
 .env.*
+
+# Documentation is not part of the build
+docs
+*.md

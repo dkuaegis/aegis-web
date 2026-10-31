@@ -10,8 +10,8 @@
   "files": {
     "maxSize": 3145728,
     "includes": [
-      "src/**/*",
       "app/**/*",
+      "scripts/**/*",
       "*.ts",
       "*.tsx",
       "*.js",
@@ -26,7 +26,6 @@
       "!node_modules",
       "!coverage",
       "!public",
-      "!src/assets",
       "!app/assets",
       "!app/features/**/assets",
       "!**/*.svg",
