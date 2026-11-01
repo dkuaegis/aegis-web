@@ -107,6 +107,7 @@ export const study = {
     rejectedDescription: "다른 스터디도 둘러보세요.",
     myApplication: "내 지원서",
     editApplication: "지원서 수정",
+    editClosed: "지원서는 신청 기간에만 수정할 수 있습니다.",
   },
 
   application: {

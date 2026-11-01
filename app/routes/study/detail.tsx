@@ -365,17 +365,31 @@ function JoinPanel({
           title={t("study.join.pending")}
           description={t("study.join.pendingDescription")}
         />
-        <ApplicationDialog
-          key="update-application"
-          intent="update-application"
-          defaultReason={application.applicationReason ?? ""}
-          trigger={
-            <Button variant="outline" className="w-full">
-              <PencilLineIcon aria-hidden="true" />
-              {t("study.join.editApplication")}
-            </Button>
-          }
-        />
+        {enrollment.status === "open" ? (
+          <ApplicationDialog
+            key="update-application"
+            intent="update-application"
+            defaultReason={application.applicationReason ?? ""}
+            trigger={
+              <Button variant="outline" className="w-full">
+                <PencilLineIcon aria-hidden="true" />
+                {t("study.join.editApplication")}
+              </Button>
+            }
+          />
+        ) : (
+          <div className="grid gap-2">
+            <p className="m-0 text-[0.875rem] font-[700] text-ink-muted">
+              {t("study.join.myApplication")}
+            </p>
+            <p className="m-0 whitespace-pre-wrap text-[0.9375rem] leading-relaxed [overflow-wrap:anywhere]">
+              {application.applicationReason}
+            </p>
+            <p className="m-0 text-[0.875rem] text-ink-muted">
+              {t("study.join.editClosed")}
+            </p>
+          </div>
+        )}
       </Panel>
     );
   }

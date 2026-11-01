@@ -107,6 +107,7 @@ export const study = {
     rejectedDescription: "Have a look at the other studies.",
     myApplication: "My application",
     editApplication: "Edit application",
+    editClosed: "You can only edit your application during the sign-up period.",
   },
 
   application: {

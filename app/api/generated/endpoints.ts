@@ -128,7 +128,7 @@ export const getUpdateMyStudyApplicationUrl = (studyId: number) => {
 };
 
 /**
- * 본인이 제출한 스터디 지원서를 수정합니다. 선착순 스터디는 이 API를 지원하지 않습니다.
+ * 본인이 제출한 스터디 지원서를 수정합니다. 신청 기간에만 수정할 수 있으며, 선착순 스터디는 이 API를 지원하지 않습니다.
  * @summary 스터디 지원서 수정
  */
 export const updateMyStudyApplication = async (
