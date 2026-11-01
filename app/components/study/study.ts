@@ -6,7 +6,7 @@ import type {
 } from "@app/api/generated/model";
 import type { BadgeTone } from "@app/components/ui/badge";
 import { t } from "@app/i18n/store";
-import { formatDateTime, parseServerDate } from "@app/lib/format";
+import { formatDateTimeInText, parseServerDate } from "@app/lib/format";
 import { data } from "react-router";
 
 export type StudyRole = "instructor" | "participant" | "applicant";
@@ -81,7 +81,7 @@ export function enrollmentWindow(
       status: "open",
       message: studyEnrollmentCloseAt
         ? t("study.enrollment.openUntil", {
-            date: formatDateTime(studyEnrollmentCloseAt),
+            date: formatDateTimeInText(studyEnrollmentCloseAt),
           })
         : t("study.enrollment.openAlways"),
     };
@@ -94,7 +94,7 @@ export function enrollmentWindow(
     return {
       status: "upcoming",
       message: t("study.enrollment.opensAt", {
-        date: formatDateTime(studyEnrollmentOpenAt),
+        date: formatDateTimeInText(studyEnrollmentOpenAt),
       }),
     };
   }
@@ -105,7 +105,7 @@ export function enrollmentWindow(
     return {
       status: "closed",
       message: t("study.enrollment.ended", {
-        date: formatDateTime(studyEnrollmentCloseAt),
+        date: formatDateTimeInText(studyEnrollmentCloseAt),
       }),
     };
   }

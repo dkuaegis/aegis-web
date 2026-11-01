@@ -126,10 +126,7 @@ export default function Applications({ loaderData }: Route.ComponentProps) {
                   {application.phoneNumber ?? "–"}
                 </TableCell>
                 <TableCell className="tabular text-ink-muted">
-                  {formatDate(application.createdAt, {
-                    month: "short",
-                    day: "numeric",
-                  })}
+                  {formatDate(application.createdAt)}
                 </TableCell>
                 <TableCell>
                   <StatusBadge status={application.status} />

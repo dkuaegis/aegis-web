@@ -19,7 +19,7 @@ import { Spinner } from "@app/components/ui/spinner";
 import { useI18n } from "@app/i18n";
 import { t as translate } from "@app/i18n/store";
 import { errorMessage } from "@app/lib/errors";
-import { formatDate } from "@app/lib/format";
+import { formatMonthDay } from "@app/lib/format";
 import { pageTitle } from "@app/lib/title";
 import { cn } from "@app/lib/utils";
 import { KeyRoundIcon } from "lucide-react";
@@ -93,10 +93,7 @@ export default function Attendance({ loaderData }: Route.ComponentProps) {
                       {t("study.attendanceAdmin.session", { index: index + 1 })}
                     </span>
                     <span className="tabular block text-[0.8125rem] font-[700]">
-                      {formatDate(session.date, {
-                        month: "numeric",
-                        day: "numeric",
-                      })}
+                      {formatMonthDay(session.date)}
                     </span>
                   </th>
                 ))}

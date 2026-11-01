@@ -16,29 +16,39 @@ export function parseServerDate(value: string): Date {
   return new Date(year, month - 1, day, hour, minute, second);
 }
 
-export function formatDate(
-  value: string,
-  options: Intl.DateTimeFormatOptions = {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }
-): string {
-  return new Intl.DateTimeFormat(locale(), options).format(
-    parseServerDate(value)
-  );
+/** "2026.09.04", the same in every language so list columns line up. */
+export function formatDate(value: string): string {
+  const date = parseServerDate(value);
+  return `${date.getFullYear()}.${formatMonthDay(value)}`;
 }
 
+/** "09.04", for dates that all fall in one semester. */
+export function formatMonthDay(value: string): string {
+  const date = parseServerDate(value);
+  return `${pad(date.getMonth() + 1)}.${pad(date.getDate())}`;
+}
+
+/** "2026.09.04 18:27" */
 export function formatDateTime(value: string): string {
-  return formatDate(value, {
+  const date = parseServerDate(value);
+  return `${formatDate(value)} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+/** "2026년 9월 4일 오후 6:27", for a date inside a sentence. */
+export function formatDateTimeInText(value: string): string {
+  return new Intl.DateTimeFormat(locale(), {
     year: "numeric",
     month: "short",
     day: "numeric",
-    hour: "2-digit",
+    hour: "numeric",
     minute: "2-digit",
-  });
+  }).format(parseServerDate(value));
 }
 
 export function formatNumber(value: number): string {
   return new Intl.NumberFormat(locale()).format(value);
+}
+
+function pad(value: number): string {
+  return String(value).padStart(2, "0");
 }
