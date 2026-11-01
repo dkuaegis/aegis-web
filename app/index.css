@@ -142,8 +142,6 @@
   html {
     -webkit-text-size-adjust: 100%;
     scroll-padding-top: calc(var(--header-height) + 1rem);
-    /* Keeps the centred frame from shifting between short and long pages. */
-    scrollbar-gutter: stable;
   }
 
   body {
