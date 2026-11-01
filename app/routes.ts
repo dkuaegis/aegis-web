@@ -11,7 +11,21 @@ export default [
     index("routes/home.tsx"),
     route("login", "routes/login.tsx"),
     route("auth/continue", "routes/auth-continue.tsx"),
-    route("join/*", "routes/join/route.tsx"),
+
+    ...prefix("join", [
+      layout("routes/join/guard.tsx", [
+        index("routes/join/start.tsx"),
+        layout("routes/join/layout.tsx", [
+          route("agreement", "routes/join/agreement.tsx"),
+          route("personal-info", "routes/join/personal-info.tsx"),
+          route("survey", "routes/join/survey.tsx"),
+          route("chat", "routes/join/chat.tsx"),
+          route("payment", "routes/join/payment.tsx"),
+        ]),
+        route("complete", "routes/join/complete.tsx"),
+        route("*", "routes/join/start.tsx", { id: "routes/join/unknown" }),
+      ]),
+    ]),
 
     ...prefix("study", [
       layout("routes/study/layout.tsx", [

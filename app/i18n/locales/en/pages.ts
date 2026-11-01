@@ -5,12 +5,6 @@ export const pages = {
     manual: "Click here if nothing happens",
   },
 
-  authContinue: {
-    checking: "Checking your sign-in details...",
-    failed: "We could not confirm whether you are signed in.",
-    retry: "Try again",
-  },
-
   notFound: {
     title: "We couldn't find that page.",
     home: "Go to the home page",

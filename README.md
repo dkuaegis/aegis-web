@@ -40,7 +40,7 @@ Start the development server:
 pnpm dev
 ```
 
-Open the local URL printed by Vite. The `VITE_DEV_BYPASS_AUTH=true` option can be used to preview the join flow without a backend; it is development-only.
+Open the local URL printed by Vite.
 
 ## Environment variables
 
@@ -74,11 +74,11 @@ Other values in `.env.example` configure payment contact details, Kakao chat lin
 
 | Path | Contents |
 | --- | --- |
-| `app/routes/` | Top-level routes: home, study, join, mypage, and auth continuation |
-| `app/features/home/` | Public home page and shared home layout |
-| `app/features/study/` | Study experience |
-| `app/features/join/` | Membership onboarding flow |
-| `app/features/mypage/` | Member pages and activity |
+| `app/routes/` | One module per route: home, study, join, mypage, and sign-in |
+| `app/components/ui/` | Shared controls built on Base UI (buttons, fields, dialogs) |
+| `app/components/page/`, `app/components/site/` | Page header, empty and error states, site header and footer |
+| `app/components/study/`, `app/components/join/`, `app/components/mypage/` | Pieces used by one section's routes |
+| `app/features/home/` | Styles for the home page |
 | `app/i18n/` | Translation provider and Korean/English locale files |
 | `app/api/`, `app/lib/` | API and authentication helpers |
 | `scripts/` | Build-time and runtime configuration support |

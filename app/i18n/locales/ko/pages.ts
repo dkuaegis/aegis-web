@@ -5,12 +5,6 @@ export const pages = {
     manual: "이동하지 않으면 여기를 누르세요",
   },
 
-  authContinue: {
-    checking: "로그인 정보를 확인하고 있습니다.",
-    failed: "로그인 상태를 확인하지 못했습니다.",
-    retry: "다시 시도",
-  },
-
   notFound: {
     title: "페이지를 찾을 수 없습니다.",
     home: "홈으로 가기",
