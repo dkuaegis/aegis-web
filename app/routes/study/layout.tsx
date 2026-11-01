@@ -3,9 +3,20 @@ import {
   getMyStudyRoles,
 } from "@app/api/generated/endpoints";
 import { RouteErrorState } from "@app/components/page/States";
+import { t as translate } from "@app/i18n/store";
 import { requireMember } from "@app/lib/auth";
+import { pageTitle } from "@app/lib/title";
 import { Outlet, useRouteLoaderData } from "react-router";
 import type { Route } from "./+types/layout";
+
+/**
+ * Pages below set their own title. This one shows when a page fails and the
+ * error boundaries here or in the manage layout take over, since the failed
+ * page's `meta` no longer applies.
+ */
+export function meta() {
+  return [{ title: pageTitle(translate("study.list.metaTitle")) }];
+}
 
 export const clientMiddleware: Route.ClientMiddlewareFunction[] = [
   ({ request }) => requireMember(request),
