@@ -5,7 +5,7 @@ import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { type MouseEvent, useEffect } from "react";
 import { Link } from "react-router";
 
-import "../features/home/home-page.css";
+import "./home-page.css";
 
 const PARTNERS = [
   { key: "swProject", href: "https://swcu.dankook.ac.kr/home" },

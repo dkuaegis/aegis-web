@@ -27,7 +27,6 @@
       "!coverage",
       "!public",
       "!app/assets",
-      "!app/features/**/assets",
       "!**/*.svg",
       "!package-lock.json",
       "!pnpm-lock.yaml"
