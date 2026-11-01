@@ -112,6 +112,14 @@ export function enrollmentWindow(
   return { status: "closed", message: t("study.enrollment.closedNoDate") };
 }
 
+/**
+ * Removes the "1." or "1)" a leader typed before a curriculum line, which the
+ * page numbers itself. A leading "3.5 ..." is content, so it stays.
+ */
+export function stripLineNumber(line: string): string {
+  return line.replace(/^\s*\d+[.)](?:\s+(?=\S)|(?=[^\d\s]))/, "");
+}
+
 /** Route params are strings; anything that is not a positive id is a 404. */
 export function parseId(value: string | undefined): number {
   const id = Number(value);

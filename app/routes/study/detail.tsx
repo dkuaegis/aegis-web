@@ -18,6 +18,7 @@ import {
   isRecruiting,
   parseId,
   roleOf,
+  stripLineNumber,
 } from "@app/components/study/study";
 import {
   AlertDialog,
@@ -232,7 +233,7 @@ export default function StudyDetail({ loaderData }: Route.ComponentProps) {
                       {String(index + 1).padStart(2, "0")}
                     </span>
                     <span className="text-[1rem] leading-relaxed font-[600] whitespace-pre-line">
-                      {item}
+                      {stripLineNumber(item)}
                     </span>
                   </li>
                 ))}
