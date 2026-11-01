@@ -84,7 +84,6 @@ export const mypage = {
     oddsTitle: "상품과 확률",
     resultTitle: "{{prize}} 당첨",
     again: "한 번 더 뽑기",
-    remaining: "남은 포인트 {{amount}}P",
   },
 
   draws: {

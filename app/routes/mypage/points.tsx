@@ -31,7 +31,7 @@ export default function Points({ loaderData }: Route.ComponentProps) {
 
   if (history.length === 0) {
     return (
-      <Subpage title={t("mypage.pointsPage.metaTitle")}>
+      <Subpage title={t("mypage.pointsPage.metaTitle")} balance>
         <EmptyState
           title={t("mypage.pointsPage.empty")}
           description={t("mypage.pointsPage.emptyDescription")}
@@ -55,13 +55,13 @@ export default function Points({ loaderData }: Route.ComponentProps) {
       : sorted.filter((item) => item.transactionType === filter);
 
   return (
-    <Subpage title={t("mypage.pointsPage.metaTitle")}>
+    <Subpage title={t("mypage.pointsPage.metaTitle")} balance>
       <div className="grid gap-8">
         <dl className="m-0 grid grid-cols-2 gap-3">
-          <Stat label={t("mypage.pointsPage.earned")}>
+          <Stat label={t("mypage.pointsPage.earned")} className="text-success">
             +{t("mypage.points", { amount: formatNumber(earned) })}
           </Stat>
-          <Stat label={t("mypage.pointsPage.spent")}>
+          <Stat label={t("mypage.pointsPage.spent")} className="text-debit">
             −{t("mypage.points", { amount: formatNumber(spent) })}
           </Stat>
         </dl>
@@ -132,15 +132,22 @@ export default function Points({ loaderData }: Route.ComponentProps) {
 
 function Stat({
   label,
+  className,
   children,
 }: {
   label: string;
+  className: string;
   children: React.ReactNode;
 }) {
   return (
     <div className="grid gap-1.5 bg-paper-raised px-5 py-4">
       <dt className="text-[0.8125rem] font-[700] text-ink-muted">{label}</dt>
-      <dd className="tabular m-0 text-[1.375rem] leading-none font-[800] tracking-[-0.03em]">
+      <dd
+        className={cn(
+          "tabular m-0 text-[1.375rem] leading-none font-[800] tracking-[-0.03em]",
+          className
+        )}
+      >
         {children}
       </dd>
     </div>

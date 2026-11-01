@@ -27,7 +27,7 @@ import { useI18n } from "@app/i18n";
 import { t as translate } from "@app/i18n/store";
 import { useFetcherResult } from "@app/lib/actions";
 import { errorMessage } from "@app/lib/errors";
-import { formatDate, formatNumber } from "@app/lib/format";
+import { formatDate } from "@app/lib/format";
 import { pageTitle } from "@app/lib/title";
 import { cn } from "@app/lib/utils";
 import { lazy, Suspense, useCallback, useRef, useState } from "react";
@@ -99,7 +99,7 @@ export default function Shop({ loaderData }: Route.ComponentProps) {
   })).filter((entry) => entry.count > 0);
 
   return (
-    <Subpage title={t("mypage.shop.metaTitle")} balance={false}>
+    <Subpage title={t("mypage.shop.metaTitle")}>
       <div className="grid gap-12">
         <section
           aria-labelledby="shop-title"
@@ -241,39 +241,40 @@ export default function Shop({ loaderData }: Route.ComponentProps) {
           }}
         >
           {shown && (
-            <DialogContent className="max-w-md text-center">
-              <div className="mx-auto grid h-40 w-full max-w-72 place-items-center rounded-media bg-paper-sunken p-5">
+            <DialogContent
+              className="max-w-md text-center"
+              showCloseButton={false}
+            >
+              <div className="h-40 rounded-media bg-paper-sunken p-5">
                 <img
                   src={PRIZES[shown.item].icon}
                   alt=""
                   className="size-full object-contain"
                 />
               </div>
-              <DialogHeader className="justify-items-center">
+              <DialogHeader className="justify-items-center pr-0">
                 <DialogTitle className="text-[1.5rem]">
                   {t("mypage.shop.resultTitle", {
                     prize: t(`mypage.prizes.names.${shown.item}`),
                   })}
                 </DialogTitle>
                 <DialogDescription className="text-balance">
-                  {t(`mypage.prizes.delivery.${PRIZES[shown.item].delivery}`)}{" "}
-                  {t("mypage.shop.remaining", {
-                    amount: formatNumber(shown.remainingBalance),
-                  })}
+                  {t(`mypage.prizes.delivery.${PRIZES[shown.item].delivery}`)}
                 </DialogDescription>
               </DialogHeader>
-              <DialogFooter className="justify-center">
+              <DialogFooter>
                 <DialogClose
                   render={
-                    <Button variant="outline">{t("common.close")}</Button>
+                    <Button variant="outline" className="sm:flex-1">
+                      {t("common.close")}
+                    </Button>
                   }
                 />
-                <Button
-                  disabled={shown.remainingBalance < DRAW_COST}
-                  onClick={draw}
-                >
-                  {t("mypage.shop.again")}
-                </Button>
+                {shown.remainingBalance >= DRAW_COST && (
+                  <Button className="sm:flex-1" onClick={draw}>
+                    {t("mypage.shop.again")}
+                  </Button>
+                )}
               </DialogFooter>
             </DialogContent>
           )}

@@ -81,7 +81,6 @@ export const mypage = {
     oddsTitle: "Prizes and odds",
     resultTitle: "{{prize}}",
     again: "Draw again",
-    remaining: "{{amount}}P left",
   },
 
   draws: {

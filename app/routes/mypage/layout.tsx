@@ -60,12 +60,12 @@ export default function MypageLayout() {
 export function Subpage({
   title,
   description,
-  balance = true,
+  balance = false,
   children,
 }: {
   title: string;
   description?: string;
-  /** Off where the page shows the balance next to what spends it. */
+  /** On where the balance is what the page is about. */
   balance?: boolean;
   children: React.ReactNode;
 }) {
@@ -125,7 +125,7 @@ export function ProfileIconDialog({ current }: { current: ProfileIcon }) {
           <PencilIcon aria-hidden="true" className="size-3.5" />
         </span>
       </DialogTrigger>
-      <DialogContent className="max-w-xl">
+      <DialogContent className="max-w-xl" showCloseButton={false}>
         <DialogHeader>
           <DialogTitle>{t("mypage.profile.title")}</DialogTitle>
           <DialogDescription>

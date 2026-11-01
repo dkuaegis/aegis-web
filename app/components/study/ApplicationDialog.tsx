@@ -77,7 +77,7 @@ export function ApplicationDialog({
       }}
     >
       <DialogTrigger render={trigger} />
-      <DialogContent className="max-w-xl">
+      <DialogContent className="max-w-xl" showCloseButton={false}>
         <fetcher.Form
           method="post"
           noValidate
