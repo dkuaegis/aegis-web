@@ -9,7 +9,6 @@
     "rootDirs": [".", "./.react-router/types"],
     "skipLibCheck": true,
     "paths": {
-      "@join/*": ["./app/features/join/*"],
       "@app/*": ["./app/*"]
     },
     /* Bundler mode */
