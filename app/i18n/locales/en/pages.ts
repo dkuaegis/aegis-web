@@ -1,7 +1,6 @@
 export const pages = {
   login: {
     metaTitle: "Log in",
-    eyebrow: "Google sign-in",
     redirecting: "Taking you to Google sign-in.",
     manual: "Click here if nothing happens",
   },

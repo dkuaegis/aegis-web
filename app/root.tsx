@@ -123,7 +123,6 @@ export function ErrorBoundary() {
           <StateMessage
             size="page"
             role="alert"
-            eyebrow={t("common.states.errorEyebrow")}
             title={t("common.states.errorTitle")}
             description={t("common.states.crashDescription")}
             action={

@@ -57,9 +57,8 @@ export default function EditStudy({
       <PageHeader
         className="border-b-0"
         back={{ to: back, label: t("study.form.back") }}
-        eyebrow={t("study.form.editEyebrow")}
-        title={study.title}
-        period={false}
+        title={t("study.form.editTitle")}
+        description={study.title}
       />
       <PageBody className="pt-0">
         {roleOf(roles, study.id) === "instructor" ? (

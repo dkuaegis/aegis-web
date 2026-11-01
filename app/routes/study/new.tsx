@@ -39,7 +39,6 @@ export default function NewStudy({ actionData }: Route.ComponentProps) {
       <PageHeader
         className="border-b-0"
         back={{ to: "/study", label: t("study.detail.back") }}
-        eyebrow={t("study.form.createEyebrow")}
         title={t("study.form.createTitle")}
         description={t("study.form.createDescription")}
       />

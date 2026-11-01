@@ -43,7 +43,6 @@ export const common = {
     signedOutDescription:
       "Your session expired. Sign in and you will come back here.",
     signIn: "Sign in",
-    errorEyebrow: "Error",
     errorTitle: "Something went wrong",
     errorDescription:
       "Please try again in a moment. If it keeps happening, let the organizers know.",

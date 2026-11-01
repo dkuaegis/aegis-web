@@ -149,12 +149,10 @@ export const study = {
 
   form: {
     createMetaTitle: "스터디 개설",
-    createEyebrow: "New study",
     createTitle: "스터디 개설",
     createDescription:
       "개설하면 이번 학기 회원 누구나 목록에서 볼 수 있습니다. 개설 후에도 대부분의 내용을 고칠 수 있습니다.",
     editMetaTitle: "스터디 수정",
-    editEyebrow: "Edit",
     editTitle: "스터디 수정",
     back: "스터디로 돌아가기",
     sections: {

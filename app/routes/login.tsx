@@ -36,7 +36,6 @@ export default function LoginPage() {
 
   return (
     <div className="gutter-x grid min-h-[60dvh] content-center justify-items-start gap-5 py-16">
-      <p className="eyebrow m-0 text-ink-muted">{t("pages.login.eyebrow")}</p>
       <p className="text-title m-0">{t("pages.login.redirecting")}</p>
       <button
         type="button"

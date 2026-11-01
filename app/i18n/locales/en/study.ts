@@ -151,12 +151,10 @@ export const study = {
 
   form: {
     createMetaTitle: "Start a study",
-    createEyebrow: "New study",
     createTitle: "Start a study",
     createDescription:
       "Once started, every member this semester can find it in the list. You can change most details later.",
     editMetaTitle: "Edit study",
-    editEyebrow: "Edit",
     editTitle: "Edit study",
     back: "Back to the study",
     sections: {

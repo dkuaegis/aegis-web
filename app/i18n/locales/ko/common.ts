@@ -43,7 +43,6 @@ export const common = {
     signedOutDescription:
       "로그인이 만료되었습니다. 로그인하면 이 페이지로 돌아옵니다.",
     signIn: "로그인",
-    errorEyebrow: "Error",
     errorTitle: "잠시 문제가 생겼습니다",
     errorDescription:
       "잠시 후 다시 시도해 주세요. 계속되면 운영진에게 알려 주세요.",
