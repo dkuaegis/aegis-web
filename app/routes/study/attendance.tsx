@@ -73,13 +73,13 @@ export default function Attendance({ loaderData }: Route.ComponentProps) {
       ) : members.length === 0 ? (
         <EmptyState title={t("study.attendanceAdmin.noMembers")} />
       ) : (
-        <div className="relative w-full overflow-x-auto border-y border-ink">
-          <table className="w-max min-w-[min(100%,36rem)] border-collapse text-left text-[0.9375rem]">
-            <thead className="border-b border-ink">
+        <div className="relative w-full overflow-x-auto bg-paper-raised">
+          <table className="w-max min-w-full border-separate border-spacing-0 text-left text-[0.9375rem]">
+            <thead className="[&_th]:border-b [&_th]:border-ink">
               <tr>
                 <th
                   scope="col"
-                  className="eyebrow sticky left-0 z-1 h-14 min-w-36 bg-paper pr-4 align-middle text-ink-muted"
+                  className="eyebrow sticky left-0 z-1 h-14 min-w-36 bg-paper-raised pr-4 pl-5 align-middle text-ink-muted"
                 >
                   {t("study.attendanceAdmin.member")}
                 </th>
@@ -99,7 +99,7 @@ export default function Attendance({ loaderData }: Route.ComponentProps) {
                 ))}
                 <th
                   scope="col"
-                  className="eyebrow h-14 min-w-20 pl-4 text-right align-middle text-ink-muted"
+                  className="eyebrow h-14 min-w-20 pr-5 pl-4 text-right align-middle text-ink-muted"
                 >
                   {t("study.attendanceAdmin.rate")}
                 </th>
@@ -111,11 +111,11 @@ export default function Attendance({ loaderData }: Route.ComponentProps) {
                 return (
                   <tr
                     key={member.memberId}
-                    className="border-b border-line last:border-b-0"
+                    className="[&>*]:border-b [&>*]:border-line last:[&>*]:border-b-0"
                   >
                     <th
                       scope="row"
-                      className="sticky left-0 z-1 bg-paper py-3 pr-4 text-left font-[750] whitespace-nowrap"
+                      className="sticky left-0 z-1 bg-paper-raised py-3 pr-4 pl-5 text-left font-[750] whitespace-nowrap"
                     >
                       {member.name}
                     </th>
@@ -140,7 +140,7 @@ export default function Attendance({ loaderData }: Route.ComponentProps) {
                         />
                       </td>
                     ))}
-                    <td className="tabular py-3 pl-4 text-right font-[750] whitespace-nowrap">
+                    <td className="tabular py-3 pr-5 pl-4 text-right font-[750] whitespace-nowrap">
                       {attended}
                       <span className="text-ink-subtle">
                         {" "}

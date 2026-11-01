@@ -51,6 +51,8 @@ export const study = {
     create: "스터디 개설",
     creationClosed: "지금은 스터디 개설 기간이 아닙니다.",
     mine: "내 스터디",
+    manage: "관리",
+    manageLabel: "{{title}} 관리",
     all: "스터디 목록",
     filterLabel: "카테고리",
     filterAll: "전체",
@@ -82,7 +84,6 @@ export const study = {
     about: "소개",
     curriculum: "커리큘럼",
     qualifications: "이런 분을 찾습니다",
-    copyLink: "링크 복사",
   },
 
   join: {

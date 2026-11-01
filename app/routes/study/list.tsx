@@ -142,11 +142,11 @@ export default function StudyList({ loaderData }: Route.ComponentProps) {
                 return (
                   <li
                     key={study.id}
-                    className="w-[min(17rem,78vw)] shrink-0 snap-start sm:w-auto"
+                    className="flex w-[min(17rem,78vw)] shrink-0 snap-start gap-px sm:w-auto"
                   >
                     <Link
                       to={`/study/${study.id}`}
-                      className="group flex h-full items-center gap-3 bg-paper-sunken px-4 py-3.5 transition-colors hover:bg-ink hover:text-paper"
+                      className="group flex min-w-0 flex-1 items-center gap-3 bg-paper-sunken px-4 py-3.5 transition-colors hover:bg-ink hover:text-paper"
                     >
                       <span
                         aria-hidden="true"
@@ -168,6 +168,19 @@ export default function StudyList({ loaderData }: Route.ComponentProps) {
                         className="size-4 shrink-0 transition-transform group-hover:translate-x-0.5"
                       />
                     </Link>
+                    {role === "instructor" && (
+                      // First-come studies have no applicants; the manage
+                      // layout sends this address on to their members tab.
+                      <Link
+                        to={`/study/${study.id}/applications`}
+                        aria-label={t("study.list.manageLabel", {
+                          title: study.title,
+                        })}
+                        className="flex shrink-0 items-center bg-paper-sunken px-3.5 text-[0.8125rem] font-[750] transition-colors hover:bg-ink hover:text-paper"
+                      >
+                        {t("study.list.manage")}
+                      </Link>
+                    )}
                   </li>
                 );
               })}

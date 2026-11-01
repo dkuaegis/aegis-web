@@ -43,7 +43,6 @@ import {
 import { Field, FieldError, FieldLabel } from "@app/components/ui/field";
 import { CodeField } from "@app/components/ui/otp-field";
 import { Spinner } from "@app/components/ui/spinner";
-import { toast } from "@app/components/ui/toast";
 import { useI18n } from "@app/i18n";
 import { t as translate } from "@app/i18n/store";
 import { runAction, useFetcherResult } from "@app/lib/actions";
@@ -55,7 +54,6 @@ import {
   CheckIcon,
   ClipboardListIcon,
   KeyRoundIcon,
-  LinkIcon,
   PencilLineIcon,
   UsersIcon,
 } from "lucide-react";
@@ -146,15 +144,9 @@ export default function StudyDetail({ loaderData }: Route.ComponentProps) {
   const { study, application, attendedToday } = loaderData;
   const role = roleOf(roles, study.id);
 
-  const copyLink = () => {
-    navigator.clipboard
-      .writeText(window.location.href)
-      .then(() => toast.success(t("common.copied")))
-      .catch(() => toast.error(t("common.copyFailed")));
-  };
-
   return (
     <article
+      className="narrow-frame [--frame-width:75rem]"
       style={
         { "--study-tone": CATEGORY_TONE[study.category] } as React.CSSProperties
       }
@@ -170,21 +162,10 @@ export default function StudyDetail({ loaderData }: Route.ComponentProps) {
         }
         title={study.title}
         period={false}
-        actions={
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={copyLink}
-            className="max-md:-ml-3.5"
-          >
-            <LinkIcon aria-hidden="true" />
-            {t("study.detail.copyLink")}
-          </Button>
-        }
         className="border-b-0"
       />
 
-      <dl className="frame-x m-0 grid grid-cols-2 border-y border-ink bg-[color-mix(in_srgb,var(--study-tone)_22%,var(--paper))] lg:grid-cols-4">
+      <dl className="frame-x m-0 grid lg:gutter-x grid-cols-2 border-y border-ink bg-paper-sunken lg:grid-cols-4">
         <Fact label={t("study.detail.instructor")}>{study.instructor}</Fact>
         <Fact label={t("study.detail.capacity")}>
           <span className="tabular">{capacityLabel(study)}</span>
@@ -201,7 +182,7 @@ export default function StudyDetail({ loaderData }: Route.ComponentProps) {
         </Fact>
       </dl>
 
-      <div className="gutter-x grid gap-x-[clamp(2.5rem,5vw,5rem)] gap-y-10 py-[clamp(2.25rem,5vw,4.5rem)] lg:grid-cols-[minmax(0,1fr)_minmax(20rem,24rem)]">
+      <div className="gutter-x grid gap-3 py-[clamp(2.25rem,5vw,4.5rem)] lg:grid-cols-[minmax(0,1fr)_minmax(20rem,24rem)]">
         <aside className="lg:sticky lg:top-[calc(var(--header-height)+1.5rem)] lg:order-2 lg:self-start">
           {role === "instructor" ? (
             <InstructorPanel study={study} />
@@ -212,27 +193,24 @@ export default function StudyDetail({ loaderData }: Route.ComponentProps) {
           )}
         </aside>
 
-        <div className="grid max-w-[54rem] min-w-0 content-start gap-12 lg:order-1">
-          <section aria-labelledby="study-about" className="grid gap-4">
-            <h2 id="study-about" className="eyebrow m-0 text-ink-muted">
-              {t("study.detail.about")}
-            </h2>
+        <div className="grid min-w-0 content-start gap-3 lg:order-1">
+          <DetailSection id="study-about" title={t("study.detail.about")}>
             <p className="text-body m-0 max-w-[68ch] text-[1.0625rem] whitespace-pre-line">
               {study.description}
             </p>
-          </section>
+          </DetailSection>
 
           {study.curricula.length > 0 && (
-            <section aria-labelledby="study-curriculum" className="grid gap-4">
-              <h2 id="study-curriculum" className="eyebrow m-0 text-ink-muted">
-                {t("study.detail.curriculum")}
-              </h2>
-              <ol className="m-0 grid list-none border-t border-ink p-0">
+            <DetailSection
+              id="study-curriculum"
+              title={t("study.detail.curriculum")}
+            >
+              <ol className="m-0 grid list-none divide-y divide-line p-0">
                 {study.curricula.map((item, index) => (
                   <li
                     // biome-ignore lint/suspicious/noArrayIndexKey: lines may repeat and never reorder
                     key={index}
-                    className="grid grid-cols-[2.75rem_minmax(0,1fr)] gap-3 border-b border-line py-4"
+                    className="grid grid-cols-[2.75rem_minmax(0,1fr)] gap-3 py-3.5 first:pt-0 last:pb-0"
                   >
                     <span className="eyebrow tabular pt-1 text-ink-muted">
                       {String(index + 1).padStart(2, "0")}
@@ -243,26 +221,20 @@ export default function StudyDetail({ loaderData }: Route.ComponentProps) {
                   </li>
                 ))}
               </ol>
-            </section>
+            </DetailSection>
           )}
 
           {study.qualifications.length > 0 && (
-            <section
-              aria-labelledby="study-qualifications"
-              className="grid gap-4"
+            <DetailSection
+              id="study-qualifications"
+              title={t("study.detail.qualifications")}
             >
-              <h2
-                id="study-qualifications"
-                className="eyebrow m-0 text-ink-muted"
-              >
-                {t("study.detail.qualifications")}
-              </h2>
-              <ul className="m-0 grid list-none border-t border-ink p-0">
+              <ul className="m-0 grid list-none divide-y divide-line p-0">
                 {study.qualifications.map((item, index) => (
                   <li
                     // biome-ignore lint/suspicious/noArrayIndexKey: lines may repeat and never reorder
                     key={index}
-                    className="flex gap-3 border-b border-line py-4"
+                    className="flex gap-3 py-3.5 first:pt-0 last:pb-0"
                   >
                     <CheckIcon
                       aria-hidden="true"
@@ -274,7 +246,7 @@ export default function StudyDetail({ loaderData }: Route.ComponentProps) {
                   </li>
                 ))}
               </ul>
-            </section>
+            </DetailSection>
           )}
         </div>
       </div>
@@ -290,10 +262,32 @@ function Fact({
   children: React.ReactNode;
 }) {
   return (
-    <div className="grid content-start gap-1.5 border-line px-(--page-pad) py-5 not-last:border-r max-lg:nth-[2]:border-r-0 max-lg:nth-[-n+2]:border-b lg:px-6 lg:first:pl-(--page-pad)">
+    <div className="grid content-start gap-1.5 border-line px-(--page-pad) py-5 not-last:border-r max-lg:nth-[2]:border-r-0 max-lg:nth-[-n+2]:border-b lg:px-6 lg:first:pl-0">
       <dt className="eyebrow text-ink-muted">{label}</dt>
       <dd className="m-0 text-[1rem] leading-snug font-[720]">{children}</dd>
     </div>
+  );
+}
+
+function DetailSection({
+  id,
+  title,
+  children,
+}: {
+  id: string;
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section
+      aria-labelledby={id}
+      className="grid gap-4 bg-paper-raised p-5 sm:p-6"
+    >
+      <h2 id={id} className="m-0 text-[1.125rem] font-[800] tracking-[-0.02em]">
+        {title}
+      </h2>
+      {children}
+    </section>
   );
 }
 
@@ -686,12 +680,12 @@ function InstructorPanel({ study }: { study: GeneralStudyDetail }) {
 
   return (
     <Panel heading={t("study.instructor.heading")} className="gap-3">
-      <nav className="grid border-t border-ink">
+      <nav className="grid divide-y divide-line">
         {links.map(({ to, label, icon: Icon }) => (
           <Link
             key={to}
             to={to}
-            className="group flex items-center gap-3 border-b border-line py-4 text-[1.0625rem] font-[750] tracking-[-0.02em] transition-colors hover:text-blue"
+            className="group flex items-center gap-3 py-3.5 last:pb-0 text-[1.0625rem] font-[750] tracking-[-0.02em] transition-colors hover:text-blue"
           >
             <Icon aria-hidden="true" className="size-4.5 text-ink-muted" />
             <span className="flex-1">{label}</span>

@@ -51,6 +51,8 @@ export const study = {
     create: "Start a study",
     creationClosed: "Studies cannot be started right now.",
     mine: "My studies",
+    manage: "Manage",
+    manageLabel: "Manage {{title}}",
     all: "All studies",
     filterLabel: "Category",
     filterAll: "All",
@@ -82,7 +84,6 @@ export const study = {
     about: "About",
     curriculum: "Curriculum",
     qualifications: "Who should join",
-    copyLink: "Copy link",
   },
 
   join: {
