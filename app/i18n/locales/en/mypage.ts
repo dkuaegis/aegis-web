@@ -106,8 +106,6 @@ export const mypage = {
 
   ranking: {
     metaTitle: "Ranking",
-    description:
-      "This semester's members, by total points ever earned. Spending points does not lower your rank.",
     members: "{{count}} members",
     rank: "#{{rank}}",
     me: "You",

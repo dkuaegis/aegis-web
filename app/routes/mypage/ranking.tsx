@@ -24,10 +24,7 @@ export default function Ranking({ loaderData }: Route.ComponentProps) {
   const meInTop = me !== null && top10.some((row) => isSame(row, me));
 
   return (
-    <Subpage
-      title={t("mypage.ranking.metaTitle")}
-      description={t("mypage.ranking.description")}
-    >
+    <Subpage title={t("mypage.ranking.metaTitle")}>
       <div className="grid gap-3">
         <p className="tabular m-0 text-[0.875rem] font-[750] text-ink-muted">
           {t("mypage.ranking.members", { count: formatNumber(memberCount) })}

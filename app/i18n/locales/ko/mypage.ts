@@ -109,8 +109,6 @@ export const mypage = {
 
   ranking: {
     metaTitle: "랭킹",
-    description:
-      "이번 학기 회원의 누적 적립 포인트 순위입니다. 포인트를 써도 순위는 내려가지 않습니다.",
     members: "{{count}}명 참여",
     rank: "{{rank}}위",
     me: "나",

@@ -59,12 +59,10 @@ export default function MypageLayout() {
 /** Header and body of a page reached from the my page hub. */
 export function Subpage({
   title,
-  description,
   balance = false,
   children,
 }: {
   title: string;
-  description?: string;
   /** On where the balance is what the page is about. */
   balance?: boolean;
   children: React.ReactNode;
@@ -77,7 +75,6 @@ export function Subpage({
         className="border-b-0"
         back={{ to: "/mypage", label: t("mypage.metaTitle") }}
         title={title}
-        description={description}
         actions={balance && <Balance amount={me.pointBalance} />}
         compact
       />
