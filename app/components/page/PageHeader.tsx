@@ -14,6 +14,8 @@ interface PageHeaderProps {
   back?: { to: string; label: string };
   /** Ends the title with the brand's orange full stop. */
   period?: boolean;
+  /** A smaller title, for pages one step below a hub. */
+  compact?: boolean;
   className?: string;
 }
 
@@ -28,6 +30,7 @@ export function PageHeader({
   actions,
   back,
   period = true,
+  compact = false,
   className,
 }: PageHeaderProps) {
   return (
@@ -54,7 +57,14 @@ export function PageHeader({
       <div className="grid gap-x-12 gap-y-6 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
         <div className="grid min-w-0 gap-4">
           {eyebrow && <p className="eyebrow m-0 text-ink-muted">{eyebrow}</p>}
-          <h1 className="text-headline m-0 max-w-[22ch]">
+          <h1
+            className={cn(
+              "m-0 max-w-[22ch]",
+              compact
+                ? "text-[clamp(1.75rem,3.2vw,2.5rem)] leading-[1.1] font-[800] tracking-[-0.05em]"
+                : "text-headline"
+            )}
+          >
             {title}
             {period && <Period />}
           </h1>

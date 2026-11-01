@@ -13,7 +13,6 @@ export default defineConfig({
   resolve: {
     alias: {
       "@join": path.resolve(appRoot, "app/features/join"),
-      "@mypage": path.resolve(appRoot, "app/features/mypage"),
       "@app": path.resolve(appRoot, "app"),
     },
     dedupe: ["react", "react-dom", "react-router"],

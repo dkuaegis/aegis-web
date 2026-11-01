@@ -44,7 +44,21 @@ export default [
       ]),
     ]),
 
+    ...prefix("mypage", [
+      layout("routes/mypage/guard.tsx", [
+        layout("routes/mypage/layout.tsx", [
+          index("routes/mypage/hub.tsx"),
+          route("points", "routes/mypage/points.tsx"),
+          route("coupons", "routes/mypage/coupons.tsx"),
+          route("shop", "routes/mypage/shop.tsx"),
+          route("ranking", "routes/mypage/ranking.tsx"),
+        ]),
+        route("qr", "routes/mypage/qr.tsx"),
+        // Addresses from the previous my page app.
+        route("*", "routes/mypage/legacy.tsx"),
+      ]),
+    ]),
+
     route("*", "routes/not-found.tsx"),
   ]),
-  route("mypage/*", "routes/mypage/route.tsx"),
 ] satisfies RouteConfig;

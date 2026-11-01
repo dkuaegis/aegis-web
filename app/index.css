@@ -37,6 +37,8 @@
   --danger-soft: #f7e2da;
   --success: #2d6a3e;
   --success-soft: #e0ead8;
+  /* Points going out; as calm as --success so the two read as a pair. */
+  --debit: #9a4038;
   --warning: #8a5a00;
   --warning-soft: #f4e8c9;
 
@@ -109,6 +111,7 @@
   --color-danger-soft: var(--danger-soft);
   --color-success: var(--success);
   --color-success-soft: var(--success-soft);
+  --color-debit: var(--debit);
   --color-warning: var(--warning);
   --color-warning-soft: var(--warning-soft);
   --color-tone-blue: var(--tone-blue);
@@ -124,10 +127,15 @@
   --font-sans: var(--font-body);
   --font-wordmark: var(--font-wordmark);
 
+  /* Interface pieces (panels, buttons, fields, badges) stay square. Only
+     frames around pictures of real things, like prize photos, are rounded:
+     `rounded-thumb` for small tiles, `rounded-media` for large ones. */
   --radius-sm: 0;
   --radius-md: 0;
   --radius-lg: 0;
   --radius-xl: 0;
+  --radius-thumb: 0.5rem;
+  --radius-media: 1rem;
 
   --ease-out-expo: var(--ease-out);
 }

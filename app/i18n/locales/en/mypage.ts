@@ -1,148 +1,127 @@
 export const mypage = {
-  nav: { back: "<" },
+  metaTitle: "My page",
+  balance: "Points",
+  pointUnit: "P",
+  points: "{{amount}}P",
+  qr: "QR code",
 
-  home: {
-    pointIconAlt: "Points",
-    giftbox: "Rewards",
-    qrCode: "QR code",
+  hub: {
+    greeting: "Welcome back",
+    name: "{{name}}",
+    canDraw: "Ready to draw",
+    drawsHint: "{{cost}}P each · {{count}} with your points",
+    progress: "{{amount}} / {{cost}}P",
+    lastDraw: "Last prize: {{prize}}",
+    total: "{{count}} entries in total",
+    earnTitle: "How to earn points",
+    earn: {
+      attend: {
+        title: "Study attendance",
+        how: "Enter the code during the session",
+      },
+      lead: { title: "Leading a study", how: "Run a study as its leader" },
+      event: { title: "Club events", how: "Show your QR code at the event" },
+    },
+    coupons: "{{count}}",
+    couponsHint: "Coupons you can use now",
+    rankHint: "Out of {{count}} this semester · {{amount}}P earned",
+    unranked: "Earn points to get a rank.",
+    loadFailed: "Could not load this. Open it to try again.",
   },
 
   profile: {
-    editImage: "Change profile picture",
-    greetingLine1: "Welcome!",
-    greetingLine2: "Glad to have you at Aegis ❤",
-    editTitle: "{{name}},\npick a profile picture",
-    pagerLabel: "Page indicator",
-    goToPage: "Go to page {{page}}",
-    leave: "Close",
+    edit: "Change profile icon",
+    title: "Profile icon",
+    description: "Shown in the ranking and on your page.",
     save: "Save",
+    saved: "Profile icon updated.",
   },
 
-  activity: {
-    title: "Your activity",
-    pointShop: "Point shop",
-    ranking: "Ranking",
-  },
-
-  points: {
-    title: "Points",
-    unit: " pts",
-    summaryLine1: "You have",
-    summaryLine2: "{{point}} points to spend!",
-    iconAlt: "Points icon",
-    coinAlt: "Coin",
-    tabs: { all: "All", earned: "Earned", spent: "Spent" },
-    dateFormat: "{{day}}/{{month}}/{{year}}",
+  pointsPage: {
+    metaTitle: "Point history",
+    earned: "Earned",
+    spent: "Spent",
+    filterLabel: "Type",
+    filters: {
+      ALL: "All",
+      EARN: "Earned",
+      SPEND: "Spent",
+    },
+    empty: "No points yet",
+    emptyDescription: "Take part in club activities to earn points.",
+    emptyFiltered: "Nothing here",
   },
 
   coupons: {
-    title: "Rewards",
-    iconAlt: "Coupon",
-    tabs: { all: "All", unused: "Unused", used: "Used" },
-    status: { UNUSED: "Unused", USED: "Used" },
-    priceFormat: "{{amount}} KRW",
+    metaTitle: "Coupons",
+    redeemTitle: "Redeem a code",
+    redeemLabel: "Coupon code",
+    redeemPlaceholder: "Enter the code you received",
+    redeem: "Redeem",
+    redeemed: "Added the {{name}} coupon.",
+    redeemRequired: "Enter a coupon code.",
+    usage: "Coupons take money off your club dues.",
+    discount: "₩{{amount}} off",
+    valid: "Available",
+    used: "Used",
+    issuedAt: "Received {{date}}",
+    empty: "No coupons",
+    emptyDescription: "Got a code? Redeem it above.",
   },
 
-  history: {
-    title: "Rewards",
-    tabs: { history: "Draw history", coupons: "Coupons" },
-    tooltip: {
-      label: "How to receive this",
-      energyDrink:
-        "Pick this up in the club room — Room 530, Hyedang Hall (the Woori Bank building)!",
-      discountCoupon:
-        "You can use this coupon when you register next semester!",
-      default: "These are sent out as gift vouchers once a week!",
+  shop: {
+    metaTitle: "Point shop",
+    title: "Every draw wins",
+    description: "One draw costs {{cost}} points.",
+    draw: "Draw for {{cost}}P",
+    drawing: "Drawing",
+    needMore: "{{amount}}P more to draw",
+    machineLabel: "Prize machine",
+    drawsLeft: "{{count}} draws available",
+    oddsTitle: "Prizes and odds",
+    resultTitle: "{{prize}}",
+    again: "Draw again",
+    remaining: "{{amount}}P left",
+  },
+
+  draws: {
+    title: "My prizes",
+    empty: "No prizes yet",
+    emptyDescription: "Try a draw in the point shop for {{cost}}P.",
+  },
+
+  prizes: {
+    names: {
+      ENERGY_DRINK: "Hot Six energy drink",
+      COFFEE_LOW: "Compose Coffee Americano",
+      CLUB_DUES_DISCOUNT_COUPON: "Club dues discount",
+      COFFEE_HIGH: "₩10,000 Starbucks voucher",
+      CHICKEN: "A whole chicken",
     },
-  },
-
-  emptyState: {
-    point: "You don't have any points yet!",
-    coupon: "You don't have any coupons yet!",
-    history: "You haven't drawn anything yet!",
+    delivery: {
+      clubRoom: "Pick it up in the club room (Hyedang Hall 530).",
+      nextDues: "Comes off your dues next semester.",
+      voucher: "Sent as a gift voucher once a week.",
+    },
   },
 
   ranking: {
-    title: "Ranking",
-    participants: "{{count}} people taking part",
-    scoreUnit: " pts",
-    rankSuffix: "#{{rank}}",
+    metaTitle: "Ranking",
+    description:
+      "This semester's members, by total points ever earned. Spending points does not lower your rank.",
+    members: "{{count}} members",
+    rank: "#{{rank}}",
+    me: "You",
+    myRank: "Your rank",
+    empty: "No ranking yet",
   },
 
-  pointShop: {
-    title: "Point shop",
-    teaser: "Every draw wins something!",
-    heading: "{{name}}, trade 100 points\nfor one draw!",
-    listDescription: [
-      "Of the prizes you can draw,",
-      "Hot Six is collected in the club room (Room 530, Hyedang Hall, the Woori Bank building),",
-      "and coffee coupons, chicken and the rest arrive as gift vouchers.",
-    ],
-    exchange: "Trade points",
-    pointIconAlt: "Points icon",
-    arrowIconAlt: "Arrow icon",
-    randomIconAlt: "Random icon",
-  },
-
-  gacha: {
-    spin: "Draw!",
-    spinning: "Drawing...",
-    resultLabel: "Your draw",
-    resultTitle: "Congratulations!",
-    resultPrize: "🎊 You won {{prize}} 🎊",
-    goToGiftbox: "Go to rewards",
-    confirm: "Done",
-    insufficientBalance: "You don't have enough points.",
-    prizes: {
-      COFFEE_LOW: "Compose Coffee americano",
-      CLUB_DUES_DISCOUNT_COUPON: "Membership fee discount coupon",
-      COFFEE_HIGH: "10,000 KRW Starbucks card",
-      ENERGY_DRINK: "Hot Six",
-      CHICKEN: "A whole fried chicken",
-    },
-  },
-
-  qr: {
-    title: "Your entry QR code",
-    description: "Check in to an event by scanning this code.",
-    loading: "Generating your QR code...",
-    retry: "Try again",
-    refresh: "Refresh",
-    refreshIconAlt: "Refresh",
-    closeIconAlt: "Close",
-    back: "Back to the previous screen",
-  },
-
-  login: {
-    titleLine1: "One moment!",
-    titleLine2: "Please sign in with",
-    titleLine3: "your Dankook University",
-    titleLine4: "Google account first",
-    description: "If this is your first visit, please join the club first",
-    join: "Join the club",
-    google: "Sign in with Google",
-  },
-
-  unauthorized: {
-    titleLine1: "One moment!",
-    titleLine2: "Are you new to",
-    titleLine3: "the Aegis club?",
-    description: "Head to the sign-up page, or read more about us first",
-    join: "Join the club",
-    about: "About Aegis",
-  },
-
-  notFound: {
-    titleLine1: "Oops!",
-    titleLine2: "This page doesn't exist",
-    description: "The page you were looking for isn't here",
-    backHome: "Back to my page",
-  },
-
-  errors: {
-    draw: "We couldn't complete the draw. Please try again in a moment.",
-    profileSave: "We could not save your profile picture.",
-    qrIssue: "We could not generate a QR code.",
-    rankingFetch: "We could not load the ranking.",
+  qrPage: {
+    metaTitle: "QR code",
+    description: "Show this screen when an organizer asks for it.",
+    imageAlt: "Member QR code for {{name}}",
+    expiresIn: "New code in {{seconds}}s",
+    refresh: "Get a new code",
+    back: "My page",
   },
 } as const;

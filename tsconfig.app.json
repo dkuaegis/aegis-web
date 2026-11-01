@@ -10,7 +10,6 @@
     "skipLibCheck": true,
     "paths": {
       "@join/*": ["./app/features/join/*"],
-      "@mypage/*": ["./app/features/mypage/*"],
       "@app/*": ["./app/*"]
     },
     /* Bundler mode */
