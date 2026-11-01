@@ -2,10 +2,13 @@ import { useI18n } from "@app/i18n";
 import { Link } from "react-router";
 import { Wordmark } from "./Wordmark";
 
+export const GITHUB_URL = "https://github.com/dkuaegis";
+export const INSTAGRAM_URL = "https://instagram.com/dku_aegis";
+
 const LINKS = [
   { label: "Email", href: "mailto:dankook.aegis@gmail.com" },
-  { label: "GitHub", href: "https://github.com/dkuaegis" },
-  { label: "Instagram", href: "https://instagram.com/dku_aegis" },
+  { label: "GitHub", href: GITHUB_URL },
+  { label: "Instagram", href: INSTAGRAM_URL },
 ] as const;
 
 export function SiteFooter() {

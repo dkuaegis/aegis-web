@@ -233,12 +233,21 @@ export const join = {
     couponCount: "{{count}} available",
     couponFetchFailed: "Failed to load",
     couponLoadError: "We could not load your coupons.",
-    completeMessage: "Your payment is complete",
+    waiting: {
+      title: "Checking for your transfer",
+      body: "Once the depositor name and amount match, your payment is confirmed automatically. If it is still not confirmed after a while, please get in touch through the transfer questions below.",
+    },
+    paid: {
+      label: "Paid",
+      title: "Your transfer is confirmed and you're now a member.",
+      body: "Next, we'll show you where to go from here.",
+    },
     loadError: "We could not load your payment status. Please try again later.",
     account: {
       sectionLabel: "Bank transfer details",
       accountNumber: "Account",
       accountHolder: "Account holder",
+      depositorName: "Depositor name",
       copyAccount: "Copy account number",
       copySuccess: "Account number copied.",
       copyFailure: "Could not copy. Please check your browser permissions.",
@@ -263,8 +272,31 @@ export const join = {
 
   complete: {
     title: "You're in",
-    noticeLead: "Activities and day-to-day chat happen in our ",
+    noticeLead: "An officer will accept your requests to join the ",
     noticeStrong: "KakaoTalk group chats",
-    noticeTail: ". We're glad to have you — let's grow together!",
+    noticeTail:
+      " once they have checked them. In the meantime, start with the list below.",
+    tasksLabel: "What to do next",
+    tasks: {
+      study: {
+        title: "Join a study",
+        description: "Look through this term's studies and apply to one.",
+      },
+      mypage: {
+        title: "Check My page",
+        description:
+          "See your activity points, coupons and attendance QR on My page.",
+      },
+      instagram: {
+        title: "Follow our news",
+        description: "Keep up with Aegis activities and news on Instagram.",
+      },
+      github: {
+        title: "Explore our GitHub",
+        description:
+          "Browse the code of the services Aegis built itself, from this join page to studies and My page.",
+      },
+    },
+    chatReminder: "Missed a chat request?",
   },
 } as const;

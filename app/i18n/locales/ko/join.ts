@@ -230,13 +230,22 @@ export const join = {
     couponCount: "{{count}}장",
     couponFetchFailed: "조회 실패",
     couponLoadError: "쿠폰을 불러오지 못했습니다.",
-    completeMessage: "납부가 완료됐어요",
+    waiting: {
+      title: "입금을 확인하고 있어요",
+      body: "입금자명과 금액을 확인하면 자동으로 확인됩니다. 시간이 지나도 확인되지 않으면 아래 입금 관련 문의로 연락해 주세요.",
+    },
+    paid: {
+      label: "납부 완료",
+      title: "입금이 확인되어 가입이 완료됐어요.",
+      body: "다음 화면에서 앞으로 둘러볼 곳을 안내해 드릴게요.",
+    },
     loadError:
       "결제 상태를 불러오는 데 실패했습니다. 나중에 다시 시도해주세요.",
     account: {
       sectionLabel: "입금 계좌 정보",
       accountNumber: "입금 계좌",
       accountHolder: "예금주명",
+      depositorName: "입금자명",
       copyAccount: "계좌번호 복사",
       copySuccess: "계좌번호를 복사했습니다.",
       copyFailure: "복사에 실패했습니다. 브라우저 권한을 확인해주세요.",
@@ -261,8 +270,31 @@ export const join = {
 
   complete: {
     title: "가입이 완료되었습니다",
-    noticeLead: "주요 활동과 소통은 ",
+    noticeLead: "신청한 ",
     noticeStrong: "카카오톡 팀채팅방",
-    noticeTail: "에서 이루어져요. Aegis와 함께 성장해 나가요!",
+    noticeTail:
+      "은 운영진이 확인한 뒤 수락해 드려요. 그동안 아래 할 일부터 시작해 보세요.",
+    tasksLabel: "가입 후 할 일",
+    tasks: {
+      study: {
+        title: "스터디 신청하기",
+        description: "이번 학기에 열린 스터디를 살펴보고 신청해 보세요.",
+      },
+      mypage: {
+        title: "마이페이지 확인하기",
+        description:
+          "활동 포인트와 쿠폰, 출석 QR을 마이페이지에서 확인해 보세요.",
+      },
+      instagram: {
+        title: "소식 받아보기",
+        description: "Instagram에서 Aegis의 활동과 소식을 받아 보세요.",
+      },
+      github: {
+        title: "GitHub 둘러보기",
+        description:
+          "가입 페이지부터 스터디, 마이페이지까지 Aegis가 직접 만든 서비스의 코드를 둘러보세요.",
+      },
+    },
+    chatReminder: "팀채팅방 신청을 빠뜨렸다면",
   },
 } as const;

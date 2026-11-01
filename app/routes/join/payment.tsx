@@ -1,5 +1,6 @@
 import {
   getMyValidCoupons,
+  getPersonalInfo,
   redeemCouponCode,
   updatePayment,
 } from "@app/api/generated/endpoints";
@@ -11,7 +12,6 @@ import {
 import { StepActions, stepButtonClassName } from "@app/components/join/Funnel";
 import { usePaymentPolling } from "@app/components/join/usePaymentPolling";
 import { RetryButton } from "@app/components/page/States";
-import { Period } from "@app/components/site/Wordmark";
 import { Button } from "@app/components/ui/button";
 import { ErrorText } from "@app/components/ui/field";
 import { Spinner } from "@app/components/ui/spinner";
@@ -21,19 +21,35 @@ import { t as translate } from "@app/i18n/store";
 import { type ActionResult, runAction } from "@app/lib/actions";
 import { formatNumber } from "@app/lib/format";
 import { invalidateSession } from "@app/lib/session";
-import { CheckIcon, ChevronRightIcon, CopyIcon } from "lucide-react";
+import { ChevronRightIcon, CopyIcon } from "lucide-react";
+import type * as React from "react";
 import { useId, useState } from "react";
 import { useNavigate, useRevalidator } from "react-router";
 import type { Route } from "./+types/payment";
 
-/** The step still works without coupons, so a failed list is not fatal. */
+/** The step still works without coupons or the name, so neither is fatal. */
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {
+  const { signal } = request;
+  const [coupons, depositorName] = await Promise.all([
+    optional(getMyValidCoupons({ signal }), signal),
+    optional(
+      getPersonalInfo({ signal }).then(({ name }) => name),
+      signal
+    ),
+  ]);
+  return { coupons, depositorName };
+}
+
+async function optional<T>(
+  promise: Promise<T>,
+  signal: AbortSignal
+): Promise<T | null> {
   try {
-    return { coupons: await getMyValidCoupons({ signal: request.signal }) };
+    return await promise;
   } catch (error) {
-    if (request.signal.aborted) throw error;
+    if (signal.aborted) throw error;
     console.error(error);
-    return { coupons: null };
+    return null;
   }
 }
 
@@ -87,15 +103,20 @@ export default function Payment({ loaderData }: Route.ComponentProps) {
   if (status === "paid") {
     return (
       <>
-        <div className="grid justify-items-start gap-5">
-          <span className="grid size-14 place-items-center bg-blue text-white">
-            <CheckIcon aria-hidden="true" strokeWidth={3} className="size-7" />
-          </span>
-          <h2 className="m-0 text-title">
-            {t("join.payment.completeMessage")}
-            <Period />
-          </h2>
-        </div>
+        <PaymentBox
+          label={
+            <span className="inline-flex items-center gap-2 text-blue">
+              <span aria-hidden="true" className="size-2 bg-blue" />
+              {t("join.payment.paid.label")}
+            </span>
+          }
+          amount={finalPrice}
+        >
+          <Status
+            title={t("join.payment.paid.title")}
+            body={t("join.payment.paid.body")}
+          />
+        </PaymentBox>
         <StepActions step="payment" back={false}>
           <Button
             size="lg"
@@ -115,22 +136,14 @@ export default function Payment({ loaderData }: Route.ComponentProps) {
 
   return (
     <div className="grid gap-6">
-      <section
-        aria-label={t("join.payment.account.sectionLabel")}
-        className="border border-ink bg-paper-raised"
-      >
-        <div className="grid gap-1 px-5 pt-5 pb-6 sm:px-6">
-          <span className="text-[0.875rem] font-[700] text-ink-muted">
-            {t("join.payment.amountLabel")}
-          </span>
-          <strong className="tabular text-[clamp(2.25rem,7vw,3rem)] leading-none font-[800] tracking-[-0.045em]">
-            {t("join.payment.amountWithUnit", {
-              amount: formatNumber(finalPrice),
-            })}
-          </strong>
-        </div>
-        <Account />
-      </section>
+      <PaymentBox label={t("join.payment.amountLabel")} amount={finalPrice}>
+        <Account depositorName={loaderData.depositorName} />
+        <Status
+          marker
+          title={t("join.payment.waiting.title")}
+          body={t("join.payment.waiting.body")}
+        />
+      </PaymentBox>
 
       <CouponDialog
         coupons={loaderData.coupons}
@@ -150,7 +163,67 @@ export default function Payment({ loaderData }: Route.ComponentProps) {
   );
 }
 
-function Account() {
+/** The amount due and what is known about it, in one ink-bordered box. */
+function PaymentBox({
+  label,
+  amount,
+  children,
+}: {
+  label: React.ReactNode;
+  amount: number;
+  children: React.ReactNode;
+}) {
+  const { t } = useI18n();
+
+  return (
+    <section
+      aria-label={t("join.payment.account.sectionLabel")}
+      className="border border-ink bg-paper-raised"
+    >
+      <div className="grid gap-1 px-5 pt-5 pb-6 sm:px-6">
+        <span className="text-[0.875rem] font-[700] text-ink-muted">
+          {label}
+        </span>
+        <strong className="tabular text-[clamp(2.25rem,7vw,3rem)] leading-none font-[800] tracking-[-0.045em]">
+          {t("join.payment.amountWithUnit", { amount: formatNumber(amount) })}
+        </strong>
+      </div>
+      {children}
+    </section>
+  );
+}
+
+/** Where the payment stands, closing the box. */
+function Status({
+  title,
+  body,
+  marker = false,
+}: {
+  title: string;
+  body: string;
+  /** A blue square that marks a payment still in progress. */
+  marker?: boolean;
+}) {
+  return (
+    <div
+      role="status"
+      className="flex items-start gap-3 border-t border-line px-5 py-4 sm:px-6"
+    >
+      {marker && (
+        <span
+          aria-hidden="true"
+          className="mt-[0.45rem] size-2 shrink-0 bg-blue"
+        />
+      )}
+      <p className="m-0 grid gap-1 text-[0.875rem] leading-relaxed">
+        <strong className="font-[750]">{title}</strong>
+        <span className="text-ink-muted">{body}</span>
+      </p>
+    </div>
+  );
+}
+
+function Account({ depositorName }: { depositorName: string | null }) {
   const { t, language } = useI18n();
   const accountNumber = import.meta.env.VITE_ADMIN_ACCOUNT_NUMBER ?? "";
   const accountHolder =
@@ -193,6 +266,14 @@ function Account() {
         </dt>
         <dd className="m-0 font-[650]">{accountHolder}</dd>
       </div>
+      {depositorName && (
+        <div className="grid grid-cols-[5.5rem_minmax(0,1fr)] items-center gap-3">
+          <dt className="font-[700] text-ink-muted">
+            {t("join.payment.account.depositorName")}
+          </dt>
+          <dd className="m-0 font-[650]">{depositorName}</dd>
+        </div>
+      )}
     </dl>
   );
 }
