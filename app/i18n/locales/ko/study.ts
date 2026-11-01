@@ -130,6 +130,7 @@ export const study = {
   attendance: {
     heading: "출석",
     prompt: "스터디 시간에 스터디장이 알려 주는 코드로 출석합니다.",
+    attendedToday: "오늘 출석을 완료했습니다.",
     open: "출석 코드 입력",
     dialogTitle: "출석 코드 입력",
     description: "스터디장이 알려 준 4자리 코드를 입력하세요.",

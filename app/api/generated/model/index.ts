@@ -56,3 +56,4 @@ export * from "./studyEnrollRequest";
 export * from "./studyLevel";
 export * from "./studyRecruitmentMethod";
 export * from "./surveyCommon";
+export * from "./todayAttendanceResponse";

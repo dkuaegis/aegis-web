@@ -132,6 +132,7 @@ export const study = {
     heading: "Attendance",
     prompt:
       "Check in with the code your study leader gives out in each session.",
+    attendedToday: "You have checked in for today.",
     open: "Enter code",
     dialogTitle: "Enter attendance code",
     description: "Enter the 4-digit code from your study leader.",

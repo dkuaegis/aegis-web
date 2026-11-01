@@ -1346,6 +1346,39 @@
         }
       }
     },
+    "/studies/{studyId}/attendance/today": {
+      "get": {
+        "tags": [
+          "Study Participant"
+        ],
+        "summary": "오늘 출석 여부 조회",
+        "description": "로그인한 회원이 이 스터디의 오늘 세션에 출석했는지 조회합니다. 오늘 세션이 없거나 스터디원이 아니면 attended=false를 반환합니다.",
+        "operationId": "getMyTodayAttendance",
+        "parameters": [
+          {
+            "name": "studyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "오늘 출석 여부 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TodayAttendanceResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/studies/{studyId}/attendance-instructor": {
       "get": {
         "tags": [
@@ -3158,6 +3191,17 @@
             "minLength": 5,
             "type": "string",
             "nullable": true
+          }
+        }
+      },
+      "TodayAttendanceResponse": {
+        "required": [
+          "attended"
+        ],
+        "type": "object",
+        "properties": {
+          "attended": {
+            "type": "boolean"
           }
         }
       }

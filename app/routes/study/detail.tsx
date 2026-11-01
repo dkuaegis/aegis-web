@@ -1,6 +1,7 @@
 import {
   enrollStudy,
   getMyStudyApplication,
+  getMyTodayAttendance,
   getStudy,
   markAttendance,
   updateMyStudyApplication,
@@ -80,18 +81,22 @@ export async function clientLoader({
   const studyId = parseId(params.studyId);
   const { signal } = request;
   const study = await getStudy(studyId, { signal });
-  // Only application studies keep applications; first-come studies refuse
-  // the lookup outright.
-  const application =
+  const [application, attendance] = await Promise.all([
+    // Only application studies keep applications; first-come studies refuse
+    // the lookup outright.
     study.recruitmentMethod === "APPLICATION"
-      ? await getMyStudyApplication(studyId, { signal }).catch(
-          (error: unknown) => {
-            if (hasErrorCode(error, "STUDY_APPLICATION_NOT_FOUND")) return null;
-            throw error;
-          }
-        )
-      : null;
-  return { study, application };
+      ? getMyStudyApplication(studyId, { signal }).catch((error: unknown) => {
+          if (hasErrorCode(error, "STUDY_APPLICATION_NOT_FOUND")) return null;
+          throw error;
+        })
+      : null,
+    // Not worth an error page: without it the panel still offers the code
+    // input, and the server refuses a second check-in.
+    getMyTodayAttendance(studyId, { signal }).catch(() => ({
+      attended: false,
+    })),
+  ]);
+  return { study, application, attendedToday: attendance.attended };
 }
 
 type Intent = "enroll" | "update-application" | "attend";
@@ -138,7 +143,7 @@ export async function clientAction({
 export default function StudyDetail({ loaderData }: Route.ComponentProps) {
   const { t } = useI18n();
   const { roles } = useStudyContext();
-  const { study, application } = loaderData;
+  const { study, application, attendedToday } = loaderData;
   const role = roleOf(roles, study.id);
 
   const copyLink = () => {
@@ -201,7 +206,7 @@ export default function StudyDetail({ loaderData }: Route.ComponentProps) {
           {role === "instructor" ? (
             <InstructorPanel study={study} />
           ) : role === "participant" ? (
-            <AttendancePanel />
+            <AttendancePanel attendedToday={attendedToday} />
           ) : (
             <JoinPanel study={study} application={application} />
           )}
@@ -525,7 +530,7 @@ function FcfsJoin() {
   );
 }
 
-function AttendancePanel() {
+function AttendancePanel({ attendedToday }: { attendedToday: boolean }) {
   const { t } = useI18n();
   return (
     <Panel heading={t("study.labels.roles.participant")}>
@@ -534,10 +539,12 @@ function AttendancePanel() {
           {t("study.attendance.heading")}
         </p>
         <p className="m-0 text-[0.9375rem] leading-relaxed text-ink-muted">
-          {t("study.attendance.prompt")}
+          {attendedToday
+            ? t("study.attendance.attendedToday")
+            : t("study.attendance.prompt")}
         </p>
       </div>
-      <AttendanceDialog />
+      {!attendedToday && <AttendanceDialog />}
     </Panel>
   );
 }

@@ -36,6 +36,7 @@ import type {
   StudyCreateUpdateRequest,
   StudyEnrollRequest,
   SurveyCommon,
+  TodayAttendanceResponse,
 } from "./model";
 
 import { apiFetch } from "../client";
@@ -739,6 +740,27 @@ export const getStudyMembers = async (
 ): Promise<InstructorStudyMemberResponse[]> => {
   return apiFetch<InstructorStudyMemberResponse[]>(
     getGetStudyMembersUrl(studyId),
+    {
+      ...options,
+      method: "GET",
+    }
+  );
+};
+
+export const getGetMyTodayAttendanceUrl = (studyId: number) => {
+  return `/studies/${studyId}/attendance/today`;
+};
+
+/**
+ * 로그인한 회원이 이 스터디의 오늘 세션에 출석했는지 조회합니다. 오늘 세션이 없거나 스터디원이 아니면 attended=false를 반환합니다.
+ * @summary 오늘 출석 여부 조회
+ */
+export const getMyTodayAttendance = async (
+  studyId: number,
+  options?: Parameters<typeof apiFetch>[1]
+): Promise<TodayAttendanceResponse> => {
+  return apiFetch<TodayAttendanceResponse>(
+    getGetMyTodayAttendanceUrl(studyId),
     {
       ...options,
       method: "GET",
