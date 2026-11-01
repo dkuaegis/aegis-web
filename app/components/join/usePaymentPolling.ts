@@ -1,5 +1,8 @@
 import { createPayment, getPaymentStatus } from "@app/api/generated/endpoints";
-import { PaymentCheckStatus } from "@app/api/generated/model";
+import {
+  PaymentCheckStatus,
+  type PaymentStatusResponse,
+} from "@app/api/generated/model";
 import { hasStatus } from "@app/lib/errors";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -16,17 +19,19 @@ const MAX_CONSECUTIVE_FAILURES = 3;
  */
 export function usePaymentPolling() {
   const [status, setStatus] = useState<Status>("loading");
-  const [finalPrice, setFinalPrice] = useState(0);
+  const [payment, setPayment] = useState<
+    Pick<PaymentStatusResponse, "finalPrice" | "issuedCouponIds">
+  >({ finalPrice: 0, issuedCouponIds: [] });
   const [attempt, setAttempt] = useState(0);
   const inFlight = useRef(false);
 
-  /** Reads the price again, e.g. after coupons changed it. */
-  const refreshFinalPrice = useCallback(async () => {
-    // A check already on its way will bring the latest price.
+  /** Reads the payment again, e.g. after coupons changed it. */
+  const refreshPayment = useCallback(async () => {
+    // A check already on its way will bring the latest payment.
     if (inFlight.current) return;
     inFlight.current = true;
     try {
-      setFinalPrice((await getPaymentStatus()).finalPrice);
+      setPayment(await getPaymentStatus());
     } catch (error) {
       console.error(error);
     } finally {
@@ -67,7 +72,7 @@ export function usePaymentPolling() {
         const result = await getPaymentStatus();
         if (!active) return;
         failures = 0;
-        setFinalPrice(result.finalPrice);
+        setPayment(result);
         if (result.status === PaymentCheckStatus.COMPLETED) {
           stop("paid");
           return;
@@ -103,7 +108,7 @@ export function usePaymentPolling() {
       try {
         const current = await getPaymentStatus();
         if (!active) return;
-        setFinalPrice(current.finalPrice);
+        setPayment(current);
         if (current.status === PaymentCheckStatus.COMPLETED) {
           setStatus("paid");
           return;
@@ -132,5 +137,5 @@ export function usePaymentPolling() {
     };
   }, [attempt]);
 
-  return { status, finalPrice, refreshFinalPrice, retry };
+  return { status, ...payment, refreshPayment, retry };
 }

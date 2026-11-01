@@ -7,7 +7,6 @@ import {
 import {
   CouponDialog,
   type CouponIntent,
-  rememberAppliedCoupons,
 } from "@app/components/join/CouponDialog";
 import { StepActions, stepButtonClassName } from "@app/components/join/Funnel";
 import { usePaymentPolling } from "@app/components/join/usePaymentPolling";
@@ -66,17 +65,17 @@ export async function clientAction({
       success: translate("join.coupon.registerSuccess"),
     });
   }
-  return runAction("apply", async () => {
-    await updatePayment({ issuedCouponIds: body.issuedCouponIds });
-    rememberAppliedCoupons(body.issuedCouponIds);
-  });
+  return runAction("apply", () =>
+    updatePayment({ issuedCouponIds: body.issuedCouponIds })
+  );
 }
 
 export default function Payment({ loaderData }: Route.ComponentProps) {
   const { t } = useI18n();
   const navigate = useNavigate();
   const revalidator = useRevalidator();
-  const { status, finalPrice, refreshFinalPrice, retry } = usePaymentPolling();
+  const { status, finalPrice, issuedCouponIds, refreshPayment, retry } =
+    usePaymentPolling();
 
   if (status === "loading") {
     return (
@@ -147,7 +146,8 @@ export default function Payment({ loaderData }: Route.ComponentProps) {
 
       <CouponDialog
         coupons={loaderData.coupons}
-        onApplied={() => void refreshFinalPrice()}
+        appliedCouponIds={issuedCouponIds}
+        onApplied={() => void refreshPayment()}
       />
       {!loaderData.coupons && (
         <div className="-mt-3 flex flex-wrap items-center gap-3">

@@ -9,4 +9,5 @@ import type { PaymentCheckStatus } from "./paymentCheckStatus";
 export interface PaymentStatusResponse {
   status: PaymentCheckStatus;
   finalPrice: number;
+  issuedCouponIds: number[];
 }

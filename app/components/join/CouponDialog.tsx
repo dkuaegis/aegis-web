@@ -19,30 +19,6 @@ import { ChevronRightIcon } from "lucide-react";
 import { useId, useState } from "react";
 import { useFetcher } from "react-router";
 
-// PUT /payments replaces the whole coupon set, but the server never says
-// which coupons are applied. Remember the last set so reopening the dialog
-// starts from it instead of silently dropping coupons applied before.
-const APPLIED_COUPONS_KEY = "aegis.join.applied-coupons";
-
-export function readAppliedCoupons(): number[] {
-  try {
-    const value: unknown = JSON.parse(
-      sessionStorage.getItem(APPLIED_COUPONS_KEY) ?? "[]"
-    );
-    return Array.isArray(value) ? value.filter(Number.isInteger) : [];
-  } catch {
-    return [];
-  }
-}
-
-export function rememberAppliedCoupons(ids: number[]) {
-  try {
-    sessionStorage.setItem(APPLIED_COUPONS_KEY, JSON.stringify(ids));
-  } catch {
-    // The server already has them; only reopening the dialog forgets.
-  }
-}
-
 export type CouponIntent = "redeem" | "apply";
 
 /**
@@ -51,16 +27,18 @@ export type CouponIntent = "redeem" | "apply";
  */
 export function CouponDialog({
   coupons,
+  appliedCouponIds,
   onApplied,
 }: {
   /** null when the list could not be loaded. */
   coupons: IssuedCouponResponse[] | null;
+  /** What the payment holds now. PUT /payments replaces the whole set. */
+  appliedCouponIds: number[];
   onApplied: () => void;
 }) {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<number[]>([]);
-  const [applied, setApplied] = useState<number[]>([]);
   const [code, setCode] = useState("");
   const fetcher = useFetcher<ActionResult<CouponIntent>>({ key: "coupons" });
   const busy = fetcher.state !== "idle";
@@ -96,11 +74,9 @@ export function CouponDialog({
       onOpenChange={(next) => {
         if (busy) return;
         if (next && coupons) {
-          // Start from what was applied last, minus coupons used since.
+          // Start from what is applied, keeping only coupons the list shows.
           const valid = new Set(coupons.map((c) => c.issuedCouponId));
-          const last = readAppliedCoupons().filter((id) => valid.has(id));
-          setApplied(last);
-          setSelected(last);
+          setSelected(appliedCouponIds.filter((id) => valid.has(id)));
         }
         setOpen(next);
       }}
@@ -204,7 +180,9 @@ export function CouponDialog({
         <Button
           size="lg"
           // Sending an empty set clears coupons applied before.
-          disabled={busy || (selected.length === 0 && applied.length === 0)}
+          disabled={
+            busy || (selected.length === 0 && appliedCouponIds.length === 0)
+          }
           onClick={() => send("apply", { issuedCouponIds: selected })}
         >
           {sending === "apply" && <Spinner />}

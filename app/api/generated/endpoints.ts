@@ -907,7 +907,7 @@ export const getGetPaymentStatusUrl = () => {
 };
 
 /**
- * 로그인한 사용자의 결제 상태를 조회합니다. 결제가 없을 경우 NOT_CREATED 상태를 반환합니다.
+ * 로그인한 사용자의 결제 상태와 결제에 적용된 발급 쿠폰 ID를 조회합니다. 결제가 없을 경우 NOT_CREATED 상태를 반환합니다.
  * @summary 결제 상태 조회
  */
 export const getPaymentStatus = async (
