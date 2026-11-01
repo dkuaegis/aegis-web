@@ -1,4 +1,5 @@
 import { getStudyApplications } from "@app/api/generated/endpoints";
+import { FilterChip } from "@app/components/page/FilterChip";
 import { EmptyState } from "@app/components/page/States";
 import { StatusBadge } from "@app/components/study/StatusBadge";
 import { parseId } from "@app/components/study/study";
@@ -14,7 +15,6 @@ import { useI18n } from "@app/i18n";
 import { t as translate } from "@app/i18n/store";
 import { formatDate } from "@app/lib/format";
 import { pageTitle } from "@app/lib/title";
-import { cn } from "@app/lib/utils";
 import { ArrowRightIcon } from "lucide-react";
 import { Link, Outlet, useSearchParams } from "react-router";
 import type { Route } from "./+types/applications";
@@ -73,26 +73,19 @@ export default function Applications({ loaderData }: Route.ComponentProps) {
     <div className="grid gap-6">
       <div className="flex flex-wrap gap-1.5">
         {FILTERS.map((value) => (
-          <button
+          <FilterChip
             key={value}
-            type="button"
-            aria-pressed={filter === value}
+            active={filter === value}
+            count={counts[value]}
             onClick={() =>
               setSearchParams(value === "ALL" ? {} : { status: value }, {
                 replace: true,
                 preventScrollReset: true,
               })
             }
-            className={cn(
-              "inline-flex h-9 cursor-pointer items-center gap-2 border px-3.5 text-[0.8125rem] font-[750] transition-colors",
-              filter === value
-                ? "border-ink bg-ink text-paper"
-                : "border-line-strong text-ink hover:border-ink"
-            )}
           >
             {t(`study.applications.filters.${value}`)}
-            <span className="tabular opacity-70">{counts[value]}</span>
-          </button>
+          </FilterChip>
         ))}
       </div>
 
