@@ -92,9 +92,17 @@ export const LANGUAGE_PENDING_SCRIPT = [
   "})()",
 ].join("");
 
-/** Shows the page once it is rendered in the visitor's language. */
+/** Shows the page once it is rendered, with its fonts, in the visitor's language. */
 export function revealLanguage() {
-  document.documentElement.removeAttribute(LANGUAGE_PENDING_ATTRIBUTE);
+  const root = document.documentElement;
+  if (!root.hasAttribute(LANGUAGE_PENDING_ATTRIBUTE)) return;
+  // Laying out the still hidden page starts loading the fonts its new text
+  // needs. Waiting for them keeps that text from visibly swapping fonts, which
+  // would shift the layout.
+  root.getBoundingClientRect();
+  void document.fonts.ready.then(() =>
+    root.removeAttribute(LANGUAGE_PENDING_ATTRIBUTE)
+  );
 }
 
 /**
