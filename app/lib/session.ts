@@ -15,7 +15,9 @@ type Snapshot =
   | { state: "ready"; status: SessionStatus }
   | { state: "error"; error: unknown };
 
-let snapshot: Snapshot = { state: "loading" };
+const LOADING: Snapshot = { state: "loading" };
+
+let snapshot: Snapshot = LOADING;
 let pending: Promise<SessionStatus> | null = null;
 const listeners = new Set<() => void>();
 
@@ -61,7 +63,7 @@ export function loadSession(): Promise<SessionStatus> {
 /** Forget the cached status, e.g. after signing in or finishing payment. */
 export function invalidateSession() {
   pending = null;
-  publish({ state: "loading" });
+  publish(LOADING);
 }
 
 function subscribe(listener: () => void) {
@@ -69,9 +71,17 @@ function subscribe(listener: () => void) {
   return () => listeners.delete(listener);
 }
 
-/** The session for rendering; starts the check if nothing has yet. */
+/**
+ * The session for rendering; starts the check if nothing has yet. The
+ * prerendered home page cannot know who is visiting, so it is built (and
+ * hydrated) in the loading state.
+ */
 export function useSession(): Snapshot {
-  const current = useSyncExternalStore(subscribe, () => snapshot);
+  const current = useSyncExternalStore(
+    subscribe,
+    () => snapshot,
+    () => LOADING
+  );
   useEffect(() => {
     if (current.state === "loading") void loadSession().catch(() => {});
   }, [current.state]);

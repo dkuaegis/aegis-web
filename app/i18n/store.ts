@@ -7,6 +7,7 @@ import {
   isLanguage,
   LANGUAGE_HTML_LANG,
   LANGUAGE_STORAGE_KEY,
+  LANGUAGES,
   type Language,
 } from "./types";
 
@@ -67,6 +68,33 @@ export function setLanguage(language: Language) {
   }
 
   for (const listener of listeners) listener();
+}
+
+/**
+ * Set on `<html>` before the page renders when the visitor's language is not
+ * the prerendered Korean, so they never see the wrong language flash by.
+ */
+const LANGUAGE_PENDING_ATTRIBUTE = "data-language-pending";
+
+/**
+ * Inline `<head>` script mirroring `detectInitialLanguage`. It cannot import
+ * anything, so the stored choice and browser preference are checked again in
+ * plain JS before the body is parsed.
+ */
+export const LANGUAGE_PENDING_SCRIPT = [
+  "(function(){var l;",
+  `try{l=localStorage.getItem(${JSON.stringify(LANGUAGE_STORAGE_KEY)})}catch(e){}`,
+  `if(${JSON.stringify(LANGUAGES)}.indexOf(l)<0){`,
+  "var p=(navigator.languages&&navigator.languages[0])||navigator.language;",
+  `l=p&&p.toLowerCase().indexOf("ko")!==0?"en":${JSON.stringify(DEFAULT_LANGUAGE)}}`,
+  `if(l!==${JSON.stringify(DEFAULT_LANGUAGE)}){var d=document.documentElement;`,
+  `d.lang=l;d.setAttribute(${JSON.stringify(LANGUAGE_PENDING_ATTRIBUTE)},"")}`,
+  "})()",
+].join("");
+
+/** Shows the page once it is rendered in the visitor's language. */
+export function revealLanguage() {
+  document.documentElement.removeAttribute(LANGUAGE_PENDING_ATTRIBUTE);
 }
 
 /**

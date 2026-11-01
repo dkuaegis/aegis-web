@@ -308,3 +308,20 @@
     animation: none;
   }
 }
+
+/*
+ * The prerendered home page is Korean. For a visitor in another language the
+ * inline script in root.tsx sets this attribute, and the page stays hidden
+ * until the app has rendered it in their language. If the app never starts,
+ * the page is shown anyway after a few seconds.
+ */
+html[data-language-pending] body > :not(.app-loading) {
+  visibility: hidden;
+  animation: language-pending-reveal 0s 3s forwards;
+}
+
+@keyframes language-pending-reveal {
+  to {
+    visibility: visible;
+  }
+}

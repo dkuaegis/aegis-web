@@ -7,6 +7,7 @@ import {
   getDictionary,
   getLanguage,
   initLanguage,
+  revealLanguage,
   setLanguage as setStoreLanguage,
   subscribeToLanguage,
 } from "./store";
@@ -29,6 +30,12 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
       void revalidate();
     });
   }, [revalidate]);
+
+  // Runs after the effect above, so on the first pass it still sees the
+  // prerendered Korean and waits for the re-render in the detected language.
+  useEffect(() => {
+    if (language === getLanguage()) revealLanguage();
+  }, [language]);
 
   const setLanguage = useCallback((next: Language) => {
     setStoreLanguage(next);

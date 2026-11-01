@@ -1,4 +1,5 @@
 import { RotateCwIcon } from "lucide-react";
+import { useEffect } from "react";
 import type { LinksFunction, MetaFunction } from "react-router";
 import {
   isRouteErrorResponse,
@@ -16,7 +17,7 @@ import { buttonVariants } from "./components/ui/button";
 import { Toaster } from "./components/ui/toast";
 import { useExternalBrowser } from "./hooks/useExternalBrowser";
 import { I18nProvider } from "./i18n";
-import { t } from "./i18n/store";
+import { LANGUAGE_PENDING_SCRIPT, revealLanguage, t } from "./i18n/store";
 import { SITE_NAME } from "./lib/title";
 import "./index.css";
 
@@ -43,12 +44,17 @@ export const meta: MetaFunction = () => {
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    // The provider rewrites this to the selected language on the client; "ko"
-    // is the correct value for the prerendered markup.
-    <html lang="ko">
+    // "ko" is the correct value for the prerendered markup. The language
+    // script below may change it before hydration, and the provider keeps it
+    // in sync afterwards.
+    <html lang="ko" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: Static script built from constants, no user input.
+          dangerouslySetInnerHTML={{ __html: LANGUAGE_PENDING_SCRIPT }}
+        />
         <Meta />
         <Links />
         {/* docker/40-runtime-config.sh fills this in at container start.
@@ -90,6 +96,8 @@ export function ErrorBoundary() {
   const error = useRouteError();
   const notFound = isRouteErrorResponse(error) && error.status === 404;
   if (!notFound) console.error(error);
+  // Without the provider nothing else would undo the language script.
+  useEffect(revealLanguage, []);
 
   // Rendered without the providers (they may be what failed), so it reads
   // translations from the store and uses plain links that reload the app.

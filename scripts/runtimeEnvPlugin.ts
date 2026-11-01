@@ -104,9 +104,16 @@ export function runtimeEnvPlugin(): Plugin {
         if (req.method !== "GET" || !accept.includes("text/html")) {
           return next();
         }
+        // Mirrors nginx: the prerendered home page for "/", the SPA fallback
+        // for every other route.
+        const { pathname } = new URL(req.url ?? "/", "http://localhost");
+        const page =
+          pathname === "/" || pathname === "/index.html"
+            ? "index.html"
+            : "__spa-fallback.html";
         try {
           const [html, keysJson] = await Promise.all([
-            readFile(path.join(outDir, "index.html"), "utf8"),
+            readFile(path.join(outDir, page), "utf8"),
             readFile(path.join(outDir, runtimeEnvKeysFile), "utf8"),
           ]);
           const env = loadEnv(mode, root, "VITE_");

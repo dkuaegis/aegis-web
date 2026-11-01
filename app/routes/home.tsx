@@ -1,5 +1,4 @@
 import { useI18n } from "@app/i18n";
-import { t as translate } from "@app/i18n/store";
 import { loginPath } from "@app/lib/auth";
 import { useSession } from "@app/lib/session";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
@@ -7,15 +6,6 @@ import { type MouseEvent, useEffect } from "react";
 import { Link } from "react-router";
 
 import "../features/home/home-page.css";
-
-export function meta() {
-  // `meta` runs outside the component tree, so it reads the language from the
-  // store rather than from context.
-  return [
-    { title: translate("home.meta.title") },
-    { name: "description", content: translate("home.meta.description") },
-  ];
-}
 
 const PARTNERS = [
   { key: "swProject", href: "https://swcu.dankook.ac.kr/home" },
