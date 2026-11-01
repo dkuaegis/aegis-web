@@ -53,7 +53,7 @@ export default function EditStudy({
   const back = `/study/${study.id}`;
 
   return (
-    <div className="form-frame">
+    <div className="narrow-frame">
       <PageHeader
         className="border-b-0"
         back={{ to: back, label: t("study.form.back") }}

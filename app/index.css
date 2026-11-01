@@ -226,11 +226,13 @@
   padding-inline: var(--page-gutter);
 }
 
-/* Widens the gutter of everything inside so long forms read as one centered
-   column instead of hugging the left edge. Percentages resolve against each
-   gutter-x element's containing block, the full page width here. */
-@utility form-frame {
-  --page-gutter: max(var(--page-pad), (100% - 62.5rem) / 2);
+/* Widens the gutter of everything inside so pages built from forms and lists,
+   like the study form and my page, read as one centered column instead of
+   hugging the left edge. The column is --frame-width wide, 62.5rem unless the
+   page sets it. Percentages resolve against each gutter-x element's
+   containing block, the full page width here. */
+@utility narrow-frame {
+  --page-gutter: max(var(--page-pad), (100% - var(--frame-width, 62.5rem)) / 2);
 }
 
 /* Caps a full-bleed block, like a tile grid, at the page frame. */
