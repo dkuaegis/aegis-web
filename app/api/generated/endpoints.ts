@@ -596,8 +596,8 @@ export const getIssueQrCodeUrl = () => {
  */
 export const issueQrCode = async (
   options?: Parameters<typeof apiFetch>[1]
-): Promise<unknown> => {
-  return apiFetch<unknown>(getIssueQrCodeUrl(), {
+): Promise<string> => {
+  return apiFetch<string>(getIssueQrCodeUrl(), {
     ...options,
     method: "POST",
   });

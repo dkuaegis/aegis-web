@@ -1031,9 +1031,14 @@
         "operationId": "issueQrCode",
         "responses": {
           "201": {
-            "description": "QR 코드 발급 성공",
+            "description": "QR 코드 발급 성공. 60초 동안 유효한 PNG 이미지의 Base64 문자열",
             "content": {
-              "text/plain": {}
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
             }
           },
           "401": {
