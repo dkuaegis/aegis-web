@@ -45,7 +45,7 @@
         "useTailwindSortedClasses": "off"
       },
       "style": {
-        "noDescendingSpecificity": "off"
+        "noDescendingSpecificity": "error"
       },
       "suspicious": {
         "noArrayIndexKey": "warn",
