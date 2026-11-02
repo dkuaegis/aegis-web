@@ -13,14 +13,17 @@ interface NavItem {
   emphasis?: boolean;
 }
 
-function useNavItems(): NavItem[] | null {
+function useNavItems(): NavItem[] {
   const { t } = useI18n();
   const session = useSession();
   const { pathname, search } = useLocation();
 
-  if (session.state !== "ready") return null;
+  // The prerendered home page ships the signed-out menu, so the visitors it is
+  // written for see no change. It also stands in when the check fails, since
+  // login re-checks the session anyway.
+  const status = session.state === "ready" ? session.status : "anonymous";
 
-  switch (session.status) {
+  switch (status) {
     case "anonymous":
       return [
         { label: t("common.site.nav.login"), to: loginPath(pathname + search) },
@@ -108,11 +111,10 @@ export function SiteHeader() {
           className={cn(
             "absolute inset-x-0 top-full flex-col border-t border-white/16 bg-ink",
             menuOpen ? "flex" : "hidden",
-            "min-[821px]:static min-[821px]:flex min-[821px]:flex-row min-[821px]:border-t-0 min-[821px]:border-l min-[821px]:bg-transparent",
-            !items && "invisible min-[821px]:min-w-56"
+            "min-[821px]:static min-[821px]:flex min-[821px]:flex-row min-[821px]:border-t-0 min-[821px]:border-l min-[821px]:bg-transparent"
           )}
         >
-          {items?.map((item) => (
+          {items.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
@@ -120,6 +122,9 @@ export function SiteHeader() {
                 cn(
                   "relative flex min-h-[3.8rem] items-center border-b border-white/12 px-5 text-base font-[780] min-[821px]:text-[0.875rem] transition-colors hover:bg-white/9 hover:text-white",
                   "min-[821px]:min-h-0 min-[821px]:w-28 min-[821px]:justify-center min-[821px]:border-r min-[821px]:border-b-0 min-[821px]:border-white/16 min-[821px]:px-4",
+                  // A lone item fills both slots, so the language toggle stays
+                  // put when the session replaces the two-item signed-out menu.
+                  items.length === 1 && "min-[821px]:w-56",
                   item.emphasis ? "text-[#83a0ff]" : "text-paper",
                   isActive &&
                     "after:absolute after:inset-x-0 after:bottom-0 after:h-[3px] after:bg-paper max-[820px]:after:inset-y-0 max-[820px]:after:right-auto max-[820px]:after:h-auto max-[820px]:after:w-[3px]"
