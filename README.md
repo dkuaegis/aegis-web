@@ -15,9 +15,10 @@ The web frontend for Aegis, providing public club information, study pages, memb
 - React 19, TypeScript 7, and React Router 8
 - Vite 8 and Tailwind CSS 4
 - Biome for formatting and linting
-- TanStack Query and Zustand for client-side state and data
+- Orval for the generated API client
+- React Hook Form and Zod for forms
 
-React Router is configured as a client-rendered SPA (`ssr: false`). Production builds are served as static files by Nginx.
+React Router runs without a server (`ssr: false`). The home page is prerendered at build time, and every other path is served `__spa-fallback.html` and rendered in the browser. Production builds are served as static files by Nginx.
 
 ## Requirements
 
@@ -32,7 +33,7 @@ pnpm install --frozen-lockfile
 cp .env.example .env
 ```
 
-Set `VITE_API_URL` in `.env` to the backend API URL. The example file uses `http://localhost:3001`. If the backend runs at a different address, update the URL. The browser calls this URL directly, so the backend must allow the development origin in CORS.
+Set `VITE_API_URL` in `.env` to the backend API URL. The example file uses the development server, `https://dev-api.dkuaegis.org`. To use a backend running locally, change it to `http://localhost:8080`. The browser calls this URL directly, so the backend must allow the development origin in CORS.
 
 Start the development server:
 
@@ -54,7 +55,7 @@ The following variables are required when starting the production container:
 | `VITE_ADMIN_ACCOUNT_HOLDER_KO` | Payment account holder displayed in Korean |
 | `VITE_ADMIN_ACCOUNT_HOLDER_EN` | Payment account holder displayed in English |
 
-Other values in `.env.example` configure payment contact details, Kakao chat links, and the development server. Set them as needed for the features and environment in use.
+Other values in `.env.example` configure payment contact details and Kakao chat links. Set them as needed for the features and environment in use.
 
 > **Security:** `VITE_` values are exposed to client-side code. Do not put passwords, tokens, or other private credentials in them.
 
@@ -64,11 +65,15 @@ Other values in `.env.example` configure payment contact details, Kakao chat lin
 | --- | --- |
 | `pnpm dev` | Start the local development server |
 | `pnpm build` | Type-check and create the production build in `build/client` |
+| `pnpm typecheck` | Generate route types and run the TypeScript compiler |
 | `pnpm preview` | Preview the production build locally with the `.env` values (run `pnpm build` first) |
 | `pnpm check:ci` | Run Biome checks without modifying files |
 | `pnpm lint` | Run Biome lint checks |
 | `pnpm format` | Format files in place |
 | `pnpm check` | Run Biome checks and apply fixes in place |
+| `pnpm i18n:check` | Verify that the locale files and translation keys are in sync |
+| `pnpm api:fetch` | Download the OpenAPI document into `openapi/`, from a locally running server by default or from a URL passed with `pnpm api:fetch <url>` |
+| `pnpm api:generate` | Generate the API client in `app/api/generated` from the OpenAPI document |
 
 ## Application structure
 
@@ -97,7 +102,7 @@ The top-level routes are declared in [`app/routes.ts`](app/routes.ts):
 
 The [`Dockerfile`](Dockerfile) builds the client bundle and serves it with Nginx. At container startup, `docker/40-runtime-config.sh` validates the required environment variables and inlines them into `<script id="runtime-config">` in each HTML document. Configure those variables in the deployment environment; do not bake private credentials into the image.
 
-The GitHub Actions workflow builds and publishes a `linux/arm64` image to GitHub Container Registry and triggers deployment through Coolify for `dev` and `main`. A README-only change is excluded from the workflow's path filters and does not trigger a deployment.
+The GitHub Actions workflow builds and publishes a `linux/arm64` image to GitHub Container Registry and triggers deployment through Coolify for `dev` and `main`. A README-only change is excluded from the workflow's path filters and does not trigger a deployment. A separate workflow runs `pnpm check:ci` on pull requests and on pushes to `dev` and `main`.
 
 ## Troubleshooting a blank or persistent loading page
 
@@ -106,7 +111,7 @@ The GitHub Actions workflow builds and publishes a `linux/arm64` image to GitHub
 3. Confirm the JavaScript and CSS files under `/assets/` load successfully. Nginx intentionally returns `404` for missing fingerprinted assets instead of serving the application shell for those requests.
 4. If the page renders but authentication or API-backed features do not work, verify `VITE_API_URL`, backend availability, and the browser's API request and cookie errors.
 
-The root route's client-rendering fallback displays `Loading...` while the application is loading. A persistent fallback should be investigated using the checks above rather than treated as proof of a specific backend or deployment failure.
+The root route's client-rendering fallback displays a loading screen while the application is loading. A persistent fallback should be investigated using the checks above rather than treated as proof of a specific backend or deployment failure.
 
 ## License
 
