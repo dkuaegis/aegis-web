@@ -28,10 +28,7 @@ export const home = {
   actions: {
     join: "가입하기",
     joinInfo: "가입 정보 보기",
-    browseStudies: "스터디 둘러보기",
-    myActivity: "내 활동 보기",
-    login: "로그인",
-    joinAndLoginLinks: "가입 및 로그인 링크",
+    joinLinks: "가입 안내 링크",
   },
 
   activities: {
@@ -119,10 +116,8 @@ export const home = {
   },
 
   join: {
-    memberTitleLine1: "계속 배우고, 만들고,",
-    memberTitleLine2: "함께 나눠요",
-    guestTitleLine1: "성장을 원하는 모두에게",
-    guestTitleLine2: "열려 있습니다",
+    titleLine1: "성장을 원하는 모두에게",
+    titleLine2: "열려 있습니다",
   },
 
   footer: {

@@ -28,10 +28,7 @@ export const home = {
   actions: {
     join: "Join us",
     joinInfo: "How to join",
-    browseStudies: "Browse studies",
-    myActivity: "My activity",
-    login: "Log in",
-    joinAndLoginLinks: "Join and log in links",
+    joinLinks: "Join links",
   },
 
   activities: {
@@ -120,10 +117,8 @@ export const home = {
   },
 
   join: {
-    memberTitleLine1: "Keep learning, keep building,",
-    memberTitleLine2: "keep sharing",
-    guestTitleLine1: "Open to everyone",
-    guestTitleLine2: "who wants to grow",
+    titleLine1: "Open to everyone",
+    titleLine2: "who wants to grow",
   },
 
   footer: {

@@ -1,6 +1,5 @@
 import { useI18n } from "@app/i18n";
 import { loginPath } from "@app/lib/auth";
-import { useSession } from "@app/lib/session";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { type MouseEvent, useEffect } from "react";
 import { Link } from "react-router";
@@ -63,10 +62,24 @@ function scrollToHomeSection(
   window.history.replaceState(null, "", `#${sectionId}`);
 }
 
+/** The same for every visitor: `/login` forwards signed-in visitors onward. */
+function JoinLinks() {
+  const { t } = useI18n();
+
+  return (
+    <>
+      <Link to={loginPath("/join")}>
+        {t("home.actions.join")} <ExternalMark />
+      </Link>
+      <Link to="#faq" onClick={(event) => scrollToHomeSection(event, "faq")}>
+        {t("home.actions.joinInfo")} <ArrowDown aria-hidden="true" />
+      </Link>
+    </>
+  );
+}
+
 export default function HomePage() {
   const { t } = useI18n();
-  const session = useSession();
-  const status = session.state === "ready" ? session.status : null;
 
   useEffect(() => {
     const sectionId = window.location.hash.slice(1);
@@ -80,21 +93,6 @@ export default function HomePage() {
 
     return () => window.cancelAnimationFrame(animationFrame);
   }, []);
-
-  const isMember = status === "member";
-  const isGuest = status === "guest";
-  const joinHref = isGuest ? "/join" : loginPath("/join");
-  const memberActions = [
-    { label: t("home.actions.browseStudies"), href: "/study" },
-    { label: t("home.actions.myActivity"), href: "/mypage" },
-  ];
-  const [browseStudies, myActivity] = memberActions;
-  const primaryAction = isMember
-    ? browseStudies
-    : { label: t("home.actions.join"), href: joinHref };
-  const secondaryAction = isMember
-    ? myActivity
-    : { label: t("home.actions.joinInfo"), href: "#faq" };
 
   return (
     <div className="home-page" id="top">
@@ -119,24 +117,7 @@ export default function HomePage() {
               {t("home.hero.summaryTail")}
             </p>
             <div className="home-hero-actions">
-              <Link to={primaryAction.href}>
-                {primaryAction.label} <ExternalMark />
-              </Link>
-              <Link
-                to={secondaryAction.href}
-                onClick={
-                  secondaryAction.href === "#faq"
-                    ? (event) => scrollToHomeSection(event, "faq")
-                    : undefined
-                }
-              >
-                {secondaryAction.label}{" "}
-                {secondaryAction.href.startsWith("/") ? (
-                  <ExternalMark />
-                ) : (
-                  <ArrowDown aria-hidden="true" />
-                )}
-              </Link>
+              <JoinLinks />
             </div>
           </div>
 
@@ -226,50 +207,14 @@ export default function HomePage() {
 
       <section className="home-join" id="join" aria-labelledby="join-title">
         <h2 id="join-title">
-          {isMember ? (
-            <>
-              {t("home.join.memberTitleLine1")}
-              <br />
-              {t("home.join.memberTitleLine2")}
-              <span className="home-join-period">.</span>
-            </>
-          ) : (
-            <>
-              {t("home.join.guestTitleLine1")}
-              <br />
-              {t("home.join.guestTitleLine2")}
-              <span className="home-join-period">.</span>
-            </>
-          )}
+          {t("home.join.titleLine1")}
+          <br />
+          {t("home.join.titleLine2")}
+          <span className="home-join-period">.</span>
         </h2>
         <div>
-          <nav aria-label={t("home.actions.joinAndLoginLinks")}>
-            {isMember ? (
-              memberActions.map((action) => (
-                <Link to={action.href} key={action.href}>
-                  {action.label} <ExternalMark />
-                </Link>
-              ))
-            ) : (
-              <>
-                <Link to={joinHref}>
-                  {t("home.actions.join")} <ExternalMark />
-                </Link>
-                {isGuest ? (
-                  <Link
-                    to="#faq"
-                    onClick={(event) => scrollToHomeSection(event, "faq")}
-                  >
-                    {t("home.actions.joinInfo")}{" "}
-                    <ArrowDown aria-hidden="true" />
-                  </Link>
-                ) : (
-                  <Link to={loginPath("/")}>
-                    {t("home.actions.login")} <ExternalMark />
-                  </Link>
-                )}
-              </>
-            )}
+          <nav aria-label={t("home.actions.joinLinks")}>
+            <JoinLinks />
           </nav>
         </div>
       </section>
