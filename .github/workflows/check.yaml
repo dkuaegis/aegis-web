@@ -1,0 +1,34 @@
+name: Check
+
+on:
+  pull_request:
+  push:
+    branches:
+      - dev
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  biome:
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+      - name: 코드 체크아웃
+        uses: actions/checkout@v7
+
+      - name: pnpm 설정
+        uses: pnpm/action-setup@v6
+
+      - name: Node.js 설정
+        uses: actions/setup-node@v7
+        with:
+          node-version: 26.13.0
+          cache: pnpm
+
+      - name: 의존성 설치
+        run: pnpm install --frozen-lockfile
+
+      - name: Biome 검사
+        run: pnpm check:ci
