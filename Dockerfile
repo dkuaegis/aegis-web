@@ -2,7 +2,7 @@ FROM node:26.13.0-trixie-slim AS builder
 
 WORKDIR /app
 
-RUN npm install --global corepack@latest && corepack enable
+RUN npm install --global corepack@0.36.0 && corepack enable
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
