@@ -18,11 +18,13 @@ type Snapshot =
 const LOADING: Snapshot = { state: "loading" };
 
 let snapshot: Snapshot = LOADING;
+let stale = false;
 let pending: Promise<SessionStatus> | null = null;
 const listeners = new Set<() => void>();
 
 function publish(next: Snapshot) {
   snapshot = next;
+  stale = false;
   for (const listener of listeners) listener();
 }
 
@@ -42,7 +44,9 @@ async function fetchStatus(): Promise<SessionStatus> {
  * the next call retries.
  */
 export function loadSession(): Promise<SessionStatus> {
-  if (snapshot.state === "ready") return Promise.resolve(snapshot.status);
+  if (snapshot.state === "ready" && !stale) {
+    return Promise.resolve(snapshot.status);
+  }
   if (pending) return pending;
 
   pending = fetchStatus()
@@ -60,10 +64,14 @@ export function loadSession(): Promise<SessionStatus> {
   return pending;
 }
 
-/** Forget the cached status, e.g. after signing in or finishing payment. */
+/**
+ * Makes the next `loadSession` ask the server again, e.g. after signing in or
+ * finishing payment. Rendering keeps the last known status until the answer
+ * arrives, so the header does not fall back to its loading state.
+ */
 export function invalidateSession() {
   pending = null;
-  publish(LOADING);
+  stale = true;
 }
 
 function subscribe(listener: () => void) {
