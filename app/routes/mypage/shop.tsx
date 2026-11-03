@@ -2,7 +2,10 @@ import {
   drawPointShop,
   getMyDrawHistories,
 } from "@app/api/generated/endpoints";
-import type { PointShopItem } from "@app/api/generated/model";
+import type {
+  PointShopDrawResponse,
+  PointShopItem,
+} from "@app/api/generated/model";
 import { Balance } from "@app/components/mypage/Balance";
 import {
   DRAW_COST,
@@ -11,6 +14,8 @@ import {
   prizeOdds,
 } from "@app/components/mypage/mypage";
 import { PrizeThumb } from "@app/components/mypage/PrizeThumb";
+import { Subpage } from "@app/components/mypage/Subpage";
+import { useMe } from "@app/components/mypage/useMe";
 import { EmptyState } from "@app/components/page/States";
 import { Button } from "@app/components/ui/button";
 import {
@@ -22,18 +27,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@app/components/ui/dialog";
+import { ErrorText } from "@app/components/ui/field";
 import { Spinner } from "@app/components/ui/spinner";
 import { useI18n } from "@app/i18n";
 import { t as translate } from "@app/i18n/store";
-import { useFetcherResult } from "@app/lib/actions";
-import { errorMessage } from "@app/lib/errors";
+import { runAction, useFetcherResult } from "@app/lib/actions";
 import { formatDate } from "@app/lib/format";
 import { pageTitle } from "@app/lib/title";
 import { cn } from "@app/lib/utils";
-import { lazy, Suspense, useCallback, useRef, useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { useFetcher } from "react-router";
 import type { Route } from "./+types/shop";
-import { Subpage, useMe } from "./layout";
 
 const GachaMachine = lazy(() => import("@app/components/mypage/GachaMachine"));
 
@@ -46,56 +50,52 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
 }
 
 export async function clientAction() {
-  try {
-    const result = await drawPointShop();
-    return { ok: true as const, result, message: null };
-  } catch (error) {
-    return { ok: false as const, result: null, message: errorMessage(error) };
-  }
+  return runAction("draw", () => drawPointShop());
 }
 
-interface Won {
-  id: number;
-  item: PointShopItem;
-  remainingBalance: number;
-}
+/**
+ * Where a draw stands. `requesting` is set by the click itself rather than
+ * read from the fetcher, whose state arrives in a later render: a double click
+ * would otherwise charge twice.
+ */
+type Draw =
+  | { phase: "idle" }
+  | { phase: "requesting" }
+  | { phase: "landing"; won: PointShopDrawResponse }
+  | { phase: "shown"; won: PointShopDrawResponse };
 
 export default function Shop({ loaderData }: Route.ComponentProps) {
   const { t } = useI18n();
   const me = useMe();
-  const fetcher = useFetcher<typeof clientAction>({ key: "draw" });
-  const [landing, setLanding] = useState<Won | null>(null);
-  const [shown, setShown] = useState<Won | null>(null);
-  const requesting = fetcher.state !== "idle";
-  const busy = requesting || (landing !== null && shown === null);
+  const fetcher = useFetcher<typeof clientAction>();
+  const [draw, setDraw] = useState<Draw>({ phase: "idle" });
+  const busy = draw.phase === "requesting" || draw.phase === "landing";
   const affordable = me.pointBalance >= DRAW_COST;
   const failed =
-    fetcher.data?.ok === false && !requesting ? fetcher.data.message : null;
+    draw.phase === "idle" && fetcher.data?.ok === false
+      ? fetcher.data.message
+      : null;
 
-  useFetcherResult(fetcher, (data) => {
-    if (!data.ok) return;
-    setShown(null);
-    setLanding({
-      id: data.result.drawHistoryId,
-      item: data.result.item,
-      remainingBalance: data.result.remainingBalance,
-    });
-  });
+  useFetcherResult(fetcher, (result) =>
+    setDraw(
+      result.ok ? { phase: "landing", won: result.data } : { phase: "idle" }
+    )
+  );
 
-  const landingRef = useRef(landing);
-  landingRef.current = landing;
-  const onSettled = useCallback(() => setShown(landingRef.current), []);
+  const settle = () =>
+    setDraw((current) =>
+      current.phase === "landing" ? { ...current, phase: "shown" } : current
+    );
 
-  const draw = () => {
-    setShown(null);
-    setLanding(null);
+  const startDraw = () => {
+    setDraw({ phase: "requesting" });
     fetcher.submit(null, { method: "post" });
   };
 
   const drawsLeft = Math.floor(me.pointBalance / DRAW_COST);
   const tally = PRIZE_CODES.map((code) => ({
     code,
-    count: loaderData.draws.filter((draw) => draw.item === code).length,
+    count: loaderData.draws.filter((entry) => entry.item === code).length,
   })).filter((entry) => entry.count > 0);
 
   return (
@@ -112,9 +112,9 @@ export default function Shop({ loaderData }: Route.ComponentProps) {
           >
             <Suspense fallback={null}>
               <GachaMachine
-                spinning={requesting}
-                result={landing ? { id: landing.id, item: landing.item } : null}
-                onSettled={onSettled}
+                spinning={draw.phase === "requesting"}
+                result={"won" in draw ? draw.won : null}
+                onSettled={settle}
               />
             </Suspense>
           </div>
@@ -143,7 +143,7 @@ export default function Shop({ loaderData }: Route.ComponentProps) {
               <Button
                 size="lg"
                 disabled={busy || !affordable}
-                onClick={draw}
+                onClick={startDraw}
                 className="w-full"
               >
                 {busy && <Spinner />}
@@ -151,14 +151,7 @@ export default function Shop({ loaderData }: Route.ComponentProps) {
                   ? t("mypage.shop.drawing")
                   : t("mypage.shop.draw", { cost: DRAW_COST })}
               </Button>
-              {failed && (
-                <p
-                  role="alert"
-                  className="m-0 text-[0.875rem] font-[650] text-danger"
-                >
-                  {failed}
-                </p>
-              )}
+              <ErrorText role="alert">{failed}</ErrorText>
             </div>
 
             <ul
@@ -215,15 +208,15 @@ export default function Shop({ loaderData }: Route.ComponentProps) {
             />
           ) : (
             <ol className="m-0 grid list-none gap-0.5 p-0 lg:grid-cols-2 lg:gap-x-3">
-              {loaderData.draws.map((draw) => (
+              {loaderData.draws.map((entry) => (
                 <li
-                  key={draw.drawHistoryId}
+                  key={entry.drawHistoryId}
                   className="grid grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-3 bg-paper-raised px-3 py-2"
                 >
-                  <PrizeThumb code={draw.item} />
-                  <PrizeLabel code={draw.item} />
+                  <PrizeThumb code={entry.item} />
+                  <PrizeLabel code={entry.item} />
                   <span className="tabular text-[0.8125rem] font-[600] text-ink-subtle">
-                    {formatDate(draw.createdAt)}
+                    {formatDate(entry.createdAt)}
                   </span>
                 </li>
               ))}
@@ -232,22 +225,19 @@ export default function Shop({ loaderData }: Route.ComponentProps) {
         </section>
 
         <Dialog
-          open={shown !== null}
+          open={draw.phase === "shown"}
           onOpenChange={(open) => {
-            if (!open) {
-              setShown(null);
-              setLanding(null);
-            }
+            if (!open) setDraw({ phase: "idle" });
           }}
         >
-          {shown && (
+          {draw.phase === "shown" && (
             <DialogContent
               className="max-w-md text-center"
               showCloseButton={false}
             >
               <div className="h-40 rounded-media bg-paper-sunken p-5">
                 <img
-                  src={PRIZES[shown.item].icon}
+                  src={PRIZES[draw.won.item].icon}
                   alt=""
                   className="size-full object-contain"
                 />
@@ -255,11 +245,13 @@ export default function Shop({ loaderData }: Route.ComponentProps) {
               <DialogHeader className="justify-items-center pr-0">
                 <DialogTitle className="text-[1.5rem]">
                   {t("mypage.shop.resultTitle", {
-                    prize: t(`mypage.prizes.names.${shown.item}`),
+                    prize: t(`mypage.prizes.names.${draw.won.item}`),
                   })}
                 </DialogTitle>
                 <DialogDescription className="text-balance">
-                  {t(`mypage.prizes.delivery.${PRIZES[shown.item].delivery}`)}
+                  {t(
+                    `mypage.prizes.delivery.${PRIZES[draw.won.item].delivery}`
+                  )}
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter>
@@ -270,8 +262,8 @@ export default function Shop({ loaderData }: Route.ComponentProps) {
                     </Button>
                   }
                 />
-                {shown.remainingBalance >= DRAW_COST && (
-                  <Button className="sm:flex-1" onClick={draw}>
+                {draw.won.remainingBalance >= DRAW_COST && (
+                  <Button className="sm:flex-1" onClick={startDraw}>
                     {t("mypage.shop.again")}
                   </Button>
                 )}

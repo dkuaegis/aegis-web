@@ -33,7 +33,6 @@ type QrState =
 export default function QrCheckIn({ loaderData }: Route.ComponentProps) {
   const { t } = useI18n();
   const [state, setState] = useState<QrState>({ status: "loading" });
-  const [now, setNow] = useState(() => Date.now());
   const inFlight = useRef(false);
 
   const issue = useCallback(async () => {
@@ -65,25 +64,16 @@ export default function QrCheckIn({ loaderData }: Route.ComponentProps) {
     return () => document.removeEventListener("visibilitychange", onVisible);
   }, [issue]);
 
-  useEffect(() => {
-    const timer = window.setInterval(() => setNow(Date.now()), 250);
-    return () => window.clearInterval(timer);
-  }, []);
+  const expiresAt = state.status === "ready" ? state.expiresAt : null;
 
-  const remaining =
-    state.status === "ready"
-      ? Math.max(0, Math.ceil((state.expiresAt - now) / 1000))
-      : 0;
-
+  // While hidden the code may lapse; coming back issues a new one above.
   useEffect(() => {
-    if (
-      state.status === "ready" &&
-      remaining === 0 &&
-      document.visibilityState === "visible"
-    ) {
-      void issue();
-    }
-  }, [state.status, remaining, issue]);
+    if (expiresAt === null) return;
+    const timer = setTimeout(() => {
+      if (document.visibilityState === "visible") void issue();
+    }, expiresAt - Date.now());
+    return () => clearTimeout(timer);
+  }, [expiresAt, issue]);
 
   return (
     <div className="narrow-frame">
@@ -126,19 +116,7 @@ export default function QrCheckIn({ loaderData }: Route.ComponentProps) {
             )}
           </div>
 
-          {state.status === "ready" && (
-            <div className="grid gap-2" aria-live="off">
-              <div className="h-[3px] w-full bg-line">
-                <div
-                  className="h-full bg-ink transition-[width] duration-300 ease-linear"
-                  style={{ width: `${(remaining / VALID_SECONDS) * 100}%` }}
-                />
-              </div>
-              <p className="tabular m-0 text-[0.8125rem] font-[650] text-ink-muted">
-                {t("mypage.qrPage.expiresIn", { seconds: remaining })}
-              </p>
-            </div>
-          )}
+          {expiresAt !== null && <Countdown expiresAt={expiresAt} />}
 
           <Button variant="outline" onClick={() => void issue()}>
             <RotateCwIcon aria-hidden="true" />
@@ -146,6 +124,32 @@ export default function QrCheckIn({ loaderData }: Route.ComponentProps) {
           </Button>
         </div>
       </div>
+    </div>
+  );
+}
+
+function Countdown({ expiresAt }: { expiresAt: number }) {
+  const { t } = useI18n();
+  const [now, setNow] = useState(() => Date.now());
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(Date.now()), 250);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const remaining = Math.max(0, Math.ceil((expiresAt - now) / 1000));
+
+  return (
+    <div className="grid gap-2" aria-live="off">
+      <div className="h-[3px] w-full bg-line">
+        <div
+          className="h-full bg-ink transition-[width] duration-300 ease-linear"
+          style={{ width: `${(remaining / VALID_SECONDS) * 100}%` }}
+        />
+      </div>
+      <p className="tabular m-0 text-[0.8125rem] font-[650] text-ink-muted">
+        {t("mypage.qrPage.expiresIn", { seconds: remaining })}
+      </p>
     </div>
   );
 }

@@ -3,42 +3,48 @@ import {
   getMyDrawHistories,
   getPointRanking,
   getPointSummary,
+  updateProfileIcon,
 } from "@app/api/generated/endpoints";
+import type { ProfileIcon } from "@app/api/generated/model";
 import { Balance } from "@app/components/mypage/Balance";
-import { DRAW_COST, PRIZES } from "@app/components/mypage/mypage";
+import { DRAW_COST, newestFirst, PRIZES } from "@app/components/mypage/mypage";
+import { ProfileIconDialog } from "@app/components/mypage/ProfileIconDialog";
+import { useMe } from "@app/components/mypage/useMe";
 import { Period } from "@app/components/site/Wordmark";
 import { buttonVariants } from "@app/components/ui/button";
 import { useI18n } from "@app/i18n";
+import { t as translate } from "@app/i18n/store";
+import { runAction } from "@app/lib/actions";
 import { formatDate, formatNumber } from "@app/lib/format";
+import { optional } from "@app/lib/route-data";
 import { cn } from "@app/lib/utils";
 import { ArrowRightIcon, QrCodeIcon } from "lucide-react";
 import { Link } from "react-router";
 import type { Route } from "./+types/hub";
-import { ProfileIconDialog, useMe } from "./layout";
-
-/** A card whose summary failed to load shows a note instead of the page failing. */
-async function settle<T>(promise: Promise<T>): Promise<T | null> {
-  try {
-    return await promise;
-  } catch {
-    return null;
-  }
-}
 
 /** How many recent entries the history card shows. */
 const RECENT_COUNT = 6;
 /** The earning guide shows until the history has this many entries. */
 const GUIDE_UNTIL = 5;
 
+/** A card whose summary failed to load shows a note instead of the page failing. */
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {
   const { signal } = request;
   const [summary, coupons, ranking, draws] = await Promise.all([
-    settle(getPointSummary({ signal })),
-    settle(getMyCoupons({ signal })),
-    settle(getPointRanking({ signal })),
-    settle(getMyDrawHistories({ signal })),
+    optional(getPointSummary({ signal }), signal),
+    optional(getMyCoupons({ signal }), signal),
+    optional(getPointRanking({ signal }), signal),
+    optional(getMyDrawHistories({ signal }), signal),
   ]);
   return { summary, coupons, ranking, draws };
+}
+
+export async function clientAction({ request }: Route.ClientActionArgs) {
+  const form = await request.formData();
+  const profileIcon = String(form.get("profileIcon")) as ProfileIcon;
+  return runAction("profile-icon", () => updateProfileIcon({ profileIcon }), {
+    success: translate("mypage.profile.saved"),
+  });
 }
 
 export default function MypageHub({ loaderData }: Route.ComponentProps) {
@@ -46,11 +52,7 @@ export default function MypageHub({ loaderData }: Route.ComponentProps) {
   const me = useMe();
   const { summary, coupons, ranking, draws } = loaderData;
 
-  const history = summary
-    ? [...summary.history].sort((a, b) =>
-        b.createdAt.localeCompare(a.createdAt)
-      )
-    : null;
+  const history = summary && newestFirst(summary.history);
   const recent = history?.slice(0, RECENT_COUNT) ?? null;
   const drawsLeft = Math.floor(me.pointBalance / DRAW_COST);
   const lastDraw = draws?.[0];

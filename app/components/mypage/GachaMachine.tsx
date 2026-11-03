@@ -1,4 +1,4 @@
-import type { PointShopItem } from "@app/api/generated/model";
+import type { PointShopDrawResponse } from "@app/api/generated/model";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import type * as THREE from "three";
@@ -13,11 +13,11 @@ const SPIN_SPEED = 9;
 const LAND_SECONDS = 1.5;
 const DROP_SECONDS = 0.9;
 
-export interface GachaMachineProps {
+interface GachaMachineProps {
   /** True while the draw request is on its way. */
   spinning: boolean;
   /** The prize to land on; changes once per draw. */
-  result: { id: number; item: PointShopItem } | null;
+  result: PointShopDrawResponse | null;
   /** Called after the winning ball has dropped. */
   onSettled: () => void;
 }
@@ -47,11 +47,17 @@ function Machine({ spinning, result, onSettled }: GachaMachineProps) {
     if (spinning && phase.current.name === "idle") {
       phase.current = { name: "spinning" };
     }
+    // The draw failed; a success goes on to land instead.
+    if (!spinning && phase.current.name === "spinning") {
+      phase.current = { name: "idle" };
+    }
   }, [spinning]);
 
   useEffect(() => {
-    if (!result || handled.current === result.id || !ring.current) return;
-    handled.current = result.id;
+    if (!result || handled.current === result.drawHistoryId || !ring.current) {
+      return;
+    }
+    handled.current = result.drawHistoryId;
     const index = PRIZE_CODES.indexOf(result.item);
     const current = ring.current.rotation.y;
     // Turn until the winning ball faces the chute at the front (+z), with a

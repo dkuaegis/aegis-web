@@ -1,15 +1,14 @@
 import { getMyCoupons, redeemCouponCode } from "@app/api/generated/endpoints";
+import { Subpage } from "@app/components/mypage/Subpage";
 import { EmptyState } from "@app/components/page/States";
 import { Badge } from "@app/components/ui/badge";
 import { Button } from "@app/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@app/components/ui/field";
 import { Input } from "@app/components/ui/input";
 import { Spinner } from "@app/components/ui/spinner";
-import { toast } from "@app/components/ui/toast";
 import { useI18n } from "@app/i18n";
 import { t as translate } from "@app/i18n/store";
-import { useFetcherResult } from "@app/lib/actions";
-import { errorMessage } from "@app/lib/errors";
+import { runAction, useFetcherResult } from "@app/lib/actions";
 import { formatDate, formatNumber } from "@app/lib/format";
 import { pageTitle } from "@app/lib/title";
 import { cn } from "@app/lib/utils";
@@ -17,7 +16,6 @@ import { TicketIcon } from "lucide-react";
 import { useState } from "react";
 import { useFetcher } from "react-router";
 import type { Route } from "./+types/coupons";
-import { Subpage } from "./layout";
 
 export function meta() {
   return [{ title: pageTitle(translate("mypage.coupons.metaTitle")) }];
@@ -37,15 +35,10 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
 export async function clientAction({ request }: Route.ClientActionArgs) {
   const form = await request.formData();
   const code = String(form.get("code") ?? "").trim();
-  try {
-    const coupon = await redeemCouponCode({ code });
-    toast.success(
-      translate("mypage.coupons.redeemed", { name: coupon.couponName })
-    );
-    return { ok: true as const, message: null };
-  } catch (error) {
-    return { ok: false as const, message: errorMessage(error) };
-  }
+  return runAction("redeem", () => redeemCouponCode({ code }), {
+    success: (coupon) =>
+      translate("mypage.coupons.redeemed", { name: coupon.couponName }),
+  });
 }
 
 export default function Coupons({ loaderData }: Route.ComponentProps) {
@@ -121,7 +114,7 @@ export default function Coupons({ loaderData }: Route.ComponentProps) {
 
 function RedeemForm() {
   const { t } = useI18n();
-  const fetcher = useFetcher<typeof clientAction>({ key: "redeem" });
+  const fetcher = useFetcher<typeof clientAction>();
   const [code, setCode] = useState("");
   const [touched, setTouched] = useState(false);
   const busy = fetcher.state !== "idle";

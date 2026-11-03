@@ -1,6 +1,7 @@
 import { getPointRanking } from "@app/api/generated/endpoints";
 import type { PointRankingResponse } from "@app/api/generated/model";
 import { PROFILE_ICONS } from "@app/components/mypage/mypage";
+import { Subpage } from "@app/components/mypage/Subpage";
 import { EmptyState } from "@app/components/page/States";
 import { useI18n } from "@app/i18n";
 import { t as translate } from "@app/i18n/store";
@@ -8,7 +9,6 @@ import { formatNumber } from "@app/lib/format";
 import { pageTitle } from "@app/lib/title";
 import { cn } from "@app/lib/utils";
 import type { Route } from "./+types/ranking";
-import { Subpage } from "./layout";
 
 export function meta() {
   return [{ title: pageTitle(translate("mypage.ranking.metaTitle")) }];

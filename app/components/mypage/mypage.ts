@@ -1,4 +1,8 @@
-import type { PointShopItem, ProfileIcon } from "@app/api/generated/model";
+import type {
+  PointShopItem,
+  PointTransactionResponse,
+  ProfileIcon,
+} from "@app/api/generated/model";
 import chicken from "@app/assets/prizes/chicken.svg";
 import compose from "@app/assets/prizes/compose.svg";
 import discountCoupon from "@app/assets/prizes/discountcoupon.svg";
@@ -93,4 +97,10 @@ export function prizeOdds(code: PointShopItem): string {
   return `${(PRIZES[code].weight / 10).toLocaleString(undefined, {
     maximumFractionDigits: 1,
   })}%`;
+}
+
+export function newestFirst(
+  history: PointTransactionResponse[]
+): PointTransactionResponse[] {
+  return [...history].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }

@@ -1,14 +1,16 @@
 import { getPointSummary } from "@app/api/generated/endpoints";
+import { newestFirst } from "@app/components/mypage/mypage";
+import { Subpage } from "@app/components/mypage/Subpage";
 import { FilterChip } from "@app/components/page/FilterChip";
 import { EmptyState } from "@app/components/page/States";
 import { useI18n } from "@app/i18n";
 import { t as translate } from "@app/i18n/store";
 import { formatDate, formatNumber } from "@app/lib/format";
+import { keepDataOnSearchChange } from "@app/lib/route-data";
 import { pageTitle } from "@app/lib/title";
 import { cn } from "@app/lib/utils";
 import { useSearchParams } from "react-router";
 import type { Route } from "./+types/points";
-import { Subpage } from "./layout";
 
 const FILTERS = ["ALL", "EARN", "SPEND"] as const;
 type Filter = (typeof FILTERS)[number];
@@ -16,6 +18,8 @@ type Filter = (typeof FILTERS)[number];
 export function meta() {
   return [{ title: pageTitle(translate("mypage.pointsPage.metaTitle")) }];
 }
+
+export const shouldRevalidate = keepDataOnSearchChange;
 
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {
   return { summary: await getPointSummary({ signal: request.signal }) };
@@ -40,9 +44,7 @@ export default function Points({ loaderData }: Route.ComponentProps) {
     );
   }
 
-  const sorted = [...history].sort((a, b) =>
-    b.createdAt.localeCompare(a.createdAt)
-  );
+  const sorted = newestFirst(history);
   const earned = history
     .filter((item) => item.transactionType === "EARN")
     .reduce((sum, item) => sum + item.amount, 0);
