@@ -40,21 +40,6 @@ export default [
           route(":studyId/members", "routes/study/members.tsx"),
           route(":studyId/attendance", "routes/study/attendance.tsx"),
         ]),
-        // Addresses from the previous study app, still found in chats.
-        ...[
-          "create",
-          "detail",
-          "edit",
-          "applications",
-          "members",
-          "attendance",
-        ].map((section) =>
-          route(
-            section === "create" ? section : `${section}/:studyId`,
-            "routes/study/legacy.tsx",
-            { id: `routes/study/legacy-${section}` }
-          )
-        ),
       ]),
     ]),
 
@@ -68,8 +53,6 @@ export default [
           route("ranking", "routes/mypage/ranking.tsx"),
         ]),
         route("qr", "routes/mypage/qr.tsx"),
-        // Addresses from the previous my page app.
-        route("*", "routes/mypage/legacy.tsx"),
       ]),
     ]),
 
