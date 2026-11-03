@@ -248,7 +248,6 @@ export const join = {
       depositorName: "입금자명",
       copyAccount: "계좌번호 복사",
       copySuccess: "계좌번호를 복사했습니다.",
-      copyFailure: "복사에 실패했습니다. 브라우저 권한을 확인해주세요.",
     },
     inquiry: {
       title: "입금 관련 문의",

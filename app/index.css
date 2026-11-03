@@ -13,7 +13,7 @@
  * that only ever marks the brand (the full stop after a headline).
  *
  * Raw values live here; components only use the semantic names mapped in
- * `@theme` below (bg-background, text-muted-foreground, border-border, ...).
+ * `@theme` below (bg-paper, text-ink-muted, border-line, ...).
  */
 :root {
   /* Keep rem-based sizing stable across language-specific browser defaults. */
@@ -76,25 +76,6 @@
 }
 
 @theme inline {
-  --color-background: var(--paper);
-  --color-foreground: var(--ink);
-  --color-card: var(--paper-raised);
-  --color-card-foreground: var(--ink);
-  --color-popover: var(--paper-raised);
-  --color-popover-foreground: var(--ink);
-  --color-primary: var(--blue);
-  --color-primary-foreground: #ffffff;
-  --color-secondary: var(--ink);
-  --color-secondary-foreground: var(--paper);
-  --color-muted: var(--paper-sunken);
-  --color-muted-foreground: var(--ink-muted);
-  --color-accent: var(--paper-sunken);
-  --color-accent-foreground: var(--ink);
-  --color-destructive: var(--danger);
-  --color-border: var(--line);
-  --color-input: var(--line-strong);
-  --color-ring: var(--blue);
-
   --color-paper: var(--paper);
   --color-paper-raised: var(--paper-raised);
   --color-paper-sunken: var(--paper-sunken);
@@ -136,8 +117,6 @@
   --radius-xl: 0;
   --radius-thumb: 0.5rem;
   --radius-media: 1rem;
-
-  --ease-out-expo: var(--ease-out);
 }
 
 @layer base {

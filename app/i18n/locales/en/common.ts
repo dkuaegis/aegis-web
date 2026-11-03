@@ -8,17 +8,12 @@ export const common = {
   decrease: "Decrease",
   increase: "Increase",
   cancel: "Cancel",
-  back: "Back",
-  save: "Save",
-  confirm: "Confirm",
-  copy: "Copy",
   copied: "Copied.",
   copyFailed: "Could not copy. Please select the text and copy it yourself.",
 
   openMenu: "Open menu",
   closeMenu: "Close menu",
   mainMenu: "Main menu",
-  mobileMainMenu: "Mobile main menu",
 
   site: {
     brandHome: "Aegis home",
@@ -34,7 +29,6 @@ export const common = {
   },
 
   states: {
-    loadFailed: "We could not load this.",
     notFoundTitle: "This page does not exist",
     notFoundDescription:
       "It may have moved or been removed. Try again from the home page.",
@@ -71,6 +65,10 @@ export const common = {
     STUDY_ENROLLMENT_CLOSED: "Study applications are closed right now.",
     STUDY_NOT_FOUND: "We could not find that study.",
     STUDY_FULL: "This study is full.",
+    STUDY_RECRUITMENT_METHOD_IMMUTABLE:
+      "The recruitment method can't be changed after the study opens.",
+    STUDY_CAPACITY_BELOW_PARTICIPANTS:
+      "The capacity can't be lower than the current number of participants.",
     STUDY_MEMBER_NOT_INSTRUCTOR: "Only the study lead can do that.",
     STUDY_MEMBER_NOT_PARTICIPANT: "Only members of this study can check in.",
     STUDY_APPLICATION_NOT_FOUND: "We could not find that application.",

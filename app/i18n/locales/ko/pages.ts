@@ -2,17 +2,9 @@ export const pages = {
   login: {
     metaTitle: "로그인",
     redirecting: "Google 로그인 화면으로 이동하고 있습니다.",
+    unfinished: "로그인을 마치지 못했습니다.",
+    retry: "다시 시도하기",
     manual: "이동하지 않으면 여기를 누르세요",
-  },
-
-  notFound: {
-    title: "페이지를 찾을 수 없습니다.",
-    home: "홈으로 가기",
-  },
-
-  appError: {
-    title: "페이지를 표시하는 중 문제가 발생했습니다.",
-    reload: "새로고침",
   },
 
   browserRedirect: {
@@ -23,7 +15,6 @@ export const pages = {
       "로그인과 결제가 막힐 수 있어 기본 브라우저에서 열어야 합니다.",
     support: "계속 열리지 않으면 동아리 운영진에게 알려 주세요.",
     names: {
-      inApp: "인앱 브라우저",
       kakaotalk: "카카오톡",
       instagram: "인스타그램",
       everytime: "에브리타임",

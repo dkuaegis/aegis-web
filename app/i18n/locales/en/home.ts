@@ -5,16 +5,6 @@ export const home = {
       "Dankook University's leading development and security club, open to everyone who wants to grow.",
   },
 
-  nav: {
-    login: "Log in",
-    join: "Join",
-    study: "Studies",
-    mypage: "My page",
-    brandHome: "Aegis home",
-  },
-
-  skipLink: "Skip to main content",
-
   hero: {
     titleLine1: "A dev · security club",
     titleLine2Lead: "that is ",
@@ -119,9 +109,5 @@ export const home = {
   join: {
     titleLine1: "Open to everyone",
     titleLine2: "who wants to grow",
-  },
-
-  footer: {
-    linksLabel: "Social and contact links",
   },
 } as const;

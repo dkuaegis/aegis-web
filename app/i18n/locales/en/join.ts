@@ -250,7 +250,6 @@ export const join = {
       depositorName: "Depositor name",
       copyAccount: "Copy account number",
       copySuccess: "Account number copied.",
-      copyFailure: "Could not copy. Please check your browser permissions.",
     },
     inquiry: {
       title: "Questions about your transfer",

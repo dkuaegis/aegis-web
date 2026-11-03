@@ -8,17 +8,12 @@ export const common = {
   decrease: "줄이기",
   increase: "늘리기",
   cancel: "취소",
-  back: "뒤로",
-  save: "저장",
-  confirm: "확인",
-  copy: "복사",
   copied: "복사했습니다.",
   copyFailed: "복사하지 못했습니다. 직접 선택해서 복사해 주세요.",
 
   openMenu: "메뉴 열기",
   closeMenu: "메뉴 닫기",
   mainMenu: "주요 메뉴",
-  mobileMainMenu: "모바일 주요 메뉴",
 
   site: {
     brandHome: "Aegis 홈",
@@ -34,7 +29,6 @@ export const common = {
   },
 
   states: {
-    loadFailed: "정보를 불러오지 못했습니다.",
     notFoundTitle: "찾는 페이지가 없습니다",
     notFoundDescription:
       "주소가 바뀌었거나 삭제된 페이지입니다. 홈에서 다시 찾아보세요.",
@@ -71,6 +65,9 @@ export const common = {
     STUDY_ENROLLMENT_CLOSED: "지금은 스터디 신청 기간이 아닙니다.",
     STUDY_NOT_FOUND: "스터디를 찾을 수 없습니다.",
     STUDY_FULL: "정원이 가득 찼습니다.",
+    STUDY_RECRUITMENT_METHOD_IMMUTABLE: "모집 방식은 개설 후 바꿀 수 없습니다.",
+    STUDY_CAPACITY_BELOW_PARTICIPANTS:
+      "정원은 현재 참여 인원보다 적게 정할 수 없습니다.",
     STUDY_MEMBER_NOT_INSTRUCTOR: "스터디장만 할 수 있는 작업입니다.",
     STUDY_MEMBER_NOT_PARTICIPANT: "이 스터디의 스터디원만 출석할 수 있습니다.",
     STUDY_APPLICATION_NOT_FOUND: "지원서를 찾을 수 없습니다.",

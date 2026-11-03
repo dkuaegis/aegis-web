@@ -243,7 +243,6 @@ export const study = {
     rejectConfirmTitle: "Decline {{name}}?",
     rejectConfirmDescription:
       "The applicant will see the result right away. You can still approve them later.",
-    pendingCount: "{{count}} to review",
   },
 
   members: {
@@ -255,7 +254,6 @@ export const study = {
     copiedPhone: "Phone number copied.",
     empty: "No members yet",
     emptyDescription: "Members will show up here once people join.",
-    noValue: "None",
   },
 
   attendanceAdmin: {

@@ -6,8 +6,7 @@ import type * as React from "react";
 
 /**
  * A labelled form control. Base UI wires the label, description and error
- * to the control (`Input`, or any element rendered through `FieldControl`)
- * with the right ids and aria attributes.
+ * to the control with the right ids and aria attributes.
  *
  * Pass `invalid` together with a `FieldError` to show a validation message
  * that comes from outside (react-hook-form, the server).
@@ -106,8 +105,6 @@ function ErrorText({
   );
 }
 
-const FieldControl = FieldPrimitive.Control;
-
 function FieldSet({ className, ...props }: FieldsetPrimitive.Root.Props) {
   return (
     <FieldsetPrimitive.Root
@@ -145,7 +142,6 @@ function FieldGroup({ className, ...props }: React.ComponentProps<"div">) {
 export {
   ErrorText,
   Field,
-  FieldControl,
   FieldDescription,
   FieldError,
   FieldGroup,

@@ -5,16 +5,6 @@ export const home = {
       "성장을 원하는 모두에게 열려있는 단국대학교 최고의 개발·보안 중앙동아리",
   },
 
-  nav: {
-    login: "로그인",
-    join: "가입하기",
-    study: "스터디",
-    mypage: "마이페이지",
-    brandHome: "Aegis 홈",
-  },
-
-  skipLink: "본문으로 바로가기",
-
   hero: {
     titleLine1: "성장을 원하는",
     titleLine2Lead: "모두에게 ",
@@ -118,9 +108,5 @@ export const home = {
   join: {
     titleLine1: "성장을 원하는 모두에게",
     titleLine2: "열려 있습니다",
-  },
-
-  footer: {
-    linksLabel: "소셜 및 문의 링크",
   },
 } as const;

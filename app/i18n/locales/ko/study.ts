@@ -240,7 +240,6 @@ export const study = {
     rejectConfirmTitle: "{{name}}님의 지원을 거절할까요?",
     rejectConfirmDescription:
       "거절하면 지원자 화면에 결과가 바로 표시됩니다. 거절한 뒤에도 다시 승인할 수 있습니다.",
-    pendingCount: "검토할 지원서 {{count}}건",
   },
 
   members: {
@@ -252,7 +251,6 @@ export const study = {
     copiedPhone: "연락처를 복사했습니다.",
     empty: "아직 스터디원이 없습니다",
     emptyDescription: "신청이 들어오면 여기에 표시됩니다.",
-    noValue: "없음",
   },
 
   attendanceAdmin: {

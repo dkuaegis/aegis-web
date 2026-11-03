@@ -1,7 +1,6 @@
 import { ApiError } from "@app/api/client";
 import { Period } from "@app/components/site/Wordmark";
 import { buttonVariants } from "@app/components/ui/button";
-import { Skeleton } from "@app/components/ui/skeleton";
 import { useI18n } from "@app/i18n";
 import { loginPath } from "@app/lib/auth";
 import { errorMessage } from "@app/lib/errors";
@@ -108,24 +107,6 @@ export function RetryButton({
       <RotateCwIcon aria-hidden="true" />
       {t("common.retry")}
     </button>
-  );
-}
-
-/** Rows of grey bars while a list loads. */
-export function ListSkeleton({ rows = 4 }: { rows?: number }) {
-  return (
-    <div className="grid border-t border-ink" aria-busy="true">
-      {Array.from({ length: rows }, (_, index) => (
-        <div
-          // biome-ignore lint/suspicious/noArrayIndexKey: static placeholders
-          key={index}
-          className="grid gap-3 border-b border-line py-6"
-        >
-          <Skeleton className="h-3 w-24" />
-          <Skeleton className="h-6 w-2/3 max-w-md" />
-        </div>
-      ))}
-    </div>
   );
 }
 

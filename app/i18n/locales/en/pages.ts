@@ -2,17 +2,9 @@ export const pages = {
   login: {
     metaTitle: "Log in",
     redirecting: "Taking you to Google sign-in.",
+    unfinished: "You didn't finish signing in.",
+    retry: "Try again",
     manual: "Click here if nothing happens",
-  },
-
-  notFound: {
-    title: "We couldn't find that page.",
-    home: "Go to the home page",
-  },
-
-  appError: {
-    title: "Something went wrong while showing this page.",
-    reload: "Reload",
   },
 
   browserRedirect: {
@@ -23,7 +15,6 @@ export const pages = {
       "Sign-in and payment may not work here. Open the page in your default browser.",
     support: "If it still will not open, let the club organizers know.",
     names: {
-      inApp: "an in-app browser",
       kakaotalk: "KakaoTalk",
       instagram: "Instagram",
       everytime: "Everytime",

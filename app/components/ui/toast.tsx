@@ -5,7 +5,7 @@ import { CircleAlertIcon, CircleCheckIcon, XIcon } from "lucide-react";
 
 const toastManager = ToastPrimitive.createToastManager();
 
-type ToastType = "success" | "error" | "info";
+type ToastType = "success" | "error";
 
 /**
  * Short, non-blocking feedback after an action. Use it for results the user
@@ -15,7 +15,6 @@ type ToastType = "success" | "error" | "info";
 export const toast = {
   success: (title: string) => show("success", title),
   error: (title: string) => show("error", title),
-  info: (title: string) => show("info", title),
 };
 
 function show(type: ToastType, title: string) {
