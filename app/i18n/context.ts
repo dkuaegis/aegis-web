@@ -5,7 +5,6 @@ import type { Language } from "./types";
 export interface I18nContextValue {
   language: Language;
   setLanguage: (language: Language) => void;
-  toggleLanguage: () => void;
   /** Translate a key to a string, with optional `{{var}}` interpolation. */
   t: (key: string, vars?: TranslationVars) => string;
   /** Translate a key that holds a list of strings (paragraphs, bullets). */

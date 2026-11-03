@@ -10,14 +10,14 @@ import {
   ScrollRestoration,
   useRouteError,
 } from "react-router";
-import BrowserRedirectPage from "./components/BrowserRedirectPage";
+import { BrowserRedirectPage } from "./components/BrowserRedirectPage";
 import { StateMessage } from "./components/page/States";
 import { Wordmark } from "./components/site/Wordmark";
 import { buttonVariants } from "./components/ui/button";
 import { Toaster } from "./components/ui/toast";
-import { useExternalBrowser } from "./hooks/useExternalBrowser";
-import { I18nProvider } from "./i18n";
+import { I18nProvider, useLanguage } from "./i18n";
 import { LANGUAGE_PENDING_SCRIPT, revealLanguage, t } from "./i18n/store";
+import { useInAppBrowser } from "./lib/in-app-browser";
 import { SITE_NAME } from "./lib/title";
 import "./index.css";
 
@@ -42,6 +42,12 @@ export const meta: MetaFunction = () => {
   ];
 };
 
+/** Route `meta` reads the language store, so the tab title follows it. */
+function LocalizedMeta() {
+  useLanguage();
+  return <Meta />;
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     // "ko" is the correct value for the prerendered markup. The language
@@ -55,7 +61,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           // biome-ignore lint/security/noDangerouslySetInnerHtml: Static script built from constants, no user input.
           dangerouslySetInnerHTML={{ __html: LANGUAGE_PENDING_SCRIPT }}
         />
-        <Meta />
+        <LocalizedMeta />
         <Links />
         {/* docker/40-runtime-config.sh fills this in at container start.
             React leaves dangerouslySetInnerHTML content alone when hydrating,
@@ -79,11 +85,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  const { isInAppBrowser } = useExternalBrowser();
+  const inAppBrowser = useInAppBrowser();
 
   return (
     <I18nProvider>
-      <Toaster>{isInAppBrowser ? <BrowserRedirectPage /> : <Outlet />}</Toaster>
+      <Toaster>
+        {inAppBrowser ? (
+          <BrowserRedirectPage browser={inAppBrowser} />
+        ) : (
+          <Outlet />
+        )}
+      </Toaster>
     </I18nProvider>
   );
 }

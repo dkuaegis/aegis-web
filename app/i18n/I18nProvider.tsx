@@ -1,5 +1,4 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { useRevalidator } from "react-router";
+import { useContext, useEffect, useMemo, useSyncExternalStore } from "react";
 import { I18nContext, type I18nContextValue } from "./context";
 import { ko } from "./locales/ko";
 import { translate, translateList } from "./resolve";
@@ -8,28 +7,26 @@ import {
   getLanguage,
   initLanguage,
   revealLanguage,
-  setLanguage as setStoreLanguage,
+  setLanguage,
   subscribeToLanguage,
 } from "./store";
 import { DEFAULT_LANGUAGE, type Language } from "./types";
 
+/** The selected language; the prerendered markup is always the default. */
+export function useLanguage(): Language {
+  return useSyncExternalStore(
+    subscribeToLanguage,
+    getLanguage,
+    () => DEFAULT_LANGUAGE
+  );
+}
+
 export function I18nProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<Language>(DEFAULT_LANGUAGE);
-  const { revalidate } = useRevalidator();
+  const language = useLanguage();
 
   // Detection runs in an effect so the first client render matches the
   // prerendered markup, then settles on the stored preference immediately.
-  // Route `meta` (the page title) is only recomputed when the router state
-  // changes, so it is nudged whenever the language moves.
-  useEffect(() => {
-    const detected = initLanguage();
-    setLanguageState(detected);
-    if (detected !== DEFAULT_LANGUAGE) void revalidate();
-    return subscribeToLanguage(() => {
-      setLanguageState(getLanguage());
-      void revalidate();
-    });
-  }, [revalidate]);
+  useEffect(initLanguage, []);
 
   // Runs after the effect above, so on the first pass it still sees the
   // prerendered Korean and waits for the re-render in the detected language.
@@ -37,21 +34,16 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     if (language === getLanguage()) revealLanguage();
   }, [language]);
 
-  const setLanguage = useCallback((next: Language) => {
-    setStoreLanguage(next);
-  }, []);
-
   const value = useMemo<I18nContextValue>(() => {
     const dictionary = getDictionary(language);
 
     return {
       language,
       setLanguage,
-      toggleLanguage: () => setLanguage(language === "ko" ? "en" : "ko"),
       t: (key, vars) => translate(dictionary, ko, key, vars),
       tList: (key, vars) => translateList(dictionary, ko, key, vars),
     };
-  }, [language, setLanguage]);
+  }, [language]);
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }

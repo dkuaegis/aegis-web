@@ -16,8 +16,9 @@ const DICTIONARIES: Record<Language, Dictionary> = { ko, en };
 /**
  * The selected language lives in a tiny module-level store rather than only in
  * React state, because a fair amount of copy is produced outside the component
- * tree: zod validation messages, API error mapping, toast helpers. Those call
- * `t()` from this module; the provider keeps this store and React in sync.
+ * tree: zod validation messages, API error mapping, toast helpers, route
+ * `meta`. Those call `t()` from this module; components subscribe through
+ * `useLanguage`.
  */
 let currentLanguage: Language = DEFAULT_LANGUAGE;
 
@@ -47,6 +48,10 @@ export function getLanguage(): Language {
   return currentLanguage;
 }
 
+function notify() {
+  for (const listener of listeners) listener();
+}
+
 export function getDictionary(
   language: Language = currentLanguage
 ): Dictionary {
@@ -67,7 +72,7 @@ export function setLanguage(language: Language) {
     document.documentElement.lang = LANGUAGE_HTML_LANG[language];
   }
 
-  for (const listener of listeners) listener();
+  notify();
 }
 
 /**
@@ -110,10 +115,10 @@ export function revealLanguage() {
  * the first render (including the `<title>` from route `meta`) differ from the
  * prerendered Korean markup.
  */
-export function initLanguage(): Language {
+export function initLanguage() {
   currentLanguage = detectInitialLanguage();
   document.documentElement.lang = LANGUAGE_HTML_LANG[currentLanguage];
-  return currentLanguage;
+  notify();
 }
 
 export function subscribeToLanguage(listener: () => void): () => void {
