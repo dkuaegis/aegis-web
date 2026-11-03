@@ -9,7 +9,7 @@ const runtimeConfigName = "__RUNTIME_CONFIG__";
  * script injects only these, so unrelated variables in the deployment
  * environment never end up in the page source.
  */
-export const runtimeEnvKeysFile = "runtime-env-keys.json";
+const runtimeEnvKeysFile = "runtime-env-keys.json";
 
 function isViteEnvironmentAccess(
   node: ESTree.MemberExpression

@@ -2,10 +2,12 @@
 node_modules
 
 # Build outputs
-dist
 build
 .react-router
 coverage
+
+# Local tools
+public/__mobile.html
 
 # VCS
 .git
@@ -22,9 +24,7 @@ coverage
 # Logs
 logs
 *.log
-npm-debug.log*
 pnpm-debug.log*
-lerna-debug.log*
 
 # Local environment files
 .env
