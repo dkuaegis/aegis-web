@@ -6,6 +6,7 @@ import friend from "@app/assets/join/friend.svg";
 import instagram from "@app/assets/join/instagram.svg";
 import offlineEvent from "@app/assets/join/offline-event.svg";
 import type { Language } from "@app/i18n/types";
+import type { SessionStatus } from "@app/lib/session";
 import { departments as en } from "./departments.en";
 import { departments as ko } from "./departments.ko";
 
@@ -29,12 +30,26 @@ export function previousStep(step: JoinStep): JoinStep | undefined {
   return JOIN_STEPS[JOIN_STEPS.indexOf(step) - 1];
 }
 
-export function nextStep(step: JoinStep): JoinStep | undefined {
-  return JOIN_STEPS[JOIN_STEPS.indexOf(step) + 1];
-}
-
 export function isJoinStep(value: string | undefined): value is JoinStep {
   return JOIN_STEPS.includes(value as JoinStep);
+}
+
+/**
+ * Where a signed-in visitor belongs instead of `pathname`, if anywhere: members
+ * have nothing left but the closing page, everyone else works through the steps.
+ */
+export function joinRedirect(
+  status: Exclude<SessionStatus, "anonymous">,
+  pathname: string
+): string | null {
+  // The router matches paths in any letter case.
+  const path = pathname.toLowerCase().replace(/\/+$/, "");
+  if (status === "member") {
+    return path === "/join/complete" ? null : "/join/complete";
+  }
+  return JOIN_STEPS.some((step) => joinPath(step) === path)
+    ? null
+    : joinPath(JOIN_STEPS[0]);
 }
 
 /** In the order the server lists them, which is the order people look for. */

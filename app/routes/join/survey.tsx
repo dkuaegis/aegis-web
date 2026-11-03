@@ -19,15 +19,15 @@ import { Spinner } from "@app/components/ui/spinner";
 import { Textarea } from "@app/components/ui/textarea";
 import { useI18n } from "@app/i18n";
 import { t } from "@app/i18n/store";
-import { jsonBody } from "@app/lib/actions";
-import { errorMessage, hasStatus } from "@app/lib/errors";
+import { runAction } from "@app/lib/actions";
+import { hasStatus } from "@app/lib/errors";
+import { localizedResolver, useJsonSubmit } from "@app/lib/forms";
 import { cn } from "@app/lib/utils";
 import { Radio } from "@base-ui/react/radio";
 import { RadioGroup } from "@base-ui/react/radio-group";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useId } from "react";
-import { Controller, type Resolver, useForm } from "react-hook-form";
-import { redirect, useNavigation, useSubmit } from "react-router";
+import { Controller, useForm } from "react-hook-form";
+import { redirect } from "react-router";
 import { z } from "zod";
 import type { Route } from "./+types/survey";
 
@@ -45,16 +45,11 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
   const body = (await request.json()) as SurveyCommon;
-  try {
-    await saveSurvey(body);
-  } catch (error) {
-    return {
-      message: errorMessage(error, {
-        fallback: t("join.actions.submitFailed"),
-      }),
-    };
-  }
-  throw redirect(joinPath("chat"));
+  const result = await runAction("save", () => saveSurvey(body), {
+    errors: { fallback: t("join.actions.submitFailed") },
+  });
+  if (result.ok) throw redirect(joinPath("chat"));
+  return result;
 }
 
 /** Built per validation so messages follow the selected language. */
@@ -79,9 +74,7 @@ export default function Survey({
   actionData,
 }: Route.ComponentProps) {
   const { t } = useI18n();
-  const submit = useSubmit();
-  const navigation = useNavigation();
-  const submitting = navigation.state !== "idle";
+  const { submitting, submitJson } = useJsonSubmit();
   const acquisitionLabelId = useId();
 
   const form = useForm<SurveyForm, unknown, FormOutput>({
@@ -89,14 +82,7 @@ export default function Survey({
       acquisitionType: loaderData.survey?.acquisitionType ?? null,
       joinReason: loaderData.survey?.joinReason ?? "",
     },
-    resolver: (values, context, options) =>
-      (
-        zodResolver(schema()) as unknown as Resolver<
-          SurveyForm,
-          unknown,
-          FormOutput
-        >
-      )(values, context, options),
+    resolver: localizedResolver(schema),
     mode: "onTouched",
   });
   const { control, register, formState } = form;
@@ -113,10 +99,7 @@ export default function Survey({
     <form
       noValidate
       onSubmit={form.handleSubmit((values) =>
-        submit(jsonBody(values satisfies SurveyCommon), {
-          method: "post",
-          encType: "application/json",
-        })
+        submitJson(values satisfies SurveyCommon)
       )}
     >
       <FieldGroup>

@@ -12,14 +12,13 @@ import { ErrorText } from "@app/components/ui/field";
 import { Input } from "@app/components/ui/input";
 import { Spinner } from "@app/components/ui/spinner";
 import { useI18n } from "@app/i18n";
-import { type ActionResult, useFetcherResult } from "@app/lib/actions";
+import { type ActionResult, useActionDialog } from "@app/lib/actions";
 import { formatNumber } from "@app/lib/format";
 import { cn } from "@app/lib/utils";
 import { ChevronRightIcon } from "lucide-react";
 import { useId, useState } from "react";
-import { useFetcher } from "react-router";
 
-export type CouponIntent = "redeem" | "apply";
+type CouponIntent = "redeem" | "apply";
 
 /**
  * The coupon row on the payment step and the dialog it opens: redeem a code,
@@ -37,26 +36,28 @@ export function CouponDialog({
   onApplied: () => void;
 }) {
   const { t } = useI18n();
-  const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<number[]>([]);
   const [code, setCode] = useState("");
-  const fetcher = useFetcher<ActionResult<CouponIntent>>({ key: "coupons" });
-  const busy = fetcher.state !== "idle";
+  const listId = useId();
+  const { fetcher, busy, failed, dialog } = useActionDialog<
+    ActionResult<CouponIntent>
+  >({
+    onOpen: () => {
+      setCode("");
+      // Start from what is applied, keeping only coupons the list shows.
+      const valid = new Set(coupons?.map((c) => c.issuedCouponId));
+      setSelected(appliedCouponIds.filter((id) => valid.has(id)));
+    },
+    closeWhen: (result) => result.ok && result.intent === "apply",
+    onResult: (result) => {
+      if (!result.ok) return;
+      if (result.intent === "redeem") setCode("");
+      if (result.intent === "apply") onApplied();
+    },
+  });
   const sending = busy
     ? (fetcher.json as { intent?: CouponIntent } | undefined)?.intent
     : undefined;
-  const failed =
-    fetcher.data?.ok === false && !busy ? fetcher.data.message : null;
-  const listId = useId();
-
-  useFetcherResult(fetcher, (result) => {
-    if (!result.ok) return;
-    if (result.intent === "redeem") setCode("");
-    if (result.intent === "apply") {
-      setOpen(false);
-      onApplied();
-    }
-  });
 
   const send = (intent: CouponIntent, body: object) =>
     fetcher.submit(
@@ -69,18 +70,7 @@ export function CouponDialog({
     );
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(next) => {
-        if (busy) return;
-        if (next && coupons) {
-          // Start from what is applied, keeping only coupons the list shows.
-          const valid = new Set(coupons.map((c) => c.issuedCouponId));
-          setSelected(appliedCouponIds.filter((id) => valid.has(id)));
-        }
-        setOpen(next);
-      }}
-    >
+    <Dialog {...dialog}>
       <DialogTrigger
         disabled={!coupons}
         className="group grid w-full cursor-pointer grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-3 border border-line-strong bg-paper-raised px-5 py-4 text-left transition-colors hover:border-ink disabled:cursor-default disabled:hover:border-line-strong"

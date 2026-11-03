@@ -2,11 +2,9 @@ import {
   getPersonalInfo,
   updatePersonalInfo,
 } from "@app/api/generated/endpoints";
-import {
-  type Department,
-  Gender,
-  type PersonalInfoResponse,
-  type PersonalInfoUpdateRequest,
+import type {
+  Department,
+  PersonalInfoUpdateRequest,
 } from "@app/api/generated/model";
 import { StepActions, stepButtonClassName } from "@app/components/join/Funnel";
 import {
@@ -17,6 +15,13 @@ import {
   joinPath,
   type PersonalInfoForm,
 } from "@app/components/join/join";
+import {
+  digits,
+  formatPhoneNumber,
+  fromServer,
+  isValidBirthDate,
+  toRequest,
+} from "@app/components/join/personal-info";
 import { Button } from "@app/components/ui/button";
 import {
   Combobox,
@@ -46,12 +51,11 @@ import {
 import { Spinner } from "@app/components/ui/spinner";
 import { useI18n } from "@app/i18n";
 import { t } from "@app/i18n/store";
-import { jsonBody } from "@app/lib/actions";
-import { errorMessage } from "@app/lib/errors";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { runAction } from "@app/lib/actions";
+import { localizedResolver, useJsonSubmit } from "@app/lib/forms";
 import { useEffect } from "react";
-import { Controller, type Resolver, useForm } from "react-hook-form";
-import { redirect, useNavigation, useSubmit } from "react-router";
+import { Controller, useForm } from "react-hook-form";
+import { redirect } from "react-router";
 import { z } from "zod";
 import type { Route } from "./+types/personal-info";
 
@@ -61,16 +65,11 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
   const body = (await request.json()) as PersonalInfoUpdateRequest;
-  try {
-    await updatePersonalInfo(body);
-  } catch (error) {
-    return {
-      message: errorMessage(error, {
-        fallback: t("join.actions.submitFailed"),
-      }),
-    };
-  }
-  throw redirect(joinPath("survey"));
+  const result = await runAction("save", () => updatePersonalInfo(body), {
+    errors: { fallback: t("join.actions.submitFailed") },
+  });
+  if (result.ok) throw redirect(joinPath("survey"));
+  return result;
 }
 
 /** Built per validation so messages follow the selected language. */
@@ -113,20 +112,11 @@ export default function PersonalInfo({
   actionData,
 }: Route.ComponentProps) {
   const { t, language } = useI18n();
-  const submit = useSubmit();
-  const navigation = useNavigation();
-  const submitting = navigation.state !== "idle";
+  const { submitting, submitJson } = useJsonSubmit();
 
   const form = useForm<PersonalInfoForm, unknown, FormOutput>({
     defaultValues: drafts.personalInfo ?? fromServer(loaderData.info),
-    resolver: (values, context, options) =>
-      (
-        zodResolver(schema()) as unknown as Resolver<
-          PersonalInfoForm,
-          unknown,
-          FormOutput
-        >
-      )(values, context, options),
+    resolver: localizedResolver(schema),
     mode: "onTouched",
   });
   const { control, formState } = form;
@@ -146,12 +136,7 @@ export default function PersonalInfo({
   return (
     <form
       noValidate
-      onSubmit={form.handleSubmit((values) =>
-        submit(jsonBody(toRequest(values)), {
-          method: "post",
-          encType: "application/json",
-        })
-      )}
+      onSubmit={form.handleSubmit((values) => submitJson(toRequest(values)))}
     >
       <FieldGroup>
         <Controller
@@ -357,68 +342,5 @@ export default function PersonalInfo({
         </Button>
       </StepActions>
     </form>
-  );
-}
-
-/**
- * Saved answers, except the grade: it changes every year, so it is asked
- * again rather than carried over from the last time.
- */
-function fromServer(info: PersonalInfoResponse): PersonalInfoForm {
-  return {
-    phoneNumber: info.phoneNumber ?? "",
-    studentId: info.studentId ?? "",
-    birthDate: info.birthDate ?? "",
-    genderDigit:
-      info.birthDate && info.gender
-        ? genderDigit(info.birthDate, info.gender)
-        : "",
-    department: info.department,
-    grade: null,
-  };
-}
-
-function toRequest(values: FormOutput): PersonalInfoUpdateRequest {
-  return {
-    phoneNumber: values.phoneNumber,
-    studentId: values.studentId,
-    birthDate: values.birthDate,
-    department: values.department,
-    grade: values.grade,
-    gender: Number(values.genderDigit) % 2 ? Gender.MALE : Gender.FEMALE,
-  };
-}
-
-/** 1 and 2 for births in the 1900s, 3 and 4 from 2000; odd is male. */
-function genderDigit(birthDate: string, gender: Gender): string {
-  const before2000 = Number(birthDate.slice(0, 2)) >= 50;
-  const male = gender === Gender.MALE;
-  return String((before2000 ? 1 : 3) + (male ? 0 : 1));
-}
-
-function digits(value: string, max: number): string {
-  return value.replace(/\D/g, "").slice(0, max);
-}
-
-/** "01012345678" to "010-1234-5678" as it is typed. */
-function formatPhoneNumber(value: string): string {
-  const raw = digits(value, 11);
-  if (raw.length <= 3) return raw;
-  if (raw.length <= 7) return `${raw.slice(0, 3)}-${raw.slice(3)}`;
-  return `${raw.slice(0, 3)}-${raw.slice(3, 7)}-${raw.slice(7)}`;
-}
-
-/** A real calendar date in YYMMDD, read as 1950 to 2049. */
-function isValidBirthDate(value: string): boolean {
-  if (!/^\d{6}$/.test(value)) return false;
-  const yy = Number(value.slice(0, 2));
-  const month = Number(value.slice(2, 4));
-  const day = Number(value.slice(4, 6));
-  const year = yy >= 50 ? 1900 + yy : 2000 + yy;
-  const date = new Date(year, month - 1, day);
-  return (
-    date.getFullYear() === year &&
-    date.getMonth() + 1 === month &&
-    date.getDate() === day
   );
 }

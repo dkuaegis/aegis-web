@@ -1,19 +1,9 @@
 import { CHAT_ROOMS } from "@app/components/join/ChatRooms";
-import { JOIN_STEPS, joinPath } from "@app/components/join/join";
 import { PageBody, PageHeader } from "@app/components/page/PageHeader";
 import { GITHUB_URL, INSTAGRAM_URL } from "@app/components/site/SiteFooter";
 import { useI18n } from "@app/i18n";
-import { loadSession } from "@app/lib/session";
 import { ArrowRightIcon, ArrowUpRightIcon } from "lucide-react";
-import { Link, redirect } from "react-router";
-
-/** Only members get here; anyone else still has steps left. */
-export async function clientLoader() {
-  if ((await loadSession()) !== "member") {
-    throw redirect(joinPath(JOIN_STEPS[0]));
-  }
-  return null;
-}
+import { Link } from "react-router";
 
 const linkClassName =
   "inline-flex items-center gap-1 text-[0.875rem] font-[750] whitespace-nowrap text-ink transition-colors hover:text-blue";

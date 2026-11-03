@@ -4,138 +4,110 @@ import {
   type PaymentStatusResponse,
 } from "@app/api/generated/model";
 import { hasStatus } from "@app/lib/errors";
+import { refreshSession } from "@app/lib/session";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-type Status = "loading" | "waiting" | "paid" | "error";
+type Payment = Pick<PaymentStatusResponse, "finalPrice" | "issuedCouponIds">;
+
+type PaymentState =
+  | { status: "loading" }
+  | { status: "error" }
+  | ({ status: "waiting" | "paid" } & Payment);
 
 // Confirming a bank transfer takes a while; every few seconds is plenty.
 const POLL_INTERVAL_MS = 3000;
 // One failed check should not turn the page into an error.
 const MAX_CONSECUTIVE_FAILURES = 3;
 
+/** Resolves when the next check is due, which waits for a hidden tab to return. */
+function untilNextCheck(signal: AbortSignal): Promise<void> {
+  return new Promise((resolve) => {
+    const finish = () => {
+      clearTimeout(timer);
+      document.removeEventListener("visibilitychange", finishIfVisible);
+      signal.removeEventListener("abort", finish);
+      resolve();
+    };
+    const finishIfVisible = () => {
+      if (!document.hidden) finish();
+    };
+    const timer = setTimeout(finishIfVisible, POLL_INTERVAL_MS);
+    document.addEventListener("visibilitychange", finishIfVisible);
+    signal.addEventListener("abort", finish);
+  });
+}
+
+/** Another tab may open the payment between the check and the create. */
+async function openPayment() {
+  try {
+    await createPayment({ issuedCouponIds: [] });
+  } catch (error) {
+    if (!hasStatus(error, 409)) throw error;
+  }
+}
+
 /**
  * Opens this term's payment if there is none yet, then watches it until an
- * officer confirms the transfer. Pauses while the tab is hidden.
+ * officer confirms the transfer. One loop owns every request, so checks never
+ * overlap; `refresh` drops the one in progress and starts over, because it may
+ * have read the payment before the change it is called for.
  */
 export function usePaymentPolling() {
-  const [status, setStatus] = useState<Status>("loading");
-  const [payment, setPayment] = useState<
-    Pick<PaymentStatusResponse, "finalPrice" | "issuedCouponIds">
-  >({ finalPrice: 0, issuedCouponIds: [] });
+  const [state, setState] = useState<PaymentState>({ status: "loading" });
   const [attempt, setAttempt] = useState(0);
-  const inFlight = useRef(false);
+  const currentCheck = useRef<AbortController | null>(null);
 
-  /** Reads the payment again, e.g. after coupons changed it. */
-  const refreshPayment = useCallback(async () => {
-    // A check already on its way will bring the latest payment.
-    if (inFlight.current) return;
-    inFlight.current = true;
-    try {
-      setPayment(await getPaymentStatus());
-    } catch (error) {
-      console.error(error);
-    } finally {
-      inFlight.current = false;
-    }
-  }, []);
+  const refresh = useCallback(() => currentCheck.current?.abort(), []);
 
   const retry = useCallback(() => {
-    setStatus("loading");
+    setState({ status: "loading" });
     setAttempt((current) => current + 1);
   }, []);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: a retry bumps `attempt` to start over
   useEffect(() => {
-    let active = true;
-    let polling = false;
-    let failures = 0;
-    let timer: ReturnType<typeof setTimeout> | null = null;
+    let stopped = false;
 
-    const schedule = () => {
-      if (active) timer = setTimeout(poll, POLL_INTERVAL_MS);
-    };
-
-    const stop = (next: Status) => {
-      polling = false;
-      setStatus(next);
-    };
-
-    const poll = async () => {
-      timer = null;
-      if (document.hidden) return;
-      if (inFlight.current) {
-        schedule();
-        return;
-      }
-      inFlight.current = true;
-      try {
-        const result = await getPaymentStatus();
-        if (!active) return;
-        failures = 0;
-        setPayment(result);
-        if (result.status === PaymentCheckStatus.COMPLETED) {
-          stop("paid");
-          return;
-        }
-        schedule();
-      } catch (error) {
-        if (!active) return;
-        failures += 1;
-        if (failures >= MAX_CONSECUTIVE_FAILURES) {
-          console.error(error);
-          stop("error");
-          return;
-        }
-        schedule();
-      } finally {
-        inFlight.current = false;
-      }
-    };
-
-    const startPolling = () => {
-      if (!active) return;
-      polling = true;
-      setStatus("waiting");
-      void poll();
-    };
-
-    const resumeWhenVisible = () => {
-      if (!document.hidden && polling && timer === null) void poll();
-    };
-    document.addEventListener("visibilitychange", resumeWhenVisible);
-
-    const start = async () => {
-      try {
-        const current = await getPaymentStatus();
-        if (!active) return;
-        setPayment(current);
-        if (current.status === PaymentCheckStatus.COMPLETED) {
-          setStatus("paid");
-          return;
-        }
-        if (current.status === PaymentCheckStatus.NOT_CREATED) {
-          await createPayment({ issuedCouponIds: [] });
-        }
-        startPolling();
-      } catch (error) {
-        if (!active) return;
-        // Another tab opened the payment between the check and the create.
-        if (hasStatus(error, 409)) {
-          startPolling();
-        } else {
-          console.error(error);
-          setStatus("error");
+    const run = async () => {
+      let failures = 0;
+      while (!stopped) {
+        const check = new AbortController();
+        currentCheck.current = check;
+        const { signal } = check;
+        try {
+          const payment = await getPaymentStatus({ signal });
+          if (payment.status === PaymentCheckStatus.NOT_CREATED) {
+            await openPayment();
+            continue;
+          }
+          failures = 0;
+          if (payment.status === PaymentCheckStatus.COMPLETED) {
+            setState({ ...payment, status: "paid" });
+            // The header and member-only pages should see the new status.
+            void refreshSession().catch(() => {});
+            return;
+          }
+          setState({ ...payment, status: "waiting" });
+          await untilNextCheck(signal);
+        } catch (error) {
+          if (signal.aborted) continue;
+          failures += 1;
+          if (failures >= MAX_CONSECUTIVE_FAILURES) {
+            console.error(error);
+            setState({ status: "error" });
+            return;
+          }
+          await untilNextCheck(signal);
         }
       }
     };
-    void start();
+    void run();
 
     return () => {
-      active = false;
-      if (timer) clearTimeout(timer);
-      document.removeEventListener("visibilitychange", resumeWhenVisible);
+      stopped = true;
+      currentCheck.current?.abort();
     };
   }, [attempt]);
 
-  return { status, ...payment, refreshPayment, retry };
+  return { payment: state, refresh, retry };
 }

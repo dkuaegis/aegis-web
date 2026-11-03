@@ -4,22 +4,19 @@ import {
   redeemCouponCode,
   updatePayment,
 } from "@app/api/generated/endpoints";
-import {
-  CouponDialog,
-  type CouponIntent,
-} from "@app/components/join/CouponDialog";
+import { CouponDialog } from "@app/components/join/CouponDialog";
 import { StepActions, stepButtonClassName } from "@app/components/join/Funnel";
 import { usePaymentPolling } from "@app/components/join/usePaymentPolling";
 import { RetryButton } from "@app/components/page/States";
 import { Button } from "@app/components/ui/button";
 import { ErrorText } from "@app/components/ui/field";
 import { Spinner } from "@app/components/ui/spinner";
-import { toast } from "@app/components/ui/toast";
 import { useI18n } from "@app/i18n";
 import { t as translate } from "@app/i18n/store";
-import { type ActionResult, runAction } from "@app/lib/actions";
+import { runAction } from "@app/lib/actions";
+import { copyToClipboard } from "@app/lib/clipboard";
 import { formatNumber } from "@app/lib/format";
-import { invalidateSession } from "@app/lib/session";
+import { optional } from "@app/lib/route-data";
 import { ChevronRightIcon, CopyIcon } from "lucide-react";
 import type * as React from "react";
 import { useId, useState } from "react";
@@ -39,26 +36,11 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
   return { coupons, depositorName };
 }
 
-async function optional<T>(
-  promise: Promise<T>,
-  signal: AbortSignal
-): Promise<T | null> {
-  try {
-    return await promise;
-  } catch (error) {
-    if (signal.aborted) throw error;
-    console.error(error);
-    return null;
-  }
-}
-
 type CouponRequest =
   | { intent: "redeem"; code: string }
   | { intent: "apply"; issuedCouponIds: number[] };
 
-export async function clientAction({
-  request,
-}: Route.ClientActionArgs): Promise<ActionResult<CouponIntent>> {
+export async function clientAction({ request }: Route.ClientActionArgs) {
   const body = (await request.json()) as CouponRequest;
   if (body.intent === "redeem") {
     return runAction("redeem", () => redeemCouponCode({ code: body.code }), {
@@ -74,10 +56,9 @@ export default function Payment({ loaderData }: Route.ComponentProps) {
   const { t } = useI18n();
   const navigate = useNavigate();
   const revalidator = useRevalidator();
-  const { status, finalPrice, issuedCouponIds, refreshPayment, retry } =
-    usePaymentPolling();
+  const { payment, refresh, retry } = usePaymentPolling();
 
-  if (status === "loading") {
+  if (payment.status === "loading") {
     return (
       <p
         role="status"
@@ -89,7 +70,7 @@ export default function Payment({ loaderData }: Route.ComponentProps) {
     );
   }
 
-  if (status === "error") {
+  if (payment.status === "error") {
     return (
       <div className="grid justify-items-start gap-5">
         <ErrorText role="alert">{t("join.payment.loadError")}</ErrorText>
@@ -99,7 +80,7 @@ export default function Payment({ loaderData }: Route.ComponentProps) {
     );
   }
 
-  if (status === "paid") {
+  if (payment.status === "paid") {
     return (
       <>
         <PaymentBox
@@ -109,7 +90,7 @@ export default function Payment({ loaderData }: Route.ComponentProps) {
               {t("join.payment.paid.label")}
             </span>
           }
-          amount={finalPrice}
+          amount={payment.finalPrice}
         >
           <Status
             title={t("join.payment.paid.title")}
@@ -119,11 +100,7 @@ export default function Payment({ loaderData }: Route.ComponentProps) {
         <StepActions step="payment" back={false}>
           <Button
             size="lg"
-            onClick={() => {
-              // The header and member-only pages should see the new status.
-              invalidateSession();
-              navigate("/join/complete");
-            }}
+            onClick={() => navigate("/join/complete")}
             className={stepButtonClassName}
           >
             {t("join.actions.next")}
@@ -135,7 +112,10 @@ export default function Payment({ loaderData }: Route.ComponentProps) {
 
   return (
     <div className="grid gap-6">
-      <PaymentBox label={t("join.payment.amountLabel")} amount={finalPrice}>
+      <PaymentBox
+        label={t("join.payment.amountLabel")}
+        amount={payment.finalPrice}
+      >
         <Account depositorName={loaderData.depositorName} />
         <Status
           marker
@@ -146,8 +126,8 @@ export default function Payment({ loaderData }: Route.ComponentProps) {
 
       <CouponDialog
         coupons={loaderData.coupons}
-        appliedCouponIds={issuedCouponIds}
-        onApplied={() => void refreshPayment()}
+        appliedCouponIds={payment.issuedCouponIds}
+        onApplied={refresh}
       />
       {!loaderData.coupons && (
         <div className="-mt-3 flex flex-wrap items-center gap-3">
@@ -231,15 +211,6 @@ function Account({ depositorName }: { depositorName: string | null }) {
       ? import.meta.env.VITE_ADMIN_ACCOUNT_HOLDER_KO
       : import.meta.env.VITE_ADMIN_ACCOUNT_HOLDER_EN;
 
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(accountNumber);
-      toast.success(t("join.payment.account.copySuccess"));
-    } catch {
-      toast.error(t("join.payment.account.copyFailure"));
-    }
-  };
-
   return (
     <dl className="m-0 grid gap-3 bg-paper-sunken px-5 py-4 text-[0.9375rem] sm:px-6">
       <div className="grid grid-cols-[5.5rem_minmax(0,1fr)_auto] items-center gap-3">
@@ -254,7 +225,12 @@ function Account({ depositorName }: { depositorName: string | null }) {
           size="icon-sm"
           aria-label={t("join.payment.account.copyAccount")}
           disabled={!accountNumber}
-          onClick={copy}
+          onClick={() =>
+            void copyToClipboard(
+              accountNumber,
+              t("join.payment.account.copySuccess")
+            )
+          }
           className="-my-2"
         >
           <CopyIcon aria-hidden="true" />
