@@ -23,11 +23,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@app/components/ui/dialog";
+import { ErrorText } from "@app/components/ui/field";
 import { Spinner } from "@app/components/ui/spinner";
-import { toast } from "@app/components/ui/toast";
 import { useI18n } from "@app/i18n";
 import { t as translate } from "@app/i18n/store";
-import { errorMessage } from "@app/lib/errors";
+import { runAction } from "@app/lib/actions";
 import { formatDateTime } from "@app/lib/format";
 import { CheckIcon, XIcon } from "lucide-react";
 import { useState } from "react";
@@ -66,18 +66,20 @@ export async function clientAction({
   const name = String(form.get("name"));
   const search = new URL(request.url).search;
 
-  try {
-    if (intent === "approve") {
-      await approveStudyApplication(studyId, applicationId);
-      toast.success(translate("study.applications.approved", { name }));
-    } else {
-      await rejectStudyApplication(studyId, applicationId);
-      toast.success(translate("study.applications.rejected", { name }));
-    }
-  } catch (error) {
-    return { message: errorMessage(error) };
-  }
-  return redirect(`/study/${studyId}/applications${search}`);
+  const result =
+    intent === "approve"
+      ? await runAction(
+          "approve",
+          () => approveStudyApplication(studyId, applicationId),
+          { success: translate("study.applications.approved", { name }) }
+        )
+      : await runAction(
+          "reject",
+          () => rejectStudyApplication(studyId, applicationId),
+          { success: translate("study.applications.rejected", { name }) }
+        );
+  if (result.ok) throw redirect(`/study/${studyId}/applications${search}`);
+  return result;
 }
 
 /** One application, opened over the list so the list keeps its place. */
@@ -106,7 +108,7 @@ export default function ApplicationDialog({
 
   if (!application) return null;
   const { name, status } = application;
-  const failed = fetcher.data?.message && !busy ? fetcher.data.message : null;
+  const failed = !busy ? fetcher.data?.message : null;
 
   const submit = (intent: "approve" | "reject") =>
     fetcher.submit({ intent, name }, { method: "post" });
@@ -160,14 +162,7 @@ export default function ApplicationDialog({
           )}
         </p>
 
-        {failed && (
-          <p
-            role="alert"
-            className="m-0 text-[0.875rem] font-[650] text-danger"
-          >
-            {failed}
-          </p>
-        )}
+        <ErrorText role="alert">{failed}</ErrorText>
 
         {status !== "APPROVED" && (
           <DialogFooter>

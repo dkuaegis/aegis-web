@@ -18,16 +18,15 @@ import {
 import { Spinner } from "@app/components/ui/spinner";
 import { Textarea } from "@app/components/ui/textarea";
 import { useI18n } from "@app/i18n";
-import { type ActionResult, useFetcherResult } from "@app/lib/actions";
+import { type ActionResult, useActionDialog } from "@app/lib/actions";
 import { cn } from "@app/lib/utils";
 import { useState } from "react";
-import { useFetcher } from "react-router";
 
 /** Matches `StudyEnrollRequest.applicationReason` on the server. */
-export const APPLICATION_REASON_MAX = 500;
+const APPLICATION_REASON_MAX = 500;
 
 interface ApplicationDialogProps {
-  intent: "enroll" | "update-application";
+  intent: "apply" | "update-application";
   defaultReason: string;
   trigger: React.ReactElement;
 }
@@ -42,11 +41,14 @@ export function ApplicationDialog({
   trigger,
 }: ApplicationDialogProps) {
   const { t } = useI18n();
-  const [open, setOpen] = useState(false);
   const [reason, setReason] = useState(defaultReason);
   const [touched, setTouched] = useState(false);
-  const fetcher = useFetcher<ActionResult>({ key: intent });
-  const busy = fetcher.state !== "idle";
+  const { fetcher, busy, failed, dialog } = useActionDialog<ActionResult>({
+    onOpen: () => {
+      setReason(defaultReason);
+      setTouched(false);
+    },
+  });
   const editing = intent === "update-application";
 
   const trimmed = reason.trim();
@@ -55,27 +57,10 @@ export function ApplicationDialog({
     : reason.length > APPLICATION_REASON_MAX
       ? t("study.application.tooLong", { max: APPLICATION_REASON_MAX })
       : null;
-  const serverError =
-    fetcher.data?.ok === false && !busy ? fetcher.data.message : null;
-  const error = (touched && clientError) || serverError;
-
-  useFetcherResult(fetcher, (result) => {
-    if (!result.ok) return;
-    setOpen(false);
-  });
+  const error = (touched && clientError) || failed;
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(next) => {
-        if (busy) return;
-        if (next) {
-          setReason(defaultReason);
-          setTouched(false);
-        }
-        setOpen(next);
-      }}
-    >
+    <Dialog {...dialog}>
       <DialogTrigger render={trigger} />
       <DialogContent className="max-w-xl" showCloseButton={false}>
         <fetcher.Form

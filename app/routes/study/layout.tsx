@@ -5,18 +5,21 @@ import {
 import { RouteErrorState } from "@app/components/page/States";
 import { t as translate } from "@app/i18n/store";
 import { requireMember } from "@app/lib/auth";
+import { keepDataOnSearchChange } from "@app/lib/route-data";
 import { pageTitle } from "@app/lib/title";
-import { Outlet, useRouteLoaderData } from "react-router";
+import { Outlet } from "react-router";
 import type { Route } from "./+types/layout";
 
 /**
  * Pages below set their own title. This one shows when a page fails and the
- * error boundaries here or in the manage layout take over, since the failed
- * page's `meta` no longer applies.
+ * error boundary here takes over, since the failed page's `meta` no longer
+ * applies.
  */
 export function meta() {
   return [{ title: pageTitle(translate("study.list.metaTitle")) }];
 }
+
+export const shouldRevalidate = keepDataOnSearchChange;
 
 export const clientMiddleware: Route.ClientMiddlewareFunction[] = [
   ({ request }) => requireMember(request),
@@ -33,12 +36,6 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
     getFeaturePolicy({ signal: request.signal }),
   ]);
   return { roles, policy };
-}
-
-export function useStudyContext() {
-  const data = useRouteLoaderData<typeof clientLoader>("routes/study/layout");
-  if (!data) throw new Error("useStudyContext must be used below /study");
-  return data;
 }
 
 export default function StudyLayout() {

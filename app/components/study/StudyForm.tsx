@@ -1,8 +1,6 @@
-import {
-  type GeneralStudyDetail,
-  StudyCategory,
-  type StudyCreateUpdateRequest,
-  StudyLevel,
+import type {
+  GeneralStudyDetail,
+  StudyCreateUpdateRequest,
   StudyRecruitmentMethod,
 } from "@app/api/generated/model";
 import {
@@ -36,131 +34,30 @@ import {
 import { Spinner } from "@app/components/ui/spinner";
 import { Textarea } from "@app/components/ui/textarea";
 import { useI18n } from "@app/i18n";
-import { t } from "@app/i18n/store";
+import { localizedResolver } from "@app/lib/forms";
 import { cn } from "@app/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { CircleAlertIcon, PlusIcon, Trash2Icon } from "lucide-react";
+import { PlusIcon, Trash2Icon } from "lucide-react";
 import { useEffect, useId } from "react";
 import {
   type Control,
   Controller,
   type FieldPath,
-  type Resolver,
   useFieldArray,
   useForm,
+  useWatch,
 } from "react-hook-form";
 import { Link, useBlocker } from "react-router";
-import { z } from "zod";
-
-export const LIMITS = {
-  title: 30,
-  description: 1000,
-  schedule: 100,
-  capacityMin: 1,
-  capacityMax: 50,
-} as const;
-
-const CATEGORIES = Object.values(StudyCategory);
-const LEVELS = Object.values(StudyLevel);
-const METHODS = Object.values(StudyRecruitmentMethod);
-
-/** Built per submit so messages follow the selected language. */
-function schema() {
-  const required = t("study.form.required");
-  const text = (max: number) =>
-    z
-      .string()
-      .trim()
-      .min(1, required)
-      .max(max, t("study.form.maxLength", { max }));
-  const rows = z
-    .array(
-      z.object({ value: z.string().trim().min(1, t("study.form.rowRequired")) })
-    )
-    .min(1);
-
-  return z
-    .object({
-      title: text(LIMITS.title),
-      category: z.enum(CATEGORIES, t("study.form.requiredSelect")),
-      level: z.enum(LEVELS, t("study.form.requiredSelect")),
-      recruitmentMethod: z.enum(METHODS, t("study.form.requiredSelect")),
-      unlimited: z.boolean(),
-      maxParticipants: z.number().nullable(),
-      schedule: z
-        .string()
-        .trim()
-        .max(
-          LIMITS.schedule,
-          t("study.form.maxLength", { max: LIMITS.schedule })
-        ),
-      description: text(LIMITS.description),
-      curricula: rows,
-      qualifications: rows,
-    })
-    .refine(
-      (values) =>
-        values.unlimited ||
-        (values.maxParticipants !== null &&
-          values.maxParticipants >= LIMITS.capacityMin &&
-          values.maxParticipants <= LIMITS.capacityMax),
-      {
-        path: ["maxParticipants"],
-        message: t("study.form.capacityRange", {
-          min: LIMITS.capacityMin,
-          max: LIMITS.capacityMax,
-        }),
-      }
-    );
-}
-
-type FormInput = {
-  title: string;
-  category: StudyCategory | null;
-  level: StudyLevel | null;
-  recruitmentMethod: StudyRecruitmentMethod | null;
-  unlimited: boolean;
-  maxParticipants: number | null;
-  schedule: string;
-  description: string;
-  curricula: { value: string }[];
-  qualifications: { value: string }[];
-};
-
-type FormOutput = z.output<ReturnType<typeof schema>>;
-
-function toRows(values: readonly string[] | undefined) {
-  return values?.length ? values.map((value) => ({ value })) : [{ value: "" }];
-}
-
-function defaultsFrom(study?: GeneralStudyDetail): FormInput {
-  return {
-    title: study?.title ?? "",
-    category: study?.category ?? null,
-    level: study?.level ?? null,
-    recruitmentMethod: study?.recruitmentMethod ?? null,
-    unlimited: study ? study.maxParticipants === 0 : false,
-    maxParticipants: study?.maxParticipants || 10,
-    schedule: study?.schedule ?? "",
-    description: study?.description ?? "",
-    curricula: toRows(study?.curricula),
-    qualifications: toRows(study?.qualifications),
-  };
-}
-
-function toRequest(values: FormOutput): StudyCreateUpdateRequest {
-  return {
-    title: values.title,
-    category: values.category,
-    level: values.level,
-    recruitmentMethod: values.recruitmentMethod,
-    maxParticipants: values.unlimited ? 0 : (values.maxParticipants ?? 0),
-    schedule: values.schedule || null,
-    description: values.description,
-    curricula: values.curricula.map((row) => row.value),
-    qualifications: values.qualifications.map((row) => row.value),
-  };
-}
+import {
+  CATEGORIES,
+  defaultsFrom,
+  type FormInput,
+  type FormOutput,
+  LEVELS,
+  LIMITS,
+  METHODS,
+  schema,
+  toRequest,
+} from "./study-form";
 
 interface StudyFormProps {
   study?: GeneralStudyDetail;
@@ -182,20 +79,11 @@ export function StudyForm({
   const editing = Boolean(study);
   const form = useForm<FormInput, unknown, FormOutput>({
     defaultValues: defaultsFrom(study),
-    // Rebuilt per validation so messages follow the selected language.
-    resolver: (values, context, options) =>
-      (
-        zodResolver(schema()) as unknown as Resolver<
-          FormInput,
-          unknown,
-          FormOutput
-        >
-      )(values, context, options),
+    resolver: localizedResolver(schema),
     mode: "onTouched",
   });
   const { control, register, watch, formState } = form;
   const unlimited = watch("unlimited");
-  const description = watch("description");
   const methodLabelId = useId();
   const hasErrors = formState.submitCount > 0 && !formState.isValid;
 
@@ -351,7 +239,7 @@ export function StudyForm({
         <Field invalid={Boolean(formState.errors.description)}>
           <div className="flex items-baseline justify-between gap-4">
             <FieldLabel required>{t("study.form.description")}</FieldLabel>
-            <Counter value={description.length} max={LIMITS.description} />
+            <DescriptionCounter control={control} />
           </div>
           <Textarea
             {...register("description")}
@@ -384,13 +272,9 @@ export function StudyForm({
 
       <div className="grid gap-3 border-t border-ink pt-6 sm:flex sm:flex-wrap sm:items-center sm:justify-end sm:gap-x-4">
         {(error || hasErrors) && (
-          <p
-            role="alert"
-            className="m-0 flex items-center gap-2 text-[0.875rem] font-[650] text-danger sm:mr-auto"
-          >
-            <CircleAlertIcon aria-hidden="true" className="size-4 shrink-0" />
+          <ErrorText role="alert" className="sm:mr-auto">
             {error ?? t("study.form.fixErrors")}
-          </p>
+          </ErrorText>
         )}
         <Button
           type="submit"
@@ -507,15 +391,21 @@ function GroupLabel({
   );
 }
 
-function Counter({ value, max }: { value: number; max: number }) {
+/** Subscribes on its own, so typing does not re-render the whole form. */
+function DescriptionCounter({
+  control,
+}: {
+  control: Control<FormInput, unknown, FormOutput>;
+}) {
+  const { length } = useWatch({ control, name: "description" });
   return (
     <span
       className={cn(
         "tabular text-[0.75rem] font-[650] text-ink-subtle",
-        value > max && "text-danger"
+        length > LIMITS.description && "text-danger"
       )}
     >
-      {value} / {max}
+      {length} / {LIMITS.description}
     </span>
   );
 }

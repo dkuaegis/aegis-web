@@ -4,15 +4,14 @@ import { PageBody, PageHeader } from "@app/components/page/PageHeader";
 import { StateMessage } from "@app/components/page/States";
 import { StudyForm } from "@app/components/study/StudyForm";
 import { parseId, roleOf } from "@app/components/study/study";
-import { toast } from "@app/components/ui/toast";
+import { useStudyContext } from "@app/components/study/useStudyContext";
 import { useI18n } from "@app/i18n";
 import { t as translate } from "@app/i18n/store";
-import { jsonBody } from "@app/lib/actions";
-import { errorMessage } from "@app/lib/errors";
+import { runAction } from "@app/lib/actions";
+import { useJsonSubmit } from "@app/lib/forms";
 import { pageTitle } from "@app/lib/title";
-import { redirect, useNavigation, useSubmit } from "react-router";
+import { redirect } from "react-router";
 import type { Route } from "./+types/edit";
-import { useStudyContext } from "./layout";
 
 export function meta() {
   return [{ title: pageTitle(translate("study.form.editMetaTitle")) }];
@@ -32,13 +31,11 @@ export async function clientAction({
 }: Route.ClientActionArgs) {
   const studyId = parseId(params.studyId);
   const body = (await request.json()) as StudyCreateUpdateRequest;
-  try {
-    await updateStudy(studyId, body);
-    toast.success(translate("study.form.saved"));
-    return redirect(`/study/${studyId}`);
-  } catch (error) {
-    return { message: errorMessage(error) };
-  }
+  const result = await runAction("update", () => updateStudy(studyId, body), {
+    success: translate("study.form.saved"),
+  });
+  if (result.ok) throw redirect(`/study/${studyId}`);
+  return result;
 }
 
 export default function EditStudy({
@@ -48,8 +45,7 @@ export default function EditStudy({
   const { t } = useI18n();
   const { roles } = useStudyContext();
   const { study } = loaderData;
-  const submit = useSubmit();
-  const navigation = useNavigation();
+  const { submitting, submitJson } = useJsonSubmit();
   const back = `/study/${study.id}`;
 
   return (
@@ -64,17 +60,10 @@ export default function EditStudy({
         {roleOf(roles, study.id) === "instructor" ? (
           <StudyForm
             study={study}
-            submitting={navigation.state !== "idle"}
-            error={
-              navigation.state === "idle" ? (actionData?.message ?? null) : null
-            }
+            submitting={submitting}
+            error={submitting ? null : (actionData?.message ?? null)}
             cancelTo={back}
-            onSubmit={(request) =>
-              submit(jsonBody(request), {
-                method: "post",
-                encType: "application/json",
-              })
-            }
+            onSubmit={submitJson}
           />
         ) : (
           <StateMessage

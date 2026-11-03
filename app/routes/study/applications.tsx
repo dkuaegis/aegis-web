@@ -14,6 +14,7 @@ import {
 import { useI18n } from "@app/i18n";
 import { t as translate } from "@app/i18n/store";
 import { formatDate } from "@app/lib/format";
+import { keepDataOnSearchChange } from "@app/lib/route-data";
 import { pageTitle } from "@app/lib/title";
 import { ArrowRightIcon } from "lucide-react";
 import { Link, Outlet, useSearchParams } from "react-router";
@@ -25,6 +26,8 @@ type Filter = (typeof FILTERS)[number];
 export function meta() {
   return [{ title: pageTitle(translate("study.applications.metaTitle")) }];
 }
+
+export const shouldRevalidate = keepDataOnSearchChange;
 
 export async function clientLoader({
   params,

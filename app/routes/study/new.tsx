@@ -3,15 +3,14 @@ import type { StudyCreateUpdateRequest } from "@app/api/generated/model";
 import { PageBody, PageHeader } from "@app/components/page/PageHeader";
 import { StateMessage } from "@app/components/page/States";
 import { StudyForm } from "@app/components/study/StudyForm";
-import { toast } from "@app/components/ui/toast";
+import { useStudyContext } from "@app/components/study/useStudyContext";
 import { useI18n } from "@app/i18n";
 import { t as translate } from "@app/i18n/store";
-import { jsonBody } from "@app/lib/actions";
-import { errorMessage } from "@app/lib/errors";
+import { runAction } from "@app/lib/actions";
+import { useJsonSubmit } from "@app/lib/forms";
 import { pageTitle } from "@app/lib/title";
-import { redirect, useNavigation, useSubmit } from "react-router";
+import { redirect } from "react-router";
 import type { Route } from "./+types/new";
-import { useStudyContext } from "./layout";
 
 export function meta() {
   return [{ title: pageTitle(translate("study.form.createMetaTitle")) }];
@@ -19,20 +18,17 @@ export function meta() {
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
   const body = (await request.json()) as StudyCreateUpdateRequest;
-  try {
-    const study = await createStudy(body);
-    toast.success(translate("study.form.created"));
-    return redirect(`/study/${study.id}`);
-  } catch (error) {
-    return { message: errorMessage(error) };
-  }
+  const result = await runAction("create", () => createStudy(body), {
+    success: translate("study.form.created"),
+  });
+  if (result.ok) throw redirect(`/study/${result.data.id}`);
+  return result;
 }
 
 export default function NewStudy({ actionData }: Route.ComponentProps) {
   const { t } = useI18n();
   const { policy } = useStudyContext();
-  const submit = useSubmit();
-  const navigation = useNavigation();
+  const { submitting, submitJson } = useJsonSubmit();
 
   return (
     <div className="narrow-frame">
@@ -45,17 +41,10 @@ export default function NewStudy({ actionData }: Route.ComponentProps) {
       <PageBody className="pt-0">
         {policy.studyCreationAllowed ? (
           <StudyForm
-            submitting={navigation.state !== "idle"}
-            error={
-              navigation.state === "idle" ? (actionData?.message ?? null) : null
-            }
+            submitting={submitting}
+            error={submitting ? null : (actionData?.message ?? null)}
             cancelTo="/study"
-            onSubmit={(request) =>
-              submit(jsonBody(request), {
-                method: "post",
-                encType: "application/json",
-              })
-            }
+            onSubmit={submitJson}
           />
         ) : (
           <StateMessage role="status" title={t("study.list.creationClosed")} />

@@ -1,4 +1,5 @@
 import type {
+  ApplicantStudyApplicationDetail,
   FeaturePolicyResponse,
   GeneralStudyRolesIdsResponse,
   StudyApplicationStatus,
@@ -62,7 +63,7 @@ export function roleOf(
 }
 
 /** `upcoming` means a window is set and has not started yet. */
-export interface EnrollmentWindow {
+interface EnrollmentWindow {
   status: "open" | "upcoming" | "closed";
   message: string;
 }
@@ -110,6 +111,38 @@ export function enrollmentWindow(
     };
   }
   return { status: "closed", message: t("study.enrollment.closedNoDate") };
+}
+
+type JoinPanelState =
+  | { kind: "approved" | "rejected" | "full" }
+  | { kind: "pending"; reason: string; editable: boolean }
+  | { kind: "closed" | "open"; message: string };
+
+/** What the visitor who is not in a study yet can do about joining it. */
+export function joinPanelState(
+  study: { participantCount: number; maxParticipants: number },
+  application: Pick<
+    ApplicantStudyApplicationDetail,
+    "status" | "applicationReason"
+  > | null,
+  policy: FeaturePolicyResponse
+): JoinPanelState {
+  const enrollment = enrollmentWindow(policy);
+  const open = enrollment.status === "open";
+  switch (application?.status) {
+    case "APPROVED":
+      return { kind: "approved" };
+    case "REJECTED":
+      return { kind: "rejected" };
+    case "PENDING":
+      return {
+        kind: "pending",
+        reason: application.applicationReason ?? "",
+        editable: open,
+      };
+  }
+  if (!isRecruiting(study)) return { kind: "full" };
+  return { kind: open ? "open" : "closed", message: enrollment.message };
 }
 
 /**

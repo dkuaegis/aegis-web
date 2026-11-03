@@ -10,21 +10,24 @@ import {
   isRecruiting,
   roleOf,
 } from "@app/components/study/study";
+import { useStudyContext } from "@app/components/study/useStudyContext";
 import { buttonVariants } from "@app/components/ui/button";
 import { Checkbox } from "@app/components/ui/checkbox";
 import { useI18n } from "@app/i18n";
 import { t as translate } from "@app/i18n/store";
+import { keepDataOnSearchChange } from "@app/lib/route-data";
 import { pageTitle } from "@app/lib/title";
 import { cn } from "@app/lib/utils";
 import { ArrowRightIcon, PlusIcon } from "lucide-react";
 import { useEffect, useId, useRef } from "react";
 import { Link, useSearchParams } from "react-router";
 import type { Route } from "./+types/list";
-import { useStudyContext } from "./layout";
 
 export function meta() {
   return [{ title: pageTitle(translate("study.list.metaTitle")) }];
 }
+
+export const shouldRevalidate = keepDataOnSearchChange;
 
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {
   return { studies: await getStudies({ signal: request.signal }) };
@@ -169,8 +172,8 @@ export default function StudyList({ loaderData }: Route.ComponentProps) {
                       />
                     </Link>
                     {role === "instructor" && (
-                      // First-come studies have no applicants; the manage
-                      // layout sends this address on to their members tab.
+                      // The manage layout sends first-come studies, which have
+                      // no applicants, on to their members tab.
                       <Link
                         to={`/study/${study.id}/applications`}
                         aria-label={t("study.list.manageLabel", {

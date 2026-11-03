@@ -15,10 +15,11 @@ import {
   AlertDialogTrigger,
 } from "@app/components/ui/alert-dialog";
 import { Button } from "@app/components/ui/button";
+import { ErrorText } from "@app/components/ui/field";
 import { Spinner } from "@app/components/ui/spinner";
 import { useI18n } from "@app/i18n";
 import { t as translate } from "@app/i18n/store";
-import { errorMessage } from "@app/lib/errors";
+import { runAction } from "@app/lib/actions";
 import { formatMonthDay } from "@app/lib/format";
 import { pageTitle } from "@app/lib/title";
 import { cn } from "@app/lib/utils";
@@ -42,12 +43,7 @@ export async function clientLoader({
 
 export async function clientAction({ params }: Route.ClientActionArgs) {
   const studyId = parseId(params.studyId);
-  try {
-    const { code } = await issueAttendanceCode(studyId);
-    return { code, message: null };
-  } catch (error) {
-    return { code: null, message: errorMessage(error) };
-  }
+  return runAction("issue", () => issueAttendanceCode(studyId));
 }
 
 function todayIso() {
@@ -160,10 +156,11 @@ export default function Attendance({ loaderData }: Route.ComponentProps) {
 
 function TodayCode({ hasToday }: { hasToday: boolean }) {
   const { t } = useI18n();
-  const fetcher = useFetcher<typeof clientAction>({ key: "attendance-code" });
+  const fetcher = useFetcher<typeof clientAction>();
   const busy = fetcher.state !== "idle";
-  const code = fetcher.data?.code;
-  const failed = !busy ? fetcher.data?.message : null;
+  const code = fetcher.data?.ok ? fetcher.data.data.code : null;
+  const failed =
+    !busy && fetcher.data?.ok === false ? fetcher.data.message : null;
   const issue = () => fetcher.submit(null, { method: "post" });
 
   return (
@@ -192,14 +189,7 @@ function TodayCode({ hasToday }: { hasToday: boolean }) {
             {t("study.attendanceAdmin.issueConfirmDescription")}
           </p>
         )}
-        {failed && (
-          <p
-            role="alert"
-            className="m-0 text-[0.875rem] font-[650] text-danger"
-          >
-            {failed}
-          </p>
-        )}
+        <ErrorText role="alert">{failed}</ErrorText>
       </div>
 
       {!code &&

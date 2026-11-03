@@ -10,9 +10,9 @@ import {
   TableHeader,
   TableRow,
 } from "@app/components/ui/table";
-import { toast } from "@app/components/ui/toast";
 import { useI18n } from "@app/i18n";
 import { t as translate } from "@app/i18n/store";
+import { copyToClipboard } from "@app/lib/clipboard";
 import { pageTitle } from "@app/lib/title";
 import { CopyIcon } from "lucide-react";
 import type { Route } from "./+types/members";
@@ -29,13 +29,6 @@ export async function clientLoader({
   const members = await getStudyMembers(studyId, { signal: request.signal });
   members.sort((a, b) => a.name.localeCompare(b.name, "ko"));
   return { members };
-}
-
-function copy(text: string, success: string) {
-  navigator.clipboard
-    .writeText(text)
-    .then(() => toast.success(success))
-    .catch(() => toast.error(translate("common.copyFailed")));
 }
 
 export default function Members({ loaderData }: Route.ComponentProps) {
@@ -66,7 +59,7 @@ export default function Members({ loaderData }: Route.ComponentProps) {
             variant="outline"
             size="sm"
             onClick={() =>
-              copy(
+              void copyToClipboard(
                 withPhone
                   .map((member) => `${member.name} ${member.phoneNumber}`)
                   .join("\n"),
@@ -110,7 +103,7 @@ export default function Members({ loaderData }: Route.ComponentProps) {
                         name: member.name,
                       })}
                       onClick={() =>
-                        copy(
+                        void copyToClipboard(
                           member.phoneNumber ?? "",
                           t("study.members.copiedPhone")
                         )
