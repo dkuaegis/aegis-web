@@ -28,7 +28,7 @@ if (
   throw new Error("VITE_API_URL must be a valid API URL in production");
 }
 
-export const API_BASE_URL = configuredApiUrl ?? DEFAULT_API_URL;
+const API_BASE_URL = configuredApiUrl ?? DEFAULT_API_URL;
 
 /** Starts Google sign-in. The server returns the browser to the page that sent it. */
 export const googleLoginUrl = `${API_BASE_URL}/oauth2/authorization/google`;
@@ -61,10 +61,6 @@ export class ApiError extends Error {
     this.code = options.code;
     this.timedOut = options.timedOut ?? false;
   }
-}
-
-export function isApiError(error: unknown): error is ApiError {
-  return error instanceof ApiError;
 }
 
 function withTimeout(signal: AbortSignal | null | undefined) {
@@ -110,6 +106,7 @@ export async function apiFetch<T>(url: string, init: RequestInit): Promise<T> {
   }
 
   let response: Response;
+  let body: unknown;
   try {
     response = await fetch(`${API_BASE_URL}${url}`, {
       ...init,
@@ -117,6 +114,8 @@ export async function apiFetch<T>(url: string, init: RequestInit): Promise<T> {
       credentials: "include",
       signal: withTimeout(init.signal),
     });
+    // The timeout and connection also cover the body, not just the headers.
+    body = await readBody(response);
   } catch (error) {
     // A navigation that cancelled its loader still gets its AbortError.
     if (init.signal?.aborted) throw error;
@@ -125,7 +124,6 @@ export async function apiFetch<T>(url: string, init: RequestInit): Promise<T> {
     throw new ApiError(0, { timedOut, cause: error });
   }
 
-  const body = await readBody(response);
   if (!response.ok) {
     throw new ApiError(response.status, { code: readErrorCode(body) });
   }

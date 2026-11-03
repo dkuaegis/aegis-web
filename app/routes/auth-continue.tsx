@@ -2,12 +2,12 @@ import { loginPath, safeReturnTo } from "@app/lib/auth";
 import { redirect } from "react-router";
 import type { Route } from "./+types/auth-continue";
 
-const INTENT_DESTINATIONS: Record<string, string> = {
-  join: "/join",
-  study: "/study",
-  qr: "/mypage/qr",
-  mypage: "/mypage",
-};
+const INTENT_DESTINATIONS = new Map([
+  ["join", "/join"],
+  ["study", "/study"],
+  ["qr", "/mypage/qr"],
+  ["mypage", "/mypage"],
+]);
 
 /** Old sign-in links (`/auth/continue?intent=qr`) still work. */
 export function clientLoader({ request }: Route.ClientLoaderArgs) {
@@ -17,7 +17,7 @@ export function clientLoader({ request }: Route.ClientLoaderArgs) {
   const destination =
     intent === "study" && returnTo
       ? safeReturnTo(returnTo)
-      : (INTENT_DESTINATIONS[intent] ?? "/");
+      : (INTENT_DESTINATIONS.get(intent) ?? "/");
   throw redirect(loginPath(destination));
 }
 

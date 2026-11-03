@@ -1,6 +1,6 @@
 import { LanguageToggle, useI18n } from "@app/i18n";
 import { loginPath } from "@app/lib/auth";
-import { useSession } from "@app/lib/session";
+import { useSessionStatus } from "@app/lib/session";
 import { cn } from "@app/lib/utils";
 import { MenuIcon, XIcon } from "lucide-react";
 import { useEffect, useId, useState } from "react";
@@ -15,15 +15,13 @@ interface NavItem {
 
 function useNavItems(): NavItem[] {
   const { t } = useI18n();
-  const session = useSession();
+  const session = useSessionStatus();
   const { pathname, search } = useLocation();
 
   // The prerendered home page ships the signed-out menu, so the visitors it is
   // written for see no change. It also stands in when the check fails, since
   // login re-checks the session anyway.
-  const status = session.state === "ready" ? session.status : "anonymous";
-
-  switch (status) {
+  switch (session ?? "anonymous") {
     case "anonymous":
       return [
         { label: t("common.site.nav.login"), to: loginPath(pathname + search) },
