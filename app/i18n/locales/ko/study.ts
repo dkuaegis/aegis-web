@@ -34,7 +34,6 @@ export const study = {
       PENDING: "검토 중",
       APPROVED: "승인",
       REJECTED: "거절",
-      NONE: "지원 전",
     },
     full: "정원 마감",
     unlimited: "인원 제한 없음",

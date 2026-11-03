@@ -34,7 +34,6 @@ export const study = {
       PENDING: "In review",
       APPROVED: "Approved",
       REJECTED: "Declined",
-      NONE: "Not applied",
     },
     full: "Full",
     unlimited: "No limit",

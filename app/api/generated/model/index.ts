@@ -7,7 +7,6 @@
 
 export * from "./acquisitionType";
 export * from "./applicantStudyApplicationDetail";
-export * from "./applicantStudyApplicationStatus";
 export * from "./attendanceCodeIssueResponse";
 export * from "./attendanceMarkRequest";
 export * from "./attendanceMarkResponse";

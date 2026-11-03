@@ -6,7 +6,6 @@
  */
 import type {
   ApplicantStudyApplicationDetail,
-  ApplicantStudyApplicationStatus,
   AttendanceCodeIssueResponse,
   AttendanceMarkRequest,
   AttendanceMarkResponse,
@@ -807,27 +806,6 @@ export const getStudyApplicationReason = async (
 ): Promise<InstructorStudyApplicationReason> => {
   return apiFetch<InstructorStudyApplicationReason>(
     getGetStudyApplicationReasonUrl(studyId, studyApplicationId),
-    {
-      ...options,
-      method: "GET",
-    }
-  );
-};
-
-export const getGetMyStudyApplicationStatusUrl = (studyId: number) => {
-  return `/studies/${studyId}/applications/status`;
-};
-
-/**
- * 지원서 스터디에 대해 본인의 지원서 상태를 조회합니다. 지원서를 제출하지 않았다면 200과 함께 status=NONE, id=null을 반환합니다. 선착순 스터디는 이 API를 지원하지 않습니다.
- * @summary 스터디 지원서 상태 조회
- */
-export const getMyStudyApplicationStatus = async (
-  studyId: number,
-  options?: Parameters<typeof apiFetch>[1]
-): Promise<ApplicantStudyApplicationStatus> => {
-  return apiFetch<ApplicantStudyApplicationStatus>(
-    getGetMyStudyApplicationStatusUrl(studyId),
     {
       ...options,
       method: "GET",

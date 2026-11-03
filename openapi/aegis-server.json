@@ -1494,59 +1494,6 @@
         }
       }
     },
-    "/studies/{studyId}/applications/status": {
-      "get": {
-        "tags": [
-          "Study Applicant"
-        ],
-        "summary": "스터디 지원서 상태 조회",
-        "description": "지원서 스터디에 대해 본인의 지원서 상태를 조회합니다. 지원서를 제출하지 않았다면 200과 함께 status=NONE, id=null을 반환합니다. 선착순 스터디는 이 API를 지원하지 않습니다.",
-        "operationId": "getMyStudyApplicationStatus",
-        "parameters": [
-          {
-            "name": "studyId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "지원서 상태 조회 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApplicantStudyApplicationStatus"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "선착순 스터디에서는 지원하지 않음",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "스터디를 찾을 수 없음",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/studies/{studyId}/applications-instructor": {
       "get": {
         "tags": [
@@ -1982,23 +1929,6 @@
           },
           "studyDescription": {
             "type": "string"
-          }
-        }
-      },
-      "ApplicantStudyApplicationStatus": {
-        "required": [
-          "status",
-          "studyApplicationId"
-        ],
-        "type": "object",
-        "properties": {
-          "studyApplicationId": {
-            "type": "integer",
-            "format": "int64",
-            "nullable": true
-          },
-          "status": {
-            "$ref": "#/components/schemas/StudyApplicationStatus"
           }
         }
       },
@@ -3072,8 +3002,7 @@
         "enum": [
           "PENDING",
           "APPROVED",
-          "REJECTED",
-          "NONE"
+          "REJECTED"
         ]
       },
       "StudyCategory": {

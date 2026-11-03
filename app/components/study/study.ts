@@ -166,5 +166,4 @@ export const APPLICATION_STATUS_TONE = {
   PENDING: "warning",
   APPROVED: "success",
   REJECTED: "neutral",
-  NONE: "neutral",
 } as const satisfies Record<StudyApplicationStatus, BadgeTone>;
