@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  biome:
+  check:
     runs-on: ubuntu-24.04-arm
 
     steps:
@@ -32,3 +32,6 @@ jobs:
 
       - name: Biome 검사
         run: pnpm check:ci
+
+      - name: 데드코드 검사
+        run: pnpm knip

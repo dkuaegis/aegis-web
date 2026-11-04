@@ -72,6 +72,7 @@ Other values in `.env.example` configure payment contact details and Kakao chat 
 | `pnpm format` | Format files in place |
 | `pnpm check` | Run Biome checks and apply fixes in place |
 | `pnpm i18n:check` | Verify that the locale files and translation keys are in sync |
+| `pnpm knip` | Find unused files, exports, and dependencies. The generated API client's exports are excluded |
 | `pnpm api:fetch` | Download the OpenAPI document into `openapi/`, from a locally running server by default or from a URL passed with `pnpm api:fetch <url>` |
 | `pnpm api:generate` | Generate the API client in `app/api/generated` from the OpenAPI document |
 
@@ -102,7 +103,7 @@ The top-level routes are declared in [`app/routes.ts`](app/routes.ts):
 
 The [`Dockerfile`](Dockerfile) builds the client bundle and serves it with Nginx. At container startup, `docker/40-runtime-config.sh` validates the required environment variables and inlines them into `<script id="runtime-config">` in each HTML document. Configure those variables in the deployment environment; do not bake private credentials into the image.
 
-The GitHub Actions workflow builds and publishes a `linux/arm64` image to GitHub Container Registry and triggers deployment through Coolify for `dev` and `main`. A README-only change is excluded from the workflow's path filters and does not trigger a deployment. A separate workflow runs `pnpm check:ci` on pull requests and on pushes to `dev` and `main`.
+The GitHub Actions workflow builds and publishes a `linux/arm64` image to GitHub Container Registry and triggers deployment through Coolify for `dev` and `main`. A README-only change is excluded from the workflow's path filters and does not trigger a deployment. A separate workflow runs `pnpm check:ci` and `pnpm knip` on pull requests and on pushes to `dev` and `main`.
 
 ## Troubleshooting a blank or persistent loading page
 
