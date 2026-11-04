@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.4.16/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.6.4/schema.json",
   "assist": {
     "actions": {
       "source": {
@@ -10,8 +10,8 @@
   "files": {
     "maxSize": 3145728,
     "includes": [
-      "src/**/*",
       "app/**/*",
+      "scripts/**/*",
       "*.ts",
       "*.tsx",
       "*.js",
@@ -26,9 +26,8 @@
       "!node_modules",
       "!coverage",
       "!public",
-      "!src/assets",
       "!app/assets",
-      "!app/features/**/assets",
+      "!**/*.svg",
       "!package-lock.json",
       "!pnpm-lock.yaml"
     ]
@@ -36,14 +35,17 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "preset": "recommended",
       "correctness": {
         "noUnusedImports": "error",
         "useHookAtTopLevel": "error",
         "useExhaustiveDependencies": "error"
       },
       "nursery": {
-        "useSortedClasses": "off"
+        "useTailwindSortedClasses": "off"
+      },
+      "style": {
+        "noDescendingSpecificity": "error"
       },
       "suspicious": {
         "noArrayIndexKey": "warn",
@@ -73,5 +75,16 @@
       "cssModules": false,
       "tailwindDirectives": true
     }
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["app/api/generated/**"],
+      "linter": {
+        "enabled": false
+      },
+      "assist": {
+        "enabled": false
+      }
+    }
+  ]
 }

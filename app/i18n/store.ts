@@ -1,12 +1,13 @@
 import { en } from "./locales/en";
 import { ko } from "./locales/ko";
-import { translate, translateList, type TranslationVars } from "./resolve";
+import { hasTranslation, type TranslationVars, translate } from "./resolve";
 import {
   DEFAULT_LANGUAGE,
+  type Dictionary,
   isLanguage,
   LANGUAGE_HTML_LANG,
   LANGUAGE_STORAGE_KEY,
-  type Dictionary,
+  LANGUAGES,
   type Language,
 } from "./types";
 
@@ -15,8 +16,9 @@ const DICTIONARIES: Record<Language, Dictionary> = { ko, en };
 /**
  * The selected language lives in a tiny module-level store rather than only in
  * React state, because a fair amount of copy is produced outside the component
- * tree: zod validation messages, API error mapping, toast helpers. Those call
- * `t()` from this module; the provider keeps this store and React in sync.
+ * tree: zod validation messages, API error mapping, toast helpers, route
+ * `meta`. Those call `t()` from this module; components subscribe through
+ * `useLanguage`.
  */
 let currentLanguage: Language = DEFAULT_LANGUAGE;
 
@@ -35,7 +37,8 @@ function detectInitialLanguage(): Language {
   // First visit: a browser that is not asking for Korean is most likely an
   // international visitor, so start them in English. Their first explicit
   // choice is remembered from then on.
-  const preferred = window.navigator.languages?.[0] ?? window.navigator.language;
+  const preferred =
+    window.navigator.languages?.[0] ?? window.navigator.language;
   if (preferred && !preferred.toLowerCase().startsWith("ko")) return "en";
 
   return DEFAULT_LANGUAGE;
@@ -45,7 +48,13 @@ export function getLanguage(): Language {
   return currentLanguage;
 }
 
-export function getDictionary(language: Language = currentLanguage): Dictionary {
+function notify() {
+  for (const listener of listeners) listener();
+}
+
+export function getDictionary(
+  language: Language = currentLanguage
+): Dictionary {
   return DICTIONARIES[language];
 }
 
@@ -63,19 +72,53 @@ export function setLanguage(language: Language) {
     document.documentElement.lang = LANGUAGE_HTML_LANG[language];
   }
 
-  for (const listener of listeners) listener();
+  notify();
 }
 
-/** Called once by the provider so detection does not run during module import. */
-export function initLanguage(): Language {
-  const detected = detectInitialLanguage();
-  currentLanguage = detected;
+/**
+ * Set on `<html>` before the page renders when the visitor's language is not
+ * the prerendered Korean, so they never see the wrong language flash by.
+ */
+const LANGUAGE_PENDING_ATTRIBUTE = "data-language-pending";
 
-  if (typeof document !== "undefined") {
-    document.documentElement.lang = LANGUAGE_HTML_LANG[detected];
-  }
+/**
+ * Inline `<head>` script mirroring `detectInitialLanguage`. It cannot import
+ * anything, so the stored choice and browser preference are checked again in
+ * plain JS before the body is parsed.
+ */
+export const LANGUAGE_PENDING_SCRIPT = [
+  "(function(){var l;",
+  `try{l=localStorage.getItem(${JSON.stringify(LANGUAGE_STORAGE_KEY)})}catch(e){}`,
+  `if(${JSON.stringify(LANGUAGES)}.indexOf(l)<0){`,
+  "var p=(navigator.languages&&navigator.languages[0])||navigator.language;",
+  `l=p&&p.toLowerCase().indexOf("ko")!==0?"en":${JSON.stringify(DEFAULT_LANGUAGE)}}`,
+  `if(l!==${JSON.stringify(DEFAULT_LANGUAGE)}){var d=document.documentElement;`,
+  `d.lang=l;d.setAttribute(${JSON.stringify(LANGUAGE_PENDING_ATTRIBUTE)},"")}`,
+  "})()",
+].join("");
 
-  return detected;
+/** Shows the page once it is rendered, with its fonts, in the visitor's language. */
+export function revealLanguage() {
+  const root = document.documentElement;
+  if (!root.hasAttribute(LANGUAGE_PENDING_ATTRIBUTE)) return;
+  // Laying out the still hidden page starts loading the fonts its new text
+  // needs. Waiting for them keeps that text from visibly swapping fonts, which
+  // would shift the layout.
+  root.getBoundingClientRect();
+  void document.fonts.ready.then(() =>
+    root.removeAttribute(LANGUAGE_PENDING_ATTRIBUTE)
+  );
+}
+
+/**
+ * Called once by the provider after hydration. Detecting earlier would make
+ * the first render (including the `<title>` from route `meta`) differ from the
+ * prerendered Korean markup.
+ */
+export function initLanguage() {
+  currentLanguage = detectInitialLanguage();
+  document.documentElement.lang = LANGUAGE_HTML_LANG[currentLanguage];
+  notify();
 }
 
 export function subscribeToLanguage(listener: () => void): () => void {
@@ -92,6 +135,7 @@ export function t(key: string, vars?: TranslationVars): string {
   return translate(getDictionary(), ko, key, vars);
 }
 
-export function tList(key: string, vars?: TranslationVars): string[] {
-  return translateList(getDictionary(), ko, key, vars);
+/** Whether `key` exists, for optional copy such as per-error-code messages. */
+export function hasKey(key: string): boolean {
+  return hasTranslation(getDictionary(), ko, key);
 }

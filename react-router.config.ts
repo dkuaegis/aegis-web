@@ -2,11 +2,7 @@ import type { Config } from "@react-router/dev/config";
 
 export default {
   ssr: false,
-  future: {
-    v8_middleware: false,
-    v8_passThroughRequests: false,
-    v8_splitRouteModules: false,
-    v8_trailingSlashAwareDataRequests: false,
-    v8_viteEnvironmentApi: false,
-  },
+  // Only the home page is prerendered, so crawlers and the first paint get
+  // real content. Every other path is served the SPA fallback.
+  prerender: ["/"],
 } satisfies Config;

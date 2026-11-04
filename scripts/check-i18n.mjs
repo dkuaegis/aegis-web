@@ -8,8 +8,22 @@
  * Run with: node scripts/check-i18n.mjs
  */
 import { readdirSync, readFileSync, statSync } from "node:fs";
+import { registerHooks } from "node:module";
 import { join, relative } from "node:path";
 import { pathToFileURL } from "node:url";
+
+// The locale files import each other without extensions, as Vite allows.
+// Node strips the types itself but needs the `.ts` spelled out.
+registerHooks({
+  resolve(specifier, context, nextResolve) {
+    try {
+      return nextResolve(specifier, context);
+    } catch (error) {
+      if (!specifier.startsWith(".")) throw error;
+      return nextResolve(`${specifier}.ts`, context);
+    }
+  },
+});
 
 const APP_DIR = new URL("../app/", import.meta.url);
 const BASE_LOCALE = "ko";
@@ -63,7 +77,10 @@ for (const [code, keys] of Object.entries(flat)) {
 
 // 3: placeholders
 const placeholders = (text) =>
-  [...String(text).matchAll(/\{\{(\w+)\}\}/g)].map((m) => m[1]).sort().join(",");
+  [...String(text).matchAll(/\{\{(\w+)\}\}/g)]
+    .map((m) => m[1])
+    .sort()
+    .join(",");
 
 function readValue(dict, key) {
   return key.split(".").reduce((node, part) => node?.[part], dict);
@@ -75,12 +92,8 @@ for (const [code, dict] of Object.entries(LOCALES)) {
     const base = readValue(LOCALES[BASE_LOCALE], key);
     const other = readValue(dict, key);
     if (other === undefined) continue;
-    const expected = placeholders(
-      Array.isArray(base) ? base.join(" ") : base
-    );
-    const actual = placeholders(
-      Array.isArray(other) ? other.join(" ") : other
-    );
+    const expected = placeholders(Array.isArray(base) ? base.join(" ") : base);
+    const actual = placeholders(Array.isArray(other) ? other.join(" ") : other);
     if (expected !== actual) {
       problems.push(
         `[${code}] placeholders differ for ${key}: expected "${expected}", got "${actual}"`
@@ -94,7 +107,8 @@ function walk(dir, files = []) {
   for (const name of readdirSync(dir)) {
     const full = join(dir, name);
     if (statSync(full).isDirectory()) {
-      if (name === "locales" || name === "assets" || name === "node_modules") continue;
+      if (name === "locales" || name === "assets" || name === "node_modules")
+        continue;
       walk(full, files);
     } else if (/\.tsx?$/.test(name)) {
       files.push(full);
@@ -124,7 +138,7 @@ for (const file of sourceFiles) {
 
 if (problems.length) {
   console.error(`i18n check failed with ${problems.length} problem(s):`);
-  for (const problem of problems) console.error("  " + problem);
+  for (const problem of problems) console.error(`  ${problem}`);
   process.exit(1);
 }
 

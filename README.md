@@ -1,10 +1,10 @@
-# AEGIS Web
+# Aegis Web
 
-The web frontend for AEGIS, providing public club information, study pages, membership onboarding, and member services.
+The web frontend for Aegis, providing public club information, study pages, membership onboarding, and member services.
 
 ## Features
 
-- Public home, FAQ, recruitment, and contact pages
+- Public home page with activities and FAQ
 - Study pages and member services
 - Multi-step membership onboarding, including personal information, surveys, coupons, and payment guidance
 - Korean and English interface
@@ -12,17 +12,18 @@ The web frontend for AEGIS, providing public club information, study pages, memb
 
 ## Technology
 
-- React 19, TypeScript, and React Router 7
+- React 19, TypeScript 7, and React Router 8
 - Vite 8 and Tailwind CSS 4
 - Biome for formatting and linting
-- TanStack Query and Zustand for client-side state and data
+- Orval for the generated API client
+- React Hook Form and Zod for forms
 
-React Router is configured as a client-rendered SPA (`ssr: false`). Production builds are served as static files by Nginx.
+React Router runs without a server (`ssr: false`). The home page is prerendered at build time, and every other path is served `__spa-fallback.html` and rendered in the browser. Production builds are served as static files by Nginx.
 
 ## Requirements
 
-- Node.js 24.x (the Docker build uses Node.js 24.21.0)
-- pnpm 11.5.1, as declared in `package.json`
+- Node.js 26.x (the Docker build uses Node.js 26.13.0)
+- pnpm 12.16.1, as declared in `package.json`
 - Access to the backend API for features that make API requests
 
 ## Local development
@@ -32,7 +33,7 @@ pnpm install --frozen-lockfile
 cp .env.example .env
 ```
 
-Set `VITE_API_URL` in `.env` to the backend API URL. The example file uses `http://localhost:3001`. If the backend runs at a different address, update the URL and, when needed, `VITE_API_PROXY_TARGET` for the Vite development-server proxy.
+Set `VITE_API_URL` in `.env` to the backend API URL. The example file uses the development server, `https://dev-api.dkuaegis.org`. To use a backend running locally, change it to `http://localhost:8080`. The browser calls this URL directly, so the backend must allow the development origin in CORS.
 
 Start the development server:
 
@@ -40,24 +41,21 @@ Start the development server:
 pnpm dev
 ```
 
-Open the local URL printed by Vite. The `VITE_DEV_BYPASS_AUTH=true` option can be used to preview the join flow without a backend; it is development-only.
+Open the local URL printed by Vite.
 
 ## Environment variables
 
-The example values are in [`.env.example`](.env.example). Production containers generate `/runtime-config.js` at startup from the `VITE_` environment variables, allowing the same image to be configured per environment.
+The example values are in [`.env.example`](.env.example). Production containers inline the `VITE_` environment variables the client code reads into the HTML documents at startup, allowing the same image to be configured per environment. Other variables in the container environment are not published.
 
 The following variables are required when starting the production container:
 
 | Variable | Purpose |
 | --- | --- |
 | `VITE_API_URL` | Backend API base URL |
-| `VITE_PRESIDENT_NAME_KO` | Contact name displayed in Korean |
-| `VITE_PRESIDENT_NAME_EN` | Contact name displayed in English |
-| `VITE_PRESIDENT_PHONE` | Contact phone number |
 | `VITE_ADMIN_ACCOUNT_HOLDER_KO` | Payment account holder displayed in Korean |
 | `VITE_ADMIN_ACCOUNT_HOLDER_EN` | Payment account holder displayed in English |
 
-Other values in `.env.example` configure payment contact details, Kakao chat links, analytics, and the development server. Set them as needed for the features and environment in use. `VITE_API_PROXY_TARGET` configures the Vite development-server proxy and defaults to `VITE_API_URL` when unset.
+Other values in `.env.example` configure payment contact details and Kakao chat links. Set them as needed for the features and environment in use.
 
 > **Security:** `VITE_` values are exposed to client-side code. Do not put passwords, tokens, or other private credentials in them.
 
@@ -67,21 +65,25 @@ Other values in `.env.example` configure payment contact details, Kakao chat lin
 | --- | --- |
 | `pnpm dev` | Start the local development server |
 | `pnpm build` | Type-check and create the production build in `build/client` |
-| `pnpm preview` | Preview the production build locally (run `pnpm build` first) |
+| `pnpm typecheck` | Generate route types and run the TypeScript compiler |
+| `pnpm preview` | Preview the production build locally with the `.env` values (run `pnpm build` first) |
 | `pnpm check:ci` | Run Biome checks without modifying files |
 | `pnpm lint` | Run Biome lint checks |
 | `pnpm format` | Format files in place |
 | `pnpm check` | Run Biome checks and apply fixes in place |
+| `pnpm i18n:check` | Verify that the locale files and translation keys are in sync |
+| `pnpm knip` | Find unused files, exports, and dependencies. The generated API client's exports are excluded |
+| `pnpm api:fetch` | Download the OpenAPI document into `openapi/`, from a locally running server by default or from a URL passed with `pnpm api:fetch <url>` |
+| `pnpm api:generate` | Generate the API client in `app/api/generated` from the OpenAPI document |
 
 ## Application structure
 
 | Path | Contents |
 | --- | --- |
-| `app/routes/` | Top-level routes: home, study, join, mypage, FAQ, recruitment, contact, and auth continuation |
-| `app/features/home/` | Public home page and shared home layout |
-| `app/features/study/` | Study experience |
-| `app/features/join/` | Membership onboarding flow |
-| `app/features/mypage/` | Member pages and activity |
+| `app/routes/` | One module per route: home, study, join, mypage, and sign-in. The home page's styles sit beside its route |
+| `app/components/ui/` | Shared controls built on Base UI (buttons, fields, dialogs) |
+| `app/components/page/`, `app/components/site/` | Page header, empty and error states, site header and footer |
+| `app/components/study/`, `app/components/join/`, `app/components/mypage/` | Pieces used by one section's routes |
 | `app/i18n/` | Translation provider and Korean/English locale files |
 | `app/api/`, `app/lib/` | API and authentication helpers |
 | `scripts/` | Build-time and runtime configuration support |
@@ -95,25 +97,22 @@ The top-level routes are declared in [`app/routes.ts`](app/routes.ts):
 | `/study/*` | Study pages |
 | `/join/*` | Membership onboarding |
 | `/mypage/*` | Member services |
-| `/faq` | Frequently asked questions |
-| `/recruit` | Recruitment information |
-| `/contact` | Contact information |
 | `/auth/continue` | Continue an authentication intent |
 
 ## Production and deployment
 
-The [`Dockerfile`](Dockerfile) builds the client bundle and serves it with Nginx. At container startup, `docker/40-runtime-config.sh` validates the required environment variables and writes `/runtime-config.js`. Configure those variables in the deployment environment; do not bake private credentials into the image.
+The [`Dockerfile`](Dockerfile) builds the client bundle and serves it with Nginx. At container startup, `docker/40-runtime-config.sh` validates the required environment variables and inlines them into `<script id="runtime-config">` in each HTML document. Configure those variables in the deployment environment; do not bake private credentials into the image.
 
-The GitHub Actions workflow builds and publishes a `linux/arm64` image to GitHub Container Registry and triggers deployment through Coolify for `dev` and `main`. A README-only change is excluded from the workflow's path filters and does not trigger a deployment.
+The GitHub Actions workflow builds and publishes a `linux/arm64` image to GitHub Container Registry and triggers deployment through Coolify for `dev` and `main`. A README-only change is excluded from the workflow's path filters and does not trigger a deployment. A separate workflow runs `pnpm check:ci` and `pnpm knip` on pull requests and on pushes to `dev` and `main`.
 
 ## Troubleshooting a blank or persistent loading page
 
 1. Open the browser developer tools and check the Console and Network panels for JavaScript errors or failed requests.
-2. In production, confirm `/runtime-config.js` returns successfully. Check the container logs for missing required environment variables if the runtime configuration was not generated.
+2. In production, view the page source and confirm `<script id="runtime-config">` contains `window.__RUNTIME_CONFIG__`. Check the container logs for missing required environment variables if the runtime configuration was not inlined.
 3. Confirm the JavaScript and CSS files under `/assets/` load successfully. Nginx intentionally returns `404` for missing fingerprinted assets instead of serving the application shell for those requests.
 4. If the page renders but authentication or API-backed features do not work, verify `VITE_API_URL`, backend availability, and the browser's API request and cookie errors.
 
-The root route's client-rendering fallback displays `Loading...` while the application is loading. A persistent fallback should be investigated using the checks above rather than treated as proof of a specific backend or deployment failure.
+The root route's client-rendering fallback displays a loading screen while the application is loading. A persistent fallback should be investigated using the checks above rather than treated as proof of a specific backend or deployment failure.
 
 ## License
 

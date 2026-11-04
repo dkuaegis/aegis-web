@@ -1,4 +1,5 @@
 export const join = {
+  metaTitle: "Join the club",
   steps: {
     progressLabel: "Sign-up progress",
     agreement: "Club rules",
@@ -10,8 +11,9 @@ export const join = {
 
   actions: {
     next: "Next",
-    goBack: "Back a step",
+    back: "Back",
     agreeAndContinue: "Agree and continue",
+    submitFailed: "We couldn't save this. Please try again in a moment.",
   },
 
   regulation: {
@@ -29,8 +31,7 @@ export const join = {
         articles: {
           "1": {
             title: "Name",
-            content:
-              "This organization is named Aegis (hereafter \"the Club\").",
+            content: 'This organization is named Aegis (hereafter "the Club").',
           },
           "2": {
             title: "Purpose",
@@ -159,21 +160,17 @@ export const join = {
   personalInfo: {
     phoneLabel: "Phone number",
     phonePlaceholder: "010-1234-5678",
-    phoneError: "That phone number does not look valid",
     studentIdLabel: "Student ID",
     studentIdPlaceholder: "32000000",
-    studentIdError: "Your student ID must be 8 digits starting with 32",
+    residentNumberBackLabel:
+      "First digit of the second part of your resident registration number",
     residentNumberLabel: "Resident registration number",
     birthDatePlaceholder: "Birth date (YYMMDD)",
-    residentNumberError: "That resident registration number does not look valid",
     departmentLabel: "Department",
-    departmentPlaceholder: "Select your department",
     departmentSearchPlaceholder: "Search for your department",
     departmentEmpty: "No matching department.",
-    departmentError: "Please select your department",
     gradeLabel: "Year",
     gradePlaceholder: "Select your year",
-    gradeError: "Please select your year",
     grades: {
       ONE: "1st year",
       TWO: "2nd year",
@@ -183,8 +180,7 @@ export const join = {
     },
     validation: {
       birthDateLength: "Enter your birth date as 6 digits (YYMMDD)",
-      birthDateInvalid:
-        "That birth date is not valid (month 1-12, day 1-31)",
+      birthDateInvalid: "That birth date is not valid (month 1-12, day 1-31)",
       genderDigit: "This digit must be a number from 1 to 8.",
       studentIdLength: "Your student ID must be 8 digits",
       studentIdFormat: "Your student ID must be 8 digits starting with 32",
@@ -225,6 +221,7 @@ export const join = {
     noticeRoomDescription: "Key announcements and the activity schedule",
     communityRoomTitle: "KakaoTalk community chat",
     communityRoomDescription: "Chat freely with other members",
+    opened: "Opened",
     statusAllJoined: "We have your requests for both chats",
     statusPending: "Request both chats to continue to the next step",
   },
@@ -232,23 +229,27 @@ export const join = {
   payment: {
     amountLabel: "Amount due",
     amountWithUnit: "{{amount}} KRW",
-    currencyUnit: " KRW",
     couponDialogTitle: "Discount coupons",
     couponCount: "{{count}} available",
-    couponFetching: "Loading",
     couponFetchFailed: "Failed to load",
-    couponLoading: "Loading your coupons.",
     couponLoadError: "We could not load your coupons.",
-    completeMessage: "Your payment is complete",
-    loadError:
-      "We could not load your payment status. Please try again later.",
+    waiting: {
+      title: "Checking for your transfer",
+      body: "Once the depositor name and amount match, your payment is confirmed automatically. If it is still not confirmed after a while, please get in touch through the transfer questions below.",
+    },
+    paid: {
+      label: "Paid",
+      title: "Your transfer is confirmed and you're now a member.",
+      body: "Next, we'll show you where to go from here.",
+    },
+    loadError: "We could not load your payment status. Please try again later.",
     account: {
       sectionLabel: "Bank transfer details",
       accountNumber: "Account",
       accountHolder: "Account holder",
+      depositorName: "Depositor name",
       copyAccount: "Copy account number",
       copySuccess: "Account number copied.",
-      copyFailure: "Could not copy. Please check your browser permissions.",
     },
     inquiry: {
       title: "Questions about your transfer",
@@ -260,29 +261,41 @@ export const join = {
   coupon: {
     codeInputLabel: "Coupon code",
     codeInputPlaceholder: "Enter a coupon code",
-    codeInputPrompt: "Enter your coupon code",
     register: "Add",
-    registerLong: "Add coupon",
-    registerTitle: "Add a coupon",
-    registerDescription: "Enter the coupon code you have.",
-    openRegister: "Add a coupon",
-    openRegisterWithCode: "Add a coupon by code",
     empty: "You have no coupons available.",
     listLegend: "Available coupons",
     applySelected: "Apply selected coupons",
-    applying: "Applying...",
-    selectRequired: "Please select a coupon to apply",
-    applyFailure: "We could not apply that coupon.",
     discountAmount: "{{amount}} KRW off",
-    codeRequired: "Please enter a coupon code",
     registerSuccess: "Coupon added.",
-    registerFailure: "We could not add that coupon.",
   },
 
   complete: {
-    title: "You're in.",
-    noticeLead: "Activities and day-to-day chat happen in our ",
+    title: "You're in",
+    noticeLead: "An officer will accept your requests to join the ",
     noticeStrong: "KakaoTalk group chats",
-    noticeTail: ". We're glad to have you — let's grow together!",
+    noticeTail:
+      " once they have checked them. In the meantime, start with the list below.",
+    tasksLabel: "What to do next",
+    tasks: {
+      study: {
+        title: "Join a study",
+        description: "Look through this term's studies and apply to one.",
+      },
+      mypage: {
+        title: "Check My page",
+        description:
+          "See your activity points, coupons and attendance QR on My page.",
+      },
+      instagram: {
+        title: "Follow our news",
+        description: "Keep up with Aegis activities and news on Instagram.",
+      },
+      github: {
+        title: "Explore our GitHub",
+        description:
+          "Browse the code of the services Aegis built itself, from this join page to studies and My page.",
+      },
+    },
+    chatReminder: "Missed a chat request?",
   },
 } as const;

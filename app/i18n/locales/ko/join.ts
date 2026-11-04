@@ -1,4 +1,5 @@
 export const join = {
+  metaTitle: "동아리 가입",
   steps: {
     progressLabel: "가입 진행 단계",
     agreement: "회칙 동의",
@@ -10,8 +11,9 @@ export const join = {
 
   actions: {
     next: "다음",
-    goBack: "이전 단계로",
+    back: "이전",
     agreeAndContinue: "동의하고 계속하기",
+    submitFailed: "저장하지 못했어요. 잠시 후 다시 시도해 주세요.",
   },
 
   regulation: {
@@ -156,21 +158,16 @@ export const join = {
   personalInfo: {
     phoneLabel: "전화번호",
     phonePlaceholder: "010-1234-5678",
-    phoneError: "유효하지 않은 전화번호입니다",
     studentIdLabel: "학번",
     studentIdPlaceholder: "32000000",
-    studentIdError: "학번은 32로 시작하는 8자리 숫자여야 합니다",
+    residentNumberBackLabel: "주민등록번호 뒷자리 첫 번째 숫자",
     residentNumberLabel: "주민등록번호",
     birthDatePlaceholder: "생년월일 6자리",
-    residentNumberError: "유효하지 않은 주민등록번호입니다",
     departmentLabel: "소속",
-    departmentPlaceholder: "학과 선택",
     departmentSearchPlaceholder: "학과를 검색해주세요.",
     departmentEmpty: "존재하지 않는 학과입니다.",
-    departmentError: "학과를 선택해주세요",
     gradeLabel: "학년",
     gradePlaceholder: "학년 선택",
-    gradeError: "학년을 선택해주세요",
     grades: {
       ONE: "1학년",
       TWO: "2학년",
@@ -221,6 +218,7 @@ export const join = {
     noticeRoomDescription: "주요 공지와 활동 일정을 확인하세요",
     communityRoomTitle: "카카오톡 소통방",
     communityRoomDescription: "회원들과 자유롭게 소통하세요",
+    opened: "신청함",
     statusAllJoined: "두 채팅방 참여 신청을 확인했어요",
     statusPending: "두 채팅방에 모두 신청해야 다음으로 넘어갈 수 있어요",
   },
@@ -228,22 +226,28 @@ export const join = {
   payment: {
     amountLabel: "납부 금액",
     amountWithUnit: "{{amount}}원",
-    currencyUnit: " 원",
     couponDialogTitle: "할인 쿠폰",
     couponCount: "{{count}}장",
-    couponFetching: "불러오는 중",
     couponFetchFailed: "조회 실패",
-    couponLoading: "쿠폰을 불러오는 중입니다.",
     couponLoadError: "쿠폰을 불러오지 못했습니다.",
-    completeMessage: "납부가 완료됐어요",
-    loadError: "결제 상태를 불러오는 데 실패했습니다. 나중에 다시 시도해주세요.",
+    waiting: {
+      title: "입금을 확인하고 있어요",
+      body: "입금자명과 금액을 확인하면 자동으로 확인됩니다. 시간이 지나도 확인되지 않으면 아래 입금 관련 문의로 연락해 주세요.",
+    },
+    paid: {
+      label: "납부 완료",
+      title: "입금이 확인되어 가입이 완료됐어요.",
+      body: "다음 화면에서 앞으로 둘러볼 곳을 안내해 드릴게요.",
+    },
+    loadError:
+      "결제 상태를 불러오는 데 실패했습니다. 나중에 다시 시도해주세요.",
     account: {
       sectionLabel: "입금 계좌 정보",
       accountNumber: "입금 계좌",
       accountHolder: "예금주명",
+      depositorName: "입금자명",
       copyAccount: "계좌번호 복사",
       copySuccess: "계좌번호를 복사했습니다.",
-      copyFailure: "복사에 실패했습니다. 브라우저 권한을 확인해주세요.",
     },
     inquiry: {
       title: "입금 관련 문의",
@@ -255,29 +259,41 @@ export const join = {
   coupon: {
     codeInputLabel: "쿠폰 코드",
     codeInputPlaceholder: "쿠폰 코드 입력",
-    codeInputPrompt: "쿠폰 코드를 입력하세요",
     register: "등록",
-    registerLong: "등록하기",
-    registerTitle: "쿠폰 등록",
-    registerDescription: "보유하신 쿠폰 코드를 입력해주세요.",
-    openRegister: "쿠폰 등록하기",
-    openRegisterWithCode: "코드로 쿠폰 등록하기",
     empty: "사용 가능한 쿠폰이 없습니다.",
     listLegend: "사용 가능한 쿠폰",
     applySelected: "선택한 쿠폰 적용",
-    applying: "적용 중...",
-    selectRequired: "적용할 쿠폰을 선택해주세요",
-    applyFailure: "쿠폰을 적용하지 못했습니다.",
     discountAmount: "{{amount}}원 할인",
-    codeRequired: "쿠폰 코드를 입력해주세요",
     registerSuccess: "쿠폰을 등록했습니다.",
-    registerFailure: "쿠폰을 등록하지 못했습니다.",
   },
 
   complete: {
-    title: "가입이 완료되었습니다.",
-    noticeLead: "주요 활동과 소통은 ",
+    title: "가입이 완료되었습니다",
+    noticeLead: "신청한 ",
     noticeStrong: "카카오톡 팀채팅방",
-    noticeTail: "에서 이루어져요. Aegis와 함께 성장해 나가요!",
+    noticeTail:
+      "은 운영진이 확인한 뒤 수락해 드려요. 그동안 아래 할 일부터 시작해 보세요.",
+    tasksLabel: "가입 후 할 일",
+    tasks: {
+      study: {
+        title: "스터디 신청하기",
+        description: "이번 학기에 열린 스터디를 살펴보고 신청해 보세요.",
+      },
+      mypage: {
+        title: "마이페이지 확인하기",
+        description:
+          "활동 포인트와 쿠폰, 출석 QR을 마이페이지에서 확인해 보세요.",
+      },
+      instagram: {
+        title: "소식 받아보기",
+        description: "Instagram에서 Aegis의 활동과 소식을 받아 보세요.",
+      },
+      github: {
+        title: "GitHub 둘러보기",
+        description:
+          "가입 페이지부터 스터디, 마이페이지까지 Aegis가 직접 만든 서비스의 코드를 둘러보세요.",
+      },
+    },
+    chatReminder: "팀채팅방 신청을 빠뜨렸다면",
   },
 } as const;

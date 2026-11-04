@@ -23,6 +23,16 @@ function lookup(
   return current;
 }
 
+/** True when the key resolves to a string or list in either dictionary. */
+export function hasTranslation(
+  dictionary: Dictionary,
+  fallback: Dictionary,
+  key: string
+): boolean {
+  const value = lookup(dictionary, key) ?? lookup(fallback, key);
+  return typeof value === "string" || Array.isArray(value);
+}
+
 function interpolate(template: string, vars?: TranslationVars): string {
   if (!vars) return template;
 

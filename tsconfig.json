@@ -3,5 +3,11 @@
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
-  ]
+  ],
+  // Mirrors tsconfig.app.json so the shadcn CLI can resolve components.json aliases.
+  "compilerOptions": {
+    "paths": {
+      "@app/*": ["./app/*"]
+    }
+  }
 }

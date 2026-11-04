@@ -1,32 +1,79 @@
-import type { LinksFunction } from "react-router";
-import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
-import { checkAuth } from "./api/auth";
-import { AuthIntentRedirect } from "./components/AuthIntentRedirect";
-import BrowserRedirectPage from "./components/BrowserRedirectPage";
-import { useExternalBrowser } from "./hooks/useExternalBrowser";
-import { I18nProvider } from "./i18n";
+import { RotateCwIcon } from "lucide-react";
+import { useEffect } from "react";
+import type { LinksFunction, MetaFunction } from "react-router";
+import {
+  isRouteErrorResponse,
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  useRouteError,
+} from "react-router";
+import { BrowserRedirectPage } from "./components/BrowserRedirectPage";
+import { StateMessage } from "./components/page/States";
+import { Wordmark } from "./components/site/Wordmark";
+import { buttonVariants } from "./components/ui/button";
+import { Toaster } from "./components/ui/toast";
+import { I18nProvider, useLanguage } from "./i18n";
+import { LANGUAGE_PENDING_SCRIPT, revealLanguage, t } from "./i18n/store";
+import { useInAppBrowser } from "./lib/in-app-browser";
+import { SITE_NAME } from "./lib/title";
 import "./index.css";
 
 export const links: LinksFunction = () => [
   { rel: "icon", href: "/aegis-logo.ico" },
 ];
 
-export async function loader() {
-  const user = await checkAuth();
-  return { user };
+// Defaults for every page, and the only tags in the prerendered index.html
+// that link-preview crawlers (which do not run JS) will see.
+export const meta: MetaFunction = () => {
+  const title = t("home.meta.title");
+  const description = t("home.meta.description");
+  return [
+    { title },
+    { name: "description", content: description },
+    { name: "theme-color", content: "#18181b" },
+    { property: "og:type", content: "website" },
+    { property: "og:site_name", content: SITE_NAME },
+    { property: "og:title", content: title },
+    { property: "og:description", content: description },
+    { name: "twitter:card", content: "summary" },
+  ];
+};
+
+/** Route `meta` reads the language store, so the tab title follows it. */
+function LocalizedMeta() {
+  useLanguage();
+  return <Meta />;
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    // The provider rewrites this to the selected language on the client; "ko"
-    // is the correct value for the prerendered markup.
-    <html lang="ko">
+    // "ko" is the correct value for the prerendered markup. The language
+    // script below may change it before hydration, and the provider keeps it
+    // in sync afterwards.
+    <html lang="ko" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <Meta />
+        <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: Static script built from constants, no user input.
+          dangerouslySetInnerHTML={{ __html: LANGUAGE_PENDING_SCRIPT }}
+        />
+        <LocalizedMeta />
         <Links />
-        {import.meta.env.PROD && <script src="/runtime-config.js" />}
+        {/* docker/40-runtime-config.sh fills this in at container start.
+            React leaves dangerouslySetInnerHTML content alone when hydrating,
+            so the injected body does not count as a mismatch. */}
+        {import.meta.env.PROD && (
+          <script
+            id="runtime-config"
+            suppressHydrationWarning
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: Empty placeholder; the container start script writes the body.
+            dangerouslySetInnerHTML={{ __html: "" }}
+          />
+        )}
       </head>
       <body>
         {children}
@@ -38,35 +85,94 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  const { isInAppBrowser } = useExternalBrowser();
+  const inAppBrowser = useInAppBrowser();
 
   return (
     <I18nProvider>
-      {isInAppBrowser ? (
-        <BrowserRedirectPage />
-      ) : (
-        <>
-          <AuthIntentRedirect />
+      <Toaster>
+        {inAppBrowser ? (
+          <BrowserRedirectPage browser={inAppBrowser} />
+        ) : (
           <Outlet />
-        </>
-      )}
+        )}
+      </Toaster>
     </I18nProvider>
+  );
+}
+
+/**
+ * Last resort when the app shell itself failed. Route errors are handled by
+ * the site layout, which keeps the header and footer on screen.
+ */
+export function ErrorBoundary() {
+  const error = useRouteError();
+  const notFound = isRouteErrorResponse(error) && error.status === 404;
+  if (!notFound) console.error(error);
+  // Without the provider nothing else would undo the language script.
+  useEffect(revealLanguage, []);
+
+  // Rendered without the providers (they may be what failed), so it reads
+  // translations from the store and uses plain links that reload the app.
+  return (
+    <div className="flex min-h-dvh flex-col bg-paper text-ink">
+      <header className="border-b border-white/18 bg-ink text-paper">
+        <div className="frame-x flex min-h-(--header-height) items-center">
+          <a
+            href="/"
+            aria-label={t("common.site.brandHome")}
+            className="flex h-full items-center px-4 min-[821px]:px-[clamp(1.25rem,3vw,2.6rem)]"
+          >
+            <Wordmark />
+          </a>
+        </div>
+      </header>
+      <main className="flex-1">
+        {notFound ? (
+          <StateMessage
+            size="page"
+            eyebrow="404"
+            title={t("common.states.notFoundTitle")}
+            description={t("common.states.notFoundDescription")}
+            action={
+              <a href="/" className={buttonVariants({ variant: "ink" })}>
+                {t("common.states.goHome")}
+              </a>
+            }
+          />
+        ) : (
+          <StateMessage
+            size="page"
+            role="alert"
+            title={t("common.states.errorTitle")}
+            description={t("common.states.crashDescription")}
+            action={
+              <>
+                <button
+                  type="button"
+                  onClick={() => window.location.reload()}
+                  className={buttonVariants({ variant: "ink" })}
+                >
+                  <RotateCwIcon aria-hidden="true" />
+                  {t("common.states.reload")}
+                </button>
+                <a href="/" className={buttonVariants({ variant: "outline" })}>
+                  {t("common.states.goHome")}
+                </a>
+              </>
+            }
+          />
+        )}
+      </main>
+    </div>
   );
 }
 
 export function HydrateFallback() {
   return (
-    <main
-      className="app-loading"
-      role="status"
-      aria-live="polite"
-      aria-busy="true"
-    >
-      <span className="app-loading__brand" aria-hidden="true">
-        AEGIS
-      </span>
-      <span className="app-loading__spinner" aria-hidden="true" />
-      <p className="app-loading__message">Loading your page...</p>
-    </main>
+    <div className="app-loading" role="status" aria-busy="true">
+      <span className="app-loading__brand">AEGIS</span>
+      <span className="app-loading__bar" aria-hidden="true" />
+      <span className="sr-only">Loading</span>
+    </div>
   );
 }

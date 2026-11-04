@@ -1,19 +1,9 @@
 export const home = {
   meta: {
-    title: "Aegis - 단국대학교 개발·보안 동아리",
+    title: "Aegis | 단국대학교 개발·보안 동아리",
     description:
       "성장을 원하는 모두에게 열려있는 단국대학교 최고의 개발·보안 중앙동아리",
   },
-
-  nav: {
-    login: "로그인",
-    join: "가입하기",
-    study: "스터디",
-    mypage: "마이페이지",
-    brandHome: "AEGIS 홈",
-  },
-
-  skipLink: "본문으로 바로가기",
 
   hero: {
     titleLine1: "성장을 원하는",
@@ -28,11 +18,7 @@ export const home = {
   actions: {
     join: "가입하기",
     joinInfo: "가입 정보 보기",
-    browseStudies: "스터디 둘러보기",
-    myActivity: "내 활동 보기",
-    clubActivities: "동아리 활동 보기",
-    login: "로그인",
-    joinAndLoginLinks: "가입 및 로그인 링크",
+    joinLinks: "가입 안내 링크",
   },
 
   activities: {
@@ -120,13 +106,7 @@ export const home = {
   },
 
   join: {
-    memberTitleLine1: "계속 배우고, 만들고,",
-    memberTitleLine2: "함께 나눠요",
-    guestTitleLine1: "성장을 원하는 모두에게",
-    guestTitleLine2: "열려 있습니다",
-  },
-
-  footer: {
-    linksLabel: "소셜 및 문의 링크",
+    titleLine1: "성장을 원하는 모두에게",
+    titleLine2: "열려 있습니다",
   },
 } as const;

@@ -6,14 +6,10 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "types": ["vite/client"],
+    "rootDirs": [".", "./.react-router/types"],
     "skipLibCheck": true,
-    "ignoreDeprecations": "6.0",
-    "baseUrl": ".",
     "paths": {
-      "@study/*": ["app/features/study/*"],
-      "@join/*": ["app/features/join/*"],
-      "@mypage/*": ["app/features/mypage/*"],
-      "@app/*": ["app/*"]
+      "@app/*": ["./app/*"]
     },
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -30,5 +26,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["app"]
+  "include": ["app", ".react-router/types/**/*"]
 }

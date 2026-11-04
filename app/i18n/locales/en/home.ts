@@ -1,19 +1,9 @@
 export const home = {
   meta: {
-    title: "Aegis — Dankook University Development & Security Club",
+    title: "Aegis | Dankook University Development & Security Club",
     description:
       "Dankook University's leading development and security club, open to everyone who wants to grow.",
   },
-
-  nav: {
-    login: "Log in",
-    join: "Join",
-    study: "Studies",
-    mypage: "My page",
-    brandHome: "AEGIS home",
-  },
-
-  skipLink: "Skip to main content",
 
   hero: {
     titleLine1: "A dev · security club",
@@ -28,11 +18,7 @@ export const home = {
   actions: {
     join: "Join us",
     joinInfo: "How to join",
-    browseStudies: "Browse studies",
-    myActivity: "My activity",
-    clubActivities: "See what we do",
-    login: "Log in",
-    joinAndLoginLinks: "Join and log in links",
+    joinLinks: "Join links",
   },
 
   activities: {
@@ -121,13 +107,7 @@ export const home = {
   },
 
   join: {
-    memberTitleLine1: "Keep learning, keep building,",
-    memberTitleLine2: "keep sharing",
-    guestTitleLine1: "Open to everyone",
-    guestTitleLine2: "who wants to grow",
-  },
-
-  footer: {
-    linksLabel: "Social and contact links",
+    titleLine1: "Open to everyone",
+    titleLine2: "who wants to grow",
   },
 } as const;
