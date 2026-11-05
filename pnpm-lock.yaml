@@ -219,16 +219,16 @@ importers:
         version: 4.6.7
     devDependencies:
       '@biomejs/biome':
-        specifier: ^2.6.4
+        specifier: 2.6.4
         version: 2.6.4
       '@react-router/dev':
-        specifier: ^8.5.1
+        specifier: 8.5.1
         version: 8.5.1(react-router@8.5.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(typescript@7.0.2)(vite@8.3.5(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))
       '@tailwindcss/vite':
-        specifier: ^4.3.3
+        specifier: 4.3.3
         version: 4.3.3(vite@8.3.5(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))
       '@types/node':
-        specifier: ^26.6.6
+        specifier: 26.6.6
         version: 26.6.6
       '@types/react':
         specifier: 19.3.0
@@ -237,7 +237,7 @@ importers:
         specifier: 19.3.0
         version: 19.3.0(@types/react@19.3.0)
       '@types/three':
-        specifier: ^0.186.0
+        specifier: 0.186.0
         version: 0.186.0
       knip:
         specifier: 6.44.1
@@ -246,16 +246,16 @@ importers:
         specifier: 8.45.0
         version: 8.45.0(@tanstack/react-query@5.105.0(@types/react@19.3.0)(react@19.3.1))(typescript@7.0.2)(zod@4.6.7)
       tailwindcss:
-        specifier: ^4.3.3
+        specifier: 4.3.3
         version: 4.3.3
       tw-animate-css:
-        specifier: ^1.4.0
+        specifier: 1.4.0
         version: 1.4.0
       typescript:
-        specifier: ~7.0.2
+        specifier: 7.0.2
         version: 7.0.2
       vite:
-        specifier: ^8.3.5
+        specifier: 8.3.5
         version: 8.3.5(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1)
 
 packages:
