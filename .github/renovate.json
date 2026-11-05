@@ -1,0 +1,35 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:best-practices"],
+  "prConcurrentLimit": 10,
+  "prHourlyLimit": 0,
+  "minimumReleaseAge": "7 days",
+  "osvVulnerabilityAlerts": true,
+  "major": {
+    "dependencyDashboardApproval": true
+  },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Dockerfile에서 설치하는 Corepack",
+      "managerFilePatterns": ["/(^|/)Dockerfile$/"],
+      "matchStrings": [
+        "npm install --global (?<depName>corepack)@(?<currentValue>\\S+)"
+      ],
+      "datasourceTemplate": "npm"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "베이스 이미지 digest는 릴리스 시각이 없어 안정화 대기를 적용하지 않는다",
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["digest", "pinDigest"],
+      "minimumReleaseAge": null
+    },
+    {
+      "groupName": "GitHub Actions",
+      "matchManagers": ["github-actions"],
+      "matchDatasources": ["github-tags", "github-digest"]
+    }
+  ]
+}
