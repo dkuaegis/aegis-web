@@ -35,3 +35,6 @@ jobs:
 
       - name: 데드코드 검사
         run: pnpm knip
+
+      - name: 타입 검사 및 빌드
+        run: pnpm build
