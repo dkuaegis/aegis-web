@@ -1,0 +1,47 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:best-practices"],
+  "prConcurrentLimit": 10,
+  "prHourlyLimit": 0,
+  "minimumReleaseAge": "7 days",
+  "osvVulnerabilityAlerts": true,
+  "major": {
+    "dependencyDashboardApproval": true
+  },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Dockerfile에서 설치하는 Corepack",
+      "managerFilePatterns": ["/(^|/)Dockerfile$/"],
+      "matchStrings": [
+        "npm install --global (?<depName>corepack)@(?<currentValue>\\S+)"
+      ],
+      "datasourceTemplate": "npm"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "config:best-practices가 npm에 거는 3일 대기를 7일로 맞춘다. 릴리스 시각이 없는 pin, 잠금 파일 유지보수는 프리셋대로 대기하지 않는다",
+      "matchDatasources": ["npm"],
+      "matchUpdateTypes": ["major", "minor", "patch"],
+      "minimumReleaseAge": "7 days"
+    },
+    {
+      "description": "베이스 이미지 digest는 릴리스 시각이 없어 안정화 대기를 적용하지 않는다",
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["digest", "pinDigest"],
+      "minimumReleaseAge": null
+    },
+    {
+      "description": "nginx는 stable(짝수 마이너) 안에서만 올린다",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["nginx"],
+      "allowedVersions": "/^1\\.\\d*[02468]\\./"
+    },
+    {
+      "groupName": "GitHub Actions",
+      "matchManagers": ["github-actions"],
+      "matchDatasources": ["github-tags", "github-digest"]
+    }
+  ]
+}

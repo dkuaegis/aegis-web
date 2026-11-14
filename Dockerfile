@@ -1,4 +1,4 @@
-FROM node:26.13.0-trixie-slim AS builder
+FROM node:26.13.0-trixie-slim@sha256:5adad64f9a1fca2d51972caa65983634c8a774eb300d72b20f7f2a0f60368072 AS builder
 
 WORKDIR /app
 
@@ -12,7 +12,7 @@ COPY . .
 
 RUN pnpm build
 
-FROM nginx:1.30.6-alpine-slim
+FROM nginx:1.30.6-alpine-slim@sha256:e2355aa95529a7999dad94ddcb45a8768abf6fb0b204c93b1a3ffce477d7b893
 
 RUN apk add --no-cache jq
 
