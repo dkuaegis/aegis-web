@@ -18,11 +18,12 @@ import { Toaster } from "./components/ui/toast";
 import { I18nProvider, useLanguage } from "./i18n";
 import { LANGUAGE_PENDING_SCRIPT, revealLanguage, t } from "./i18n/store";
 import { useInAppBrowser } from "./lib/in-app-browser";
-import { SITE_NAME } from "./lib/title";
+import { SITE_NAME, SITE_URL } from "./lib/title";
 import "./index.css";
 
 export const links: LinksFunction = () => [
   { rel: "icon", href: "/aegis-logo.ico" },
+  { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
 ];
 
 // Defaults for every page, and the only tags in the prerendered index.html
@@ -38,7 +39,13 @@ export const meta: MetaFunction = () => {
     { property: "og:site_name", content: SITE_NAME },
     { property: "og:title", content: title },
     { property: "og:description", content: description },
-    { name: "twitter:card", content: "summary" },
+    { property: "og:url", content: `${SITE_URL}/` },
+    { property: "og:image", content: `${SITE_URL}/og-image.png` },
+    { property: "og:image:width", content: "1200" },
+    { property: "og:image:height", content: "630" },
+    { property: "og:image:alt", content: title },
+    { name: "twitter:card", content: "summary_large_image" },
+    { tagName: "link", rel: "canonical", href: `${SITE_URL}/` },
   ];
 };
 
