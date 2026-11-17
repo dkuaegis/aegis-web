@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /mypage
+Disallow: /auth/
+
+Sitemap: https://dkuaegis.org/sitemap.xml
