@@ -9,6 +9,10 @@ const appRoot = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   plugins: [runtimeEnvPlugin(), tailwindcss(), reactRouter()],
+  server: {
+    host: true,
+    open: true,
+  },
   resolve: {
     alias: {
       "@app": path.resolve(appRoot, "app"),
