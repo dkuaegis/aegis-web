@@ -12,7 +12,7 @@ COPY . .
 
 RUN pnpm build
 
-FROM nginx:1.30.7-alpine-slim@sha256:b6c9aa217a1a855d53b0fb502a9a19f356404584e0bd1fc3d62a989e8dfcb6ca
+FROM nginx:1.30.7-alpine-slim@sha256:8c950211a641ec5b23f265450517001f6bcca533666120ebe36cb4cff3d00a55
 
 RUN apk add --no-cache jq
 
