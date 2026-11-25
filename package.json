@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.7",
-    "@react-router/dev": "8.5.1",
+    "@react-router/dev": "8.5.2",
     "@tailwindcss/vite": "4.3.5",
     "@types/node": "26.6.6",
     "@types/react": "19.3.0",
